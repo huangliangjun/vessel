@@ -1,123 +1,152 @@
 package pipeline
 
 import (
-	"errors"
-	"strings"
+	"encoding/json"
+	"fmt"
+	"log"
+	"time"
 
 	"github.com/containerops/vessel/models"
+	"github.com/containerops/vessel/module/dependence"
+	"github.com/containerops/vessel/module/etcd"
+	"github.com/containerops/vessel/module/scheduler"
+	"github.com/containerops/vessel/utils"
+	"github.com/containerops/vessel/utils/timer"
 )
 
-var (
-	DEFAULT_PIPELINE_ETCD_PATH        = "/containerops/vessel/ws-%d/pj-%d/pl-%d/stage/"
-	DEFAULT_PIPELINEVERSION_ETCD_PATH = "/containerops/vessel/ws-%d/pj-%d/pl-%d/version/plv-%d"
-)
-
-// RunPipeline : run pipeline generate pipelineVersion
-func RunPipeline(pl *models.Pipeline) (*models.Pipeline, error) {
-	// first test is pipeline legal if not return err
-	relationMap, err := isPipelineLegal(pl)
-	if err != nil {
-		return nil, err
+// StartPipeline start pipeline with PipelineSpecTemplate
+func StartPipeline(pipelineTemplate *models.PipelineSpecTemplate) []byte {
+	log.Println("Start pipeline")
+	pipeline := pipelineTemplate.MetaData
+	stageSpec := pipelineTemplate.Spec
+	if status, err := etcd.GetPipelineStatus(pipeline); err == nil && status != "Deleted" {
+		detail := fmt.Sprintf("Pipeline = %v in namespane = %v is already exist", pipeline.Name, pipeline.Namespace)
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, detail)
+		return bytes
 	}
 
-	// save pipeline info to db
-	id, err := pl.Save()
-	if err != nil {
-		return nil, err
-	}
-	pl.Id = id
-
-	// save stage infos to db
-	for _, stage := range pl.Stages {
-		if relationMap[stage.Name][0] != "" {
-			stage.From = strings.Split(relationMap[stage.Name][0], ",")
+	for _, stage := range stageSpec {
+		stage.Namespace = pipeline.Namespace
+		stage.PipelineName = pipeline.Name
+		status, err := etcd.GetStageStatus(stage)
+		if err == nil && status != "Deleted" {
+			detail := fmt.Sprintf("Stage = %v in namespane = %v is already exist", stage.Name, stage.Namespace)
+			bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, detail)
+			return bytes
 		}
-		if relationMap[stage.Name][1] != "" {
-			stage.To = strings.Split(relationMap[stage.Name][1], ",")
-		}
-		stage.Save()
 	}
 
-	return pl, nil
+	executorMap, err := dependence.ParsePipelineTemplate(pipelineTemplate)
+	if err != nil {
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, err.Error())
+		return bytes
+	}
+
+	if err := etcd.SavePipeline(pipeline); err != nil {
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, err.Error())
+		return bytes
+	}
+
+	pipeline.Status = models.StateReady
+	if err := etcd.SetPipelineStatus(pipeline); err != nil {
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, err.Error())
+		return bytes
+	}
+
+	schedulingRes := scheduler.StartStage(executorMap, timer.InitHourglass(time.Duration(pipeline.TimeoutDuration)*time.Second))
+	etcd.SetCreationTimestamp(pipeline)
+	bytes, success := formatOutputBytes(pipelineTemplate, pipeline, schedulingRes, "")
+	if success {
+		pipeline.Status = models.StateRunning
+		etcd.SetPipelineStatus(pipeline)
+	} else {
+		//rollback by pipeline failed
+		go removePipeline(executorMap, pipeline)
+	}
+	log.Printf("Start pipeline name = %v in namespace '%v' is over", pipeline.Namespace, pipeline.Name)
+	log.Print("Start job is done")
+	return bytes
 }
 
-// test is the given pipeline is legal ,if legal return pipeline's stage relationMap if not return error
-func isPipelineLegal(pipeline *models.Pipeline) (map[string][]string, error) {
-	stageMap := make(map[string]*models.Stage, 0)
-	dependenceCount := make(map[string]int, 0)
-	stageRelationMap := make(map[string][]string, 0)
+func removePipeline(executorMap map[string]*models.Executor, pipeline *models.Pipeline) []*models.ExecutedResult {
+	for _, executor := range executorMap {
+		executor.From = []string{""}
+	}
+	schedulingRes := scheduler.StopStage(executorMap, timer.InitHourglass(time.Duration(pipeline.TimeoutDuration)*time.Second))
+	pipeline.Status = models.StateDeleted
+	etcd.SetDeletionTimestamp(pipeline)
+	etcd.SetPipelineStatus(pipeline)
+	etcd.SetPipelineTTL(pipeline,30)
+	return schedulingRes
+}
 
-	// regist all stage,and check repeat/nil stage name
-	for _, stage := range pipeline.Stages {
-		if stage.Name == "" {
-			return nil, errors.New("stage has a nil name")
-		}
-		if _, exist := stageMap[stage.Name]; !exist {
-			stageMap[stage.Name] = stage
-		} else {
-			// has a repeat stage name ,return
-			return nil, errors.New("stage has repeat name:" + stage.Name)
+// StopPipeline stop pipeline with PipelineSpecTemplate
+func StopPipeline(pipelineTemplate *models.PipelineSpecTemplate) []byte {
+	log.Println("Delete pipeline")
+	pipeline := pipelineTemplate.MetaData
+	stageSpec := pipelineTemplate.Spec
+	if status, err := etcd.GetPipelineStatus(pipeline); err != nil || status == "Deleted" {
+		detail := fmt.Sprintf("Pipeline = %v in namespane = %v is not start", pipeline.Name, pipeline.Namespace)
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, detail)
+		return bytes
+	}
+
+	for _, stage := range stageSpec {
+		stage.Namespace = pipeline.Namespace
+		stage.PipelineName = pipeline.Name
+		status, err := etcd.GetStageStatus(stage)
+		if err != nil || status == "Deleted" {
+			detail := fmt.Sprintf("Stage = %v in namespane = %v is not start", stage.Name, stage.Namespace)
+			bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, detail)
+			return bytes
 		}
 	}
 
-	// init stage dependence count
-	for stageName, _ := range stageMap {
-		dependenceCount[stageName] = 0
+	executorMap, err := dependence.ParsePipelineTemplate(pipelineTemplate)
+	if err != nil {
+		bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, nil, err.Error())
+		return bytes
 	}
+	etcd.GetCreationTimestamp(pipeline)
+	schedulingRes := removePipeline(executorMap, pipeline)
+	bytes, _ := formatOutputBytes(pipelineTemplate, pipeline, schedulingRes, "")
+	log.Printf("Delete pipeline name = %v in namespace '%v' is over", pipeline.Namespace, pipeline.Name)
+	log.Print("Delete job is done")
+	return bytes
+}
 
-	// count stage dependence
-	for _, stage := range stageMap {
-		for _, from := range stage.From {
-			dependenceCount[from]++
-		}
-	}
-
-	// check DAG
-	//if AnnulusTag == nowReleaseStageCount or nowReleaseStageCount == len(dependenceCount) then exit for,if nowReleaseStageCount == len(dependenceCount) then isDAG,else isNotDAG
-	nowReleaseStageCount := 0
-	for true {
-
-		annulusTag := 0
-		for stageName, stage := range stageMap {
-			if dependenceCount[stageName] == 0 {
-				nowReleaseStageCount++
-				for _, from := range stage.From {
-					dependenceCount[from]--
-				}
-
-				dependenceCount[stage.Name] = -1
-			} else if dependenceCount[stageName] == -1 {
-				annulusTag++
-			}
-		}
-
-		if annulusTag == nowReleaseStageCount || nowReleaseStageCount == len(dependenceCount) {
-			break
-		}
-	}
-
-	if nowReleaseStageCount != len(dependenceCount) {
-		return nil, errors.New("given pipeline's stage can't create a DAG")
-	}
-
-	// generate stage relationMap
-	// stageRelationMap := map[stageName]{"stage.From","stage.To"}
-	for stageName, stage := range stageMap {
-		if _, exist := stageRelationMap[stageName]; !exist {
-			stageRelationMap[stageName] = make([]string, 2)
-		}
-		stageRelationMap[stageName][0] = strings.Join(stage.From, ",")
-
-		for _, from := range stage.From {
-			if _, exist := stageRelationMap[from]; !exist {
-				stageRelationMap[from] = make([]string, 2)
-			}
-			if len(stageRelationMap[from][1]) == 0 {
-				stageRelationMap[from][1] = stageName
-			} else {
-				stageRelationMap[from][1] = strings.Join(append(strings.Split(stageRelationMap[from][1], ","), stageName), ",")
+func formatOutputBytes(pipelineTemplate *models.PipelineSpecTemplate, pipeline *models.Pipeline, schedulingRes []*models.ExecutedResult, pipelineDetail string) ([]byte, bool) {
+	log.Println("Pipeline result :", schedulingRes)
+	log.Printf("Pipeline detail : %v", pipelineDetail)
+	resultList := []interface{}{}
+	status := models.ResultFailed
+	if pipelineDetail == "" {
+		status = models.ResultSuccess
+		for _, result := range schedulingRes {
+			resultList = append(resultList, result.Result)
+			if status != result.Status {
+				status = result.Status
+				break
 			}
 		}
 	}
-	return stageRelationMap, nil
+
+	output := &models.PipelineResult{
+		Namespace:      pipeline.Namespace,
+		Name:           pipeline.Name,
+		WorkspaceID:    1000,
+		ProjectID:      2000,
+		PipelineID:     utils.UUID(),
+		PipelineDetail: pipelineDetail,
+		Details:        resultList,
+		PipelineSpec:   pipelineTemplate,
+		Status:         status,
+	}
+
+	bytes, err := json.Marshal(output)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Printf("Pipeline result is %v", string(bytes))
+	return bytes, status == models.ResultSuccess
 }

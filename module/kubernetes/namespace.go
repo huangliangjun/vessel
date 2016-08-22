@@ -1,84 +1,82 @@
 package kubernetes
 
 import (
-	// "encoding/json"
-	// "errors"
 	"fmt"
 	"time"
 
 	"github.com/containerops/vessel/models"
-	// "k8s.io/kubernetes/pkg/api"
-	// "k8s.io/kubernetes/pkg/util/intstr"
+	"github.com/containerops/vessel/utils/timer"
 	"k8s.io/kubernetes/pkg/api"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/watch"
 )
 
-func CreateNamespace(pipelineVersion *models.PipelineVersion) error {
-	piplineMetadata := pipelineVersion.MetaData
-	// pipelineStageSpecs := pipelineVersion.StageSpecs
-	// Going to support create namespace after we have namespace watch lib
-	/*	_, err := CLIENT.Namespaces().Get(piplineMetadata.Namespace)
-		if err != nil {*/
-	namespaceObj := &api.Namespace{
-		ObjectMeta: api.ObjectMeta{
-			Name:   piplineMetadata.Namespace,
-			Labels: map[string]string{},
-		},
-	}
-	namespaceObj.SetLabels(map[string]string{"app": piplineMetadata.Name})
-
-	if _, err := CLIENT.Namespaces().Create(namespaceObj); err != nil {
-		fmt.Errorf("Create namespace err : %v\n", err)
+func createNamespace(stage *models.Stage) error {
+	if err := getClient(); err != nil {
 		return err
+	}
+	k8sNamespace := k8sClient.Namespaces()
+	namespaceLock.RLock()
+	if _, err := k8sNamespace.Get(stage.Namespace); err != nil {
+		namespaceLock.RUnlock()
+		namespaceLock.Lock()
+		if _, err := k8sNamespace.Get(stage.Namespace); err != nil {
+			namespaceObj := &api.Namespace{
+				ObjectMeta: api.ObjectMeta{
+					Name:   stage.Namespace,
+					Labels: map[string]string{},
+				},
+			}
+			namespaceObj.SetLabels(map[string]string{models.LabelKey: stage.PipelineName})
+
+			if _, err := k8sNamespace.Create(namespaceObj); err != nil {
+				namespaceLock.Unlock()
+				return err
+			}
+		}
+		namespaceLock.Unlock()
+	} else {
+		namespaceLock.RUnlock()
 	}
 	return nil
 }
 
-// WatchPodStatus return status of the operation(specified by checkOp) of the pod, OK, TIMEOUT.
-func WatchNamespaceStatus(labelKey string, labelValue string, timeout int64, checkOp string, ch chan string) {
-	if checkOp != string(watch.Deleted) && checkOp != string(watch.Added) {
-		fmt.Errorf("Params checkOp err, checkOp: %v", checkOp)
+func deleteNamespace(stage *models.Stage) error {
+	if err := getClient(); err != nil {
+		return err
 	}
-
-	//opts := api.ListOptions{FieldSelector: fields.Set{"kind": "pod"}.AsSelector()}
-	opts := api.ListOptions{LabelSelector: labels.Set{labelKey: labelValue}.AsSelector()}
-	w, err := CLIENT.Namespaces().Watch(opts)
-	if err != nil {
-		ch <- Error
-		return
-		// fmt.Errorf("Get watch interface err")
-		// return "", err
-	}
-
-	t := time.NewTimer(time.Second * time.Duration(timeout))
-	for {
-		select {
-		case event, ok := <-w.ResultChan():
-			//fmt.Println(event.Type)
-			if !ok {
-				ch <- Error
-				return
-				// fmt.Errorf("Watch err\n")
-				// return "", errors.New("error occours from watch chanle")
+	k8sNamespace := k8sClient.Namespaces()
+	namespaceLock.RLock()
+	if _, err := k8sNamespace.Get(stage.Namespace); err == nil {
+		namespaceLock.RUnlock()
+		namespaceLock.Lock()
+		if _, err := k8sNamespace.Get(stage.Namespace); err == nil {
+			if err := k8sNamespace.Delete(stage.Namespace); err != nil {
+				namespaceLock.Unlock()
+				return err
 			}
-			//fmt.Println(event.Type)
-			// Pod have phase, so we have to wait for the phase change to the right status when added
-			if string(event.Type) == checkOp {
-				fmt.Println(event.Object.(*api.Namespace).Status.Phase)
-
-				if (checkOp == string(watch.Deleted)) || ((checkOp != string(watch.Deleted)) &&
-					(event.Object.(*api.Namespace).Status.Phase == "Active")) {
-					ch <- OK
-					return
-					// return "OK", nil
-				}
-			}
-
-		case <-t.C:
-			ch <- Timeout
-			return
-			// return "TIMEOUT", nil
 		}
+		namespaceLock.Unlock()
+	} else {
+		namespaceLock.RUnlock()
 	}
+	return nil
+}
+
+func watchDeleteNamespace(stage *models.Stage, hourglass *timer.Hourglass, namespaceCh chan error) {
+	k8sNamespace := k8sClient.Namespaces()
+	timeChan := time.After(time.Duration(hourglass.GetLeftNanoseconds()))
+	running := true
+	for running {
+		if _, err := k8sNamespace.Get(stage.Namespace); err != nil {
+			namespaceCh <- nil
+			return
+		}
+		select {
+		case <-time.After(time.Duration(1)*time.Second):
+		case <-timeChan:
+			running = false
+		}
+
+	}
+	namespaceCh <- fmt.Errorf("Unexpected err when watch namespace : name = %v", stage.PipelineName)
+	return
 }

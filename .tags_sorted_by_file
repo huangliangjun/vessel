@@ -1,0 +1,887 @@
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+Blue	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Yellow$/;"	c
+ColorLog	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ColorLog(format string, a ...interface{}) {$/;"	f
+ColorLogS	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ColorLogS(format string, a ...interface{}) string {$/;"	f
+EndColor	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Magenta$/;"	c
+ExecCmd	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ExecCmd(cmdName string, args ...string) (string, string, error) {$/;"	f
+ExecCmdBytes	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ExecCmdBytes(cmdName string, args ...string) ([]byte, []byte, error) {$/;"	f
+ExecCmdDir	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ExecCmdDir(dir, cmdName string, args ...string) (string, string, error) {$/;"	f
+ExecCmdDirBytes	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func ExecCmdDirBytes(dir, cmdName string, args ...string) ([]byte, []byte, error) {$/;"	f
+Gray	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^const ($/;"	c
+Green	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Red$/;"	c
+Magenta	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Blue$/;"	c
+Red	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Gray = uint8(iota + 90)$/;"	c
+Yellow	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^	Green$/;"	c
+com	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^package com$/;"	p
+getColorLevel	Godeps/_workspace/src/github.com/Unknwon/com/cmd.go	/^func getColorLevel(level string) string {$/;"	f
+Exist	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) Exist() bool {$/;"	f
+Get	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (a argInt) Get(i int, args ...int) (r int) {$/;"	f
+HexStr2int	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func HexStr2int(hexStr string) (int, error) {$/;"	f
+Int	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) Int() (int, error) {$/;"	f
+Int2HexStr	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func Int2HexStr(num int) (hex string) {$/;"	f
+Int64	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) Int64() (int64, error) {$/;"	f
+MustInt	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) MustInt() int {$/;"	f
+MustInt64	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) MustInt64() int64 {$/;"	f
+MustUint8	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) MustUint8() uint8 {$/;"	f
+StrTo	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^type StrTo string$/;"	t
+String	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) String() string {$/;"	f
+ToStr	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func ToStr(value interface{}, args ...int) (s string) {$/;"	f
+Uint8	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^func (f StrTo) Uint8() (uint8, error) {$/;"	f
+argInt	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^type argInt []int$/;"	t
+com	Godeps/_workspace/src/github.com/Unknwon/com/convert.go	/^package com$/;"	p
+CopyDir	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func CopyDir(srcPath, destPath string, filters ...func(filePath string) bool) error {$/;"	f
+GetAllSubDirs	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func GetAllSubDirs(rootPath string) ([]string, error) {$/;"	f
+GetFileListBySuffix	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func GetFileListBySuffix(dirPath, suffix string) ([]string, error) {$/;"	f
+IsDir	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func IsDir(dir string) bool {$/;"	f
+StatDir	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func StatDir(rootPath string, includeDir ...bool) ([]string, error) {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^package com$/;"	p
+statDir	Godeps/_workspace/src/github.com/Unknwon/com/dir.go	/^func statDir(dirPath, recPath string, includeDir, isDirOnly bool) ([]string, error) {$/;"	f
+Byte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^const ($/;"	c
+Copy	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func Copy(src, dest string) error {$/;"	f
+EByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	PByte = TByte * 1024$/;"	c
+FileMTime	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func FileMTime(file string) (int64, error) {$/;"	f
+FileSize	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func FileSize(file string) (int64, error) {$/;"	f
+GByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	MByte = KByte * 1024$/;"	c
+HumaneFileSize	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func HumaneFileSize(s uint64) string {$/;"	f
+IsExist	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func IsExist(path string) bool {$/;"	f
+IsFile	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func IsFile(filePath string) bool {$/;"	f
+KByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	Byte  = 1$/;"	c
+MByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	KByte = Byte * 1024$/;"	c
+PByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	TByte = GByte * 1024$/;"	c
+TByte	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^	GByte = MByte * 1024$/;"	c
+WriteFile	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func WriteFile(filename string, data []byte) error {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^package com$/;"	p
+humanateBytes	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func humanateBytes(s uint64, base float64, sizes []string) string {$/;"	f
+logn	Godeps/_workspace/src/github.com/Unknwon/com/file.go	/^func logn(n, b float64) float64 {$/;"	f
+Html2JS	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^func Html2JS(data []byte) []byte {$/;"	f
+HtmlDecode	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^func HtmlDecode(str string) string {$/;"	f
+HtmlEncode	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^func HtmlEncode(str string) string {$/;"	f
+Nl2br	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^func Nl2br(str string) string {$/;"	f
+StripTags	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^func StripTags(src string) string {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/html.go	/^package com$/;"	p
+Error	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func (e *RemoteError) Error() string {$/;"	f
+Error	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func (e NotFoundError) Error() string {$/;"	f
+FetchFiles	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func FetchFiles(client *http.Client, files []RawFile, header http.Header) error {$/;"	f
+FetchFilesCurl	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func FetchFilesCurl(files []RawFile, curlOptions ...string) error {$/;"	f
+HttpCall	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpCall(client *http.Client, method, url string, header http.Header, body io.Reader) (io.ReadCloser, error) {$/;"	f
+HttpGet	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpGet(client *http.Client, url string, header http.Header) (io.ReadCloser, error) {$/;"	f
+HttpGetBytes	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpGetBytes(client *http.Client, url string, header http.Header) ([]byte, error) {$/;"	f
+HttpGetJSON	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpGetJSON(client *http.Client, url string, v interface{}) error {$/;"	f
+HttpGetToFile	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpGetToFile(client *http.Client, url string, header http.Header, fileName string) error {$/;"	f
+HttpPost	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpPost(client *http.Client, url string, header http.Header, body []byte) (io.ReadCloser, error) {$/;"	f
+HttpPostJSON	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^func HttpPostJSON(client *http.Client, url string, body, v interface{}) error {$/;"	f
+NotFoundError	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^type NotFoundError struct {$/;"	t
+RawFile	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^type RawFile interface {$/;"	t
+RemoteError	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^type RemoteError struct {$/;"	t
+UserAgent	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^var UserAgent = "Mozilla\/5.0 (Windows NT 6.1; WOW64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/29.0.1541.0 Safari\/537.36"$/;"	v
+com	Godeps/_workspace/src/github.com/Unknwon/com/http.go	/^package com$/;"	p
+PowInt	Godeps/_workspace/src/github.com/Unknwon/com/math.go	/^func PowInt(x int, y int) int {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/math.go	/^package com$/;"	p
+GetGOPATHs	Godeps/_workspace/src/github.com/Unknwon/com/path.go	/^func GetGOPATHs() []string {$/;"	f
+GetSrcPath	Godeps/_workspace/src/github.com/Unknwon/com/path.go	/^func GetSrcPath(importPath string) (appPath string, err error) {$/;"	f
+HomeDir	Godeps/_workspace/src/github.com/Unknwon/com/path.go	/^func HomeDir() (home string, err error) {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/path.go	/^package com$/;"	p
+(?:\.[A-Z0-9!#$%&'*+/=?^_{|}~-]+)*	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^	regex_strict_email_pattern = `(?i)[A-Z0-9!#$%&'*+\/=?^_{|}~-]+` +$/;"	c
+@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\.)+	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^		`(?:\\.[A-Z0-9!#$%&'*+\/=?^_{|}~-]+)*` +$/;"	c
+IsEmail	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^func IsEmail(email string) bool {$/;"	f
+IsEmailRFC	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^func IsEmailRFC(email string) bool {$/;"	f
+IsUrl	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^func IsUrl(url string) bool {$/;"	f
+[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^		`@(?:[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?\\.)+` +$/;"	c
+com	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^package com$/;"	p
+init	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^func init() {$/;"	f
+regex_email	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^var ($/;"	v
+regex_email_pattern	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^const ($/;"	c
+regex_strict_email	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^	regex_email        *regexp.Regexp$/;"	v
+regex_strict_email_pattern	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^	regex_email_pattern        = `(?i)[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\\.)+[A-Z]{2,6}`$/;"	c
+regex_url	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^	regex_strict_email *regexp.Regexp$/;"	v
+regex_url_pattern	Godeps/_workspace/src/github.com/Unknwon/com/regex.go	/^		`[A-Z0-9](?:[A-Z0-9-]*[A-Z0-9])?`$/;"	c
+AppendStr	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^func AppendStr(strs []string, str string) []string {$/;"	f
+CompareSliceStr	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^func CompareSliceStr(s1, s2 []string) bool {$/;"	f
+CompareSliceStrU	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^func CompareSliceStrU(s1, s2 []string) bool {$/;"	f
+IsSliceContainsInt64	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^func IsSliceContainsInt64(sl []int64, i int64) bool {$/;"	f
+IsSliceContainsStr	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^func IsSliceContainsStr(sl []string, str string) bool {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/slice.go	/^package com$/;"	p
+AESDecrypt	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func AESDecrypt(key, text []byte) ([]byte, error) {$/;"	f
+AESEncrypt	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func AESEncrypt(key, text []byte) ([]byte, error) {$/;"	f
+Expand	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func Expand(template string, match map[string]string, subs ...string) string {$/;"	f
+IsLetter	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func IsLetter(l uint8) bool {$/;"	f
+RandomCreateBytes	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func RandomCreateBytes(n int, alphabets ...byte) []byte {$/;"	f
+Reverse	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func Reverse(s string) string {$/;"	f
+ToSnakeCase	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^func ToSnakeCase(str string) string {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/string.go	/^package com$/;"	p
+Date	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^func Date(ti int64, format string) string {$/;"	f
+DateParse	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^func DateParse(dateString, format string) (time.Time, error) {$/;"	f
+DateS	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^func DateS(ts string, format string) string {$/;"	f
+DateT	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^func DateT(t time.Time, format string) string {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^package com$/;"	p
+datePatterns	Godeps/_workspace/src/github.com/Unknwon/com/time.go	/^var datePatterns = []string{$/;"	v
+Base64Decode	Godeps/_workspace/src/github.com/Unknwon/com/url.go	/^func Base64Decode(str string) (string, error) {$/;"	f
+Base64Encode	Godeps/_workspace/src/github.com/Unknwon/com/url.go	/^func Base64Encode(str string) string {$/;"	f
+UrlDecode	Godeps/_workspace/src/github.com/Unknwon/com/url.go	/^func UrlDecode(str string) (string, error) {$/;"	f
+UrlEncode	Godeps/_workspace/src/github.com/Unknwon/com/url.go	/^func UrlEncode(str string) string {$/;"	f
+com	Godeps/_workspace/src/github.com/Unknwon/com/url.go	/^package com$/;"	p
+App	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^type App struct {$/;"	t
+Author	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^type Author struct {$/;"	t
+Categories	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) Categories() CommandCategories {$/;"	f
+Command	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) Command(name string) *Command {$/;"	f
+HandleAction	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func HandleAction(action interface{}, context *Context) (err error) {$/;"	f
+NewApp	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func NewApp() *App {$/;"	f
+Run	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) Run(arguments []string) (err error) {$/;"	f
+RunAndExitOnError	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) RunAndExitOnError() {$/;"	f
+RunAsSubcommand	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) RunAsSubcommand(ctx *Context) (err error) {$/;"	f
+Setup	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) Setup() {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a Author) String() string {$/;"	f
+VisibleCategories	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) VisibleCategories() []*CommandCategory {$/;"	f
+VisibleCommands	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) VisibleCommands() []Command {$/;"	f
+VisibleFlags	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) VisibleFlags() []Flag {$/;"	f
+appActionDeprecationURL	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^	changeLogURL                    = "https:\/\/github.com\/urfave\/cli\/blob\/master\/CHANGELOG.md"$/;"	v
+appendFlag	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) appendFlag(flag Flag) {$/;"	f
+changeLogURL	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^var ($/;"	v
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^package cli$/;"	p
+compileTime	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func compileTime() time.Time {$/;"	f
+contactSysadmin	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^	runAndExitOnErrorDeprecationURL = fmt.Sprintf("%s#deprecated-cli-app-runandexitonerror", changeLogURL)$/;"	v
+errInvalidActionSignature	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^		fmt.Sprintf("See %s", appActionDeprecationURL), 2)$/;"	v
+errNonFuncAction	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^	contactSysadmin = "This is an error in the application.  Please contact the distributor of this application if this is not you."$/;"	v
+errWriter	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) errWriter() io.Writer {$/;"	f
+hasFlag	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^func (a *App) hasFlag(flag Flag) bool {$/;"	f
+runAndExitOnErrorDeprecationURL	Godeps/_workspace/src/github.com/codegangsta/cli/app.go	/^	appActionDeprecationURL         = fmt.Sprintf("%s#deprecated-cli-app-action-signature", changeLogURL)$/;"	v
+AddCommand	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^func (c CommandCategories) AddCommand(category string, command Command) CommandCategories {$/;"	f
+CommandCategories	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^type CommandCategories []*CommandCategory$/;"	t
+CommandCategory	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^type CommandCategory struct {$/;"	t
+Len	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^func (c CommandCategories) Len() int {$/;"	f
+Less	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^func (c CommandCategories) Less(i, j int) bool {$/;"	f
+Swap	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^func (c CommandCategories) Swap(i, j int) {$/;"	f
+VisibleCommands	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^func (c *CommandCategory) VisibleCommands() []Command {$/;"	f
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/category.go	/^package cli$/;"	p
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/cli.go	/^package cli$/;"	p
+Command	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^type Command struct {$/;"	t
+Commands	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^type Commands []Command$/;"	t
+FullName	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) FullName() string {$/;"	f
+HasName	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) HasName(name string) bool {$/;"	f
+Names	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) Names() []string {$/;"	f
+Run	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) Run(ctx *Context) (err error) {$/;"	f
+VisibleFlags	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) VisibleFlags() []Flag {$/;"	f
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^package cli$/;"	p
+startApp	Godeps/_workspace/src/github.com/codegangsta/cli/command.go	/^func (c Command) startApp(ctx *Context) error {$/;"	f
+Args	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Args() Args {$/;"	f
+Args	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^type Args []string$/;"	t
+Bool	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Bool(name string) bool {$/;"	f
+BoolT	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) BoolT(name string) bool {$/;"	f
+Context	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^type Context struct {$/;"	t
+Duration	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Duration(name string) time.Duration {$/;"	f
+First	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (a Args) First() string {$/;"	f
+FlagNames	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) FlagNames() (names []string) {$/;"	f
+Float64	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Float64(name string) float64 {$/;"	f
+Generic	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Generic(name string) interface{} {$/;"	f
+Get	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (a Args) Get(n int) string {$/;"	f
+GlobalBool	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalBool(name string) bool {$/;"	f
+GlobalBoolT	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalBoolT(name string) bool {$/;"	f
+GlobalDuration	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalDuration(name string) time.Duration {$/;"	f
+GlobalFlagNames	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalFlagNames() (names []string) {$/;"	f
+GlobalFloat64	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalFloat64(name string) float64 {$/;"	f
+GlobalGeneric	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalGeneric(name string) interface{} {$/;"	f
+GlobalInt	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalInt(name string) int {$/;"	f
+GlobalIntSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalIntSlice(name string) []int {$/;"	f
+GlobalIsSet	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalIsSet(name string) bool {$/;"	f
+GlobalSet	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalSet(name, value string) error {$/;"	f
+GlobalString	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalString(name string) string {$/;"	f
+GlobalStringSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) GlobalStringSlice(name string) []string {$/;"	f
+Int	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Int(name string) int {$/;"	f
+IntSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) IntSlice(name string) []int {$/;"	f
+IsSet	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) IsSet(name string) bool {$/;"	f
+NArg	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) NArg() int {$/;"	f
+NewContext	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func NewContext(app *App, set *flag.FlagSet, parentCtx *Context) *Context {$/;"	f
+NumFlags	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) NumFlags() int {$/;"	f
+Parent	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Parent() *Context {$/;"	f
+Present	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (a Args) Present() bool {$/;"	f
+Set	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) Set(name, value string) error {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) String(name string) string {$/;"	f
+StringSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (c *Context) StringSlice(name string) []string {$/;"	f
+Swap	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (a Args) Swap(from, to int) error {$/;"	f
+Tail	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func (a Args) Tail() []string {$/;"	f
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^package cli$/;"	p
+copyFlag	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func copyFlag(name string, ff *flag.Flag, set *flag.FlagSet) {$/;"	f
+globalContext	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func globalContext(ctx *Context) *Context {$/;"	f
+lookupBool	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupBool(name string, set *flag.FlagSet) bool {$/;"	f
+lookupBoolT	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupBoolT(name string, set *flag.FlagSet) bool {$/;"	f
+lookupDuration	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupDuration(name string, set *flag.FlagSet) time.Duration {$/;"	f
+lookupFloat64	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupFloat64(name string, set *flag.FlagSet) float64 {$/;"	f
+lookupGeneric	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupGeneric(name string, set *flag.FlagSet) interface{} {$/;"	f
+lookupGlobalFlagSet	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupGlobalFlagSet(name string, ctx *Context) *flag.FlagSet {$/;"	f
+lookupInt	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupInt(name string, set *flag.FlagSet) int {$/;"	f
+lookupIntSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupIntSlice(name string, set *flag.FlagSet) []int {$/;"	f
+lookupString	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupString(name string, set *flag.FlagSet) string {$/;"	f
+lookupStringSlice	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func lookupStringSlice(name string, set *flag.FlagSet) []string {$/;"	f
+normalizeFlags	Godeps/_workspace/src/github.com/codegangsta/cli/context.go	/^func normalizeFlags(flags []Flag, set *flag.FlagSet) error {$/;"	f
+ErrWriter	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^var ErrWriter io.Writer = os.Stderr$/;"	v
+Error	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func (ee *ExitError) Error() string {$/;"	f
+Error	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func (m MultiError) Error() string {$/;"	f
+ExitCode	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func (ee *ExitError) ExitCode() int {$/;"	f
+ExitCoder	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^type ExitCoder interface {$/;"	t
+ExitError	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^type ExitError struct {$/;"	t
+HandleExitCoder	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func HandleExitCoder(err error) {$/;"	f
+MultiError	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^type MultiError struct {$/;"	t
+NewExitError	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func NewExitError(message string, exitCode int) *ExitError {$/;"	f
+NewMultiError	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^func NewMultiError(err ...error) MultiError {$/;"	f
+OsExiter	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^var OsExiter = os.Exit$/;"	v
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/errors.go	/^package cli$/;"	p
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolTFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f DurationFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f Float64Flag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f GenericFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntSliceFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringFlag) Apply(set *flag.FlagSet) {$/;"	f
+Apply	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringSliceFlag) Apply(set *flag.FlagSet) {$/;"	f
+BashCompletionFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^var BashCompletionFlag = BoolFlag{$/;"	v
+BoolFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type BoolFlag struct {$/;"	t
+BoolTFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type BoolTFlag struct {$/;"	t
+DurationFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type DurationFlag struct {$/;"	t
+Flag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type Flag interface {$/;"	t
+FlagStringer	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^var FlagStringer FlagStringFunc = stringifyFlag$/;"	v
+Float64Flag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type Float64Flag struct {$/;"	t
+Generic	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type Generic interface {$/;"	t
+GenericFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type GenericFlag struct {$/;"	t
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolTFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f DurationFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f Float64Flag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f GenericFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntSliceFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringFlag) GetName() string {$/;"	f
+GetName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringSliceFlag) GetName() string {$/;"	f
+HelpFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^var HelpFlag = BoolFlag{$/;"	v
+IntFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type IntFlag struct {$/;"	t
+IntSlice	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type IntSlice []int$/;"	t
+IntSliceFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type IntSliceFlag struct {$/;"	t
+Set	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *IntSlice) Set(value string) error {$/;"	f
+Set	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *StringSlice) Set(value string) error {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *IntSlice) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *StringSlice) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f BoolTFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f DurationFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f Float64Flag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f GenericFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f IntSliceFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringFlag) String() string {$/;"	f
+String	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f StringSliceFlag) String() string {$/;"	f
+StringFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type StringFlag struct {$/;"	t
+StringSlice	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type StringSlice []string$/;"	t
+StringSliceFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^type StringSliceFlag struct {$/;"	t
+Value	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *IntSlice) Value() []int {$/;"	f
+Value	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func (f *StringSlice) Value() []string {$/;"	f
+VersionFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^var VersionFlag = BoolFlag{$/;"	v
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^package cli$/;"	p
+defaultPlaceholder	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^const defaultPlaceholder = "value"$/;"	c
+eachName	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func eachName(longName string, fn func(string)) {$/;"	f
+flagSet	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func flagSet(name string, flags []Flag) *flag.FlagSet {$/;"	f
+prefixFor	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func prefixFor(name string) (prefix string) {$/;"	f
+prefixedNames	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func prefixedNames(fullName, placeholder string) string {$/;"	f
+stringifyFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func stringifyFlag(f Flag) string {$/;"	f
+stringifyIntSliceFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func stringifyIntSliceFlag(f IntSliceFlag) string {$/;"	f
+stringifySliceFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func stringifySliceFlag(usage, name string, defaultVals []string) string {$/;"	f
+stringifyStringSliceFlag	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func stringifyStringSliceFlag(f StringSliceFlag) string {$/;"	f
+unquoteUsage	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func unquoteUsage(usage string) (string, string) {$/;"	f
+visibleFlags	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func visibleFlags(fl []Flag) []Flag {$/;"	f
+withEnvHint	Godeps/_workspace/src/github.com/codegangsta/cli/flag.go	/^func withEnvHint(envVar, str string) string {$/;"	f
+ActionFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type ActionFunc func(*Context) error$/;"	t
+AfterFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type AfterFunc func(*Context) error$/;"	t
+BashCompleteFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type BashCompleteFunc func(*Context)$/;"	t
+BeforeFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type BeforeFunc func(*Context) error$/;"	t
+CommandNotFoundFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type CommandNotFoundFunc func(*Context, string)$/;"	t
+FlagStringFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type FlagStringFunc func(Flag) string$/;"	t
+OnUsageErrorFunc	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^type OnUsageErrorFunc func(context *Context, err error, isSubcommand bool) error$/;"	t
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/funcs.go	/^package cli$/;"	p
+AppHelpTemplate	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var AppHelpTemplate = `NAME:$/;"	v
+CommandHelpTemplate	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var CommandHelpTemplate = `NAME:$/;"	v
+DefaultAppComplete	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func DefaultAppComplete(c *Context) {$/;"	f
+HelpPrinter	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var HelpPrinter helpPrinter = printHelp$/;"	v
+ShowAppHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowAppHelp(c *Context) {$/;"	f
+ShowCommandCompletions	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowCommandCompletions(ctx *Context, command string) {$/;"	f
+ShowCommandHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowCommandHelp(ctx *Context, command string) error {$/;"	f
+ShowCompletions	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowCompletions(c *Context) {$/;"	f
+ShowSubcommandHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowSubcommandHelp(c *Context) error {$/;"	f
+ShowVersion	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func ShowVersion(c *Context) {$/;"	f
+SubcommandHelpTemplate	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var SubcommandHelpTemplate = `NAME:$/;"	v
+VersionPrinter	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var VersionPrinter = printVersion$/;"	v
+checkCommandCompletions	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkCommandCompletions(c *Context, name string) bool {$/;"	f
+checkCommandHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkCommandHelp(c *Context, name string) bool {$/;"	f
+checkCompletions	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkCompletions(c *Context) bool {$/;"	f
+checkHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkHelp(c *Context) bool {$/;"	f
+checkSubcommandHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkSubcommandHelp(c *Context) bool {$/;"	f
+checkVersion	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func checkVersion(c *Context) bool {$/;"	f
+cli	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^package cli$/;"	p
+helpCommand	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var helpCommand = Command{$/;"	v
+helpPrinter	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^type helpPrinter func(w io.Writer, templ string, data interface{})$/;"	t
+helpSubcommand	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^var helpSubcommand = Command{$/;"	v
+printHelp	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func printHelp(out io.Writer, templ string, data interface{}) {$/;"	f
+printVersion	Godeps/_workspace/src/github.com/codegangsta/cli/help.go	/^func printVersion(c *Context) {$/;"	f
+PACKAGE_NAME	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^PACKAGE_NAME = os.environ.get($/;"	v
+_combine_coverprofiles	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _combine_coverprofiles(coverprofiles):$/;"	f
+_gfmxr	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _gfmxr():$/;"	f
+_gfmxr_count	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _gfmxr_count():$/;"	f
+_is_go_runnable	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _is_go_runnable(line):$/;"	f
+_run	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _run(command):$/;"	f
+_test	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _test():$/;"	f
+_vet	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def _vet():$/;"	f
+main	Godeps/_workspace/src/github.com/codegangsta/cli/runtests	/^def main(sysargs=sys.argv[:]):$/;"	f
+Applicator	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^type Applicator interface {$/;"	t
+Apply	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (inj *injector) Apply(val interface{}) error {$/;"	f
+GetVal	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (i *injector) GetVal(t reflect.Type) reflect.Value {$/;"	f
+Injector	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^type Injector interface {$/;"	t
+InterfaceOf	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func InterfaceOf(value interface{}) reflect.Type {$/;"	f
+Invoke	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (inj *injector) Invoke(f interface{}) ([]reflect.Value, error) {$/;"	f
+Invoker	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^type Invoker interface {$/;"	t
+Map	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (i *injector) Map(val interface{}) TypeMapper {$/;"	f
+MapTo	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (i *injector) MapTo(val interface{}, ifacePtr interface{}) TypeMapper {$/;"	f
+New	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func New() Injector {$/;"	f
+Set	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (i *injector) Set(typ reflect.Type, val reflect.Value) TypeMapper {$/;"	f
+SetParent	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^func (i *injector) SetParent(parent Injector) {$/;"	f
+TypeMapper	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^type TypeMapper interface {$/;"	t
+inject	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^package inject$/;"	p
+injector	Godeps/_workspace/src/github.com/go-macaron/inject/inject.go	/^type injector struct {$/;"	t
+Append	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) Append(source interface{}, others ...interface{}) error {$/;"	f
+Close	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (rc *bytesReadCloser) Close() error {$/;"	f
+DEFAULT_SECTION	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^const ($/;"	c
+DefaultHeader	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^	PrettyFormat = true$/;"	v
+DeleteSection	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) DeleteSection(name string) {$/;"	f
+Empty	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func Empty() *File {$/;"	f
+File	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^type File struct {$/;"	t
+GetSection	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) GetSection(name string) (*Section, error) {$/;"	f
+LineBreak	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^var ($/;"	v
+Load	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func Load(source interface{}, others ...interface{}) (*File, error) {$/;"	f
+LooseLoad	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func LooseLoad(source interface{}, others ...interface{}) (*File, error) {$/;"	f
+NewSection	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) NewSection(name string) (*Section, error) {$/;"	f
+NewSections	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) NewSections(names ...string) (err error) {$/;"	f
+PrettyFormat	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^	varPattern = regexp.MustCompile(`%\\(([^\\)]+)\\)s`)$/;"	v
+Read	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (rc *bytesReadCloser) Read(p []byte) (n int, err error) {$/;"	f
+ReadCloser	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (s *sourceData) ReadCloser() (io.ReadCloser, error) {$/;"	f
+ReadCloser	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (s sourceFile) ReadCloser() (_ io.ReadCloser, err error) {$/;"	f
+Reload	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) Reload() (err error) {$/;"	f
+SaveTo	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) SaveTo(filename string) error {$/;"	f
+SaveToIndent	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) SaveToIndent(filename, indent string) error {$/;"	f
+Section	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) Section(name string) *Section {$/;"	f
+SectionStrings	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) SectionStrings() []string {$/;"	f
+Sections	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) Sections() []*Section {$/;"	f
+Version	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func Version() string {$/;"	f
+WriteTo	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) WriteTo(w io.Writer) (int64, error) {$/;"	f
+WriteToIndent	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) WriteToIndent(w io.Writer, indent string) (n int64, err error) {$/;"	f
+_DEPTH_VALUES	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^	DEFAULT_SECTION = "DEFAULT"$/;"	c
+_VERSION	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^	_DEPTH_VALUES = 99$/;"	c
+bytesReadCloser	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^type bytesReadCloser struct {$/;"	t
+dataSource	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^type dataSource interface {$/;"	t
+inSlice	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func inSlice(str string, s []string) bool {$/;"	f
+ini	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^package ini$/;"	p
+init	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func init() {$/;"	f
+loadSources	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func loadSources(looseMode bool, source interface{}, others ...interface{}) (_ *File, err error) {$/;"	f
+newFile	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func newFile(dataSources []dataSource, looseMode bool) *File {$/;"	f
+parseDataSource	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func parseDataSource(source interface{}) (dataSource, error) {$/;"	f
+reload	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^func (f *File) reload(s dataSource) error {$/;"	f
+sourceData	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^type sourceData struct {$/;"	t
+sourceFile	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^type sourceFile struct {$/;"	t
+varPattern	Godeps/_workspace/src/gopkg.in/ini.v1/ini.go	/^	LineBreak = "\\n"$/;"	v
+Bool	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Bool() (bool, error) {$/;"	f
+Duration	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Duration() (time.Duration, error) {$/;"	f
+Float64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Float64() (float64, error) {$/;"	f
+Float64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Float64s(delim string) []float64 {$/;"	f
+In	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) In(defaultVal string, candidates []string) string {$/;"	f
+InFloat64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InFloat64(defaultVal float64, candidates []float64) float64 {$/;"	f
+InInt	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InInt(defaultVal int, candidates []int) int {$/;"	f
+InInt64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InInt64(defaultVal int64, candidates []int64) int64 {$/;"	f
+InTime	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InTime(defaultVal time.Time, candidates []time.Time) time.Time {$/;"	f
+InTimeFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InTimeFormat(format string, defaultVal time.Time, candidates []time.Time) time.Time {$/;"	f
+InUint	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InUint(defaultVal uint, candidates []uint) uint {$/;"	f
+InUint64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) InUint64(defaultVal uint64, candidates []uint64) uint64 {$/;"	f
+Int	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Int() (int, error) {$/;"	f
+Int64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Int64() (int64, error) {$/;"	f
+Int64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Int64s(delim string) []int64 {$/;"	f
+Ints	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Ints(delim string) []int {$/;"	f
+Key	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^type Key struct {$/;"	t
+MustBool	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustBool(defaultVal ...bool) bool {$/;"	f
+MustDuration	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustDuration(defaultVal ...time.Duration) time.Duration {$/;"	f
+MustFloat64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustFloat64(defaultVal ...float64) float64 {$/;"	f
+MustInt	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustInt(defaultVal ...int) int {$/;"	f
+MustInt64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustInt64(defaultVal ...int64) int64 {$/;"	f
+MustString	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustString(defaultVal string) string {$/;"	f
+MustTime	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustTime(defaultVal ...time.Time) time.Time {$/;"	f
+MustTimeFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustTimeFormat(format string, defaultVal ...time.Time) time.Time {$/;"	f
+MustUint	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustUint(defaultVal ...uint) uint {$/;"	f
+MustUint64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) MustUint64(defaultVal ...uint64) uint64 {$/;"	f
+Name	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Name() string {$/;"	f
+RangeFloat64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) RangeFloat64(defaultVal, min, max float64) float64 {$/;"	f
+RangeInt	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) RangeInt(defaultVal, min, max int) int {$/;"	f
+RangeInt64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) RangeInt64(defaultVal, min, max int64) int64 {$/;"	f
+RangeTime	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) RangeTime(defaultVal, min, max time.Time) time.Time {$/;"	f
+RangeTimeFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) RangeTimeFormat(format string, defaultVal, min, max time.Time) time.Time {$/;"	f
+SetValue	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) SetValue(v string) {$/;"	f
+StrictFloat64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictFloat64s(delim string) ([]float64, error) {$/;"	f
+StrictInt64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictInt64s(delim string) ([]int64, error) {$/;"	f
+StrictInts	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictInts(delim string) ([]int, error) {$/;"	f
+StrictTimes	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictTimes(delim string) ([]time.Time, error) {$/;"	f
+StrictTimesFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictTimesFormat(format, delim string) ([]time.Time, error) {$/;"	f
+StrictUint64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictUint64s(delim string) ([]uint64, error) {$/;"	f
+StrictUints	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) StrictUints(delim string) ([]uint, error) {$/;"	f
+String	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) String() string {$/;"	f
+Strings	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Strings(delim string) []string {$/;"	f
+Time	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Time() (time.Time, error) {$/;"	f
+TimeFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) TimeFormat(format string) (time.Time, error) {$/;"	f
+Times	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Times(delim string) []time.Time {$/;"	f
+TimesFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) TimesFormat(format, delim string) []time.Time {$/;"	f
+Uint	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Uint() (uint, error) {$/;"	f
+Uint64	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Uint64() (uint64, error) {$/;"	f
+Uint64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Uint64s(delim string) []uint64 {$/;"	f
+Uints	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Uints(delim string) []uint {$/;"	f
+ValidFloat64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidFloat64s(delim string) []float64 {$/;"	f
+ValidInt64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidInt64s(delim string) []int64 {$/;"	f
+ValidInts	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidInts(delim string) []int {$/;"	f
+ValidTimes	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidTimes(delim string) []time.Time {$/;"	f
+ValidTimesFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidTimesFormat(format, delim string) []time.Time {$/;"	f
+ValidUint64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidUint64s(delim string) []uint64 {$/;"	f
+ValidUints	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) ValidUints(delim string) []uint {$/;"	f
+Validate	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Validate(fn func(string) string) string {$/;"	f
+Value	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) Value() string {$/;"	f
+getFloat64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getFloat64s(delim string, addInvalid, returnOnInvalid bool) ([]float64, error) {$/;"	f
+getInt64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getInt64s(delim string, addInvalid, returnOnInvalid bool) ([]int64, error) {$/;"	f
+getInts	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getInts(delim string, addInvalid, returnOnInvalid bool) ([]int, error) {$/;"	f
+getTimesFormat	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getTimesFormat(format, delim string, addInvalid, returnOnInvalid bool) ([]time.Time, error) {$/;"	f
+getUint64s	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getUint64s(delim string, addInvalid, returnOnInvalid bool) ([]uint64, error) {$/;"	f
+getUints	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func (k *Key) getUints(delim string, addInvalid, returnOnInvalid bool) ([]uint, error) {$/;"	f
+ini	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^package ini$/;"	p
+parseBool	Godeps/_workspace/src/gopkg.in/ini.v1/key.go	/^func parseBool(str string) (value bool, err error) {$/;"	f
+BOM	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (p *parser) BOM() error {$/;"	f
+_TOKEN_COMMENT	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^	_TOKEN_INVALID tokenType = iota$/;"	c
+_TOKEN_INVALID	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^const ($/;"	c
+_TOKEN_KEY	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^	_TOKEN_SECTION$/;"	c
+_TOKEN_SECTION	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^	_TOKEN_COMMENT$/;"	c
+cleanComment	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func cleanComment(in []byte) ([]byte, bool) {$/;"	f
+hasSurroundedQuote	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func hasSurroundedQuote(in string, quote byte) bool {$/;"	f
+ini	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^package ini$/;"	p
+newParser	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func newParser(r io.Reader) *parser {$/;"	f
+parse	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (f *File) parse(reader io.Reader) (err error) {$/;"	f
+parser	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^type parser struct {$/;"	t
+readContinuationLines	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (p *parser) readContinuationLines(val string) (string, error) {$/;"	f
+readKeyName	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func readKeyName(in []byte) (string, int, error) {$/;"	f
+readMultilines	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (p *parser) readMultilines(line, val, valQuote string) (string, error) {$/;"	f
+readUntil	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (p *parser) readUntil(delim byte) ([]byte, error) {$/;"	f
+readValue	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^func (p *parser) readValue(in []byte) (string, error) {$/;"	f
+tokenType	Godeps/_workspace/src/gopkg.in/ini.v1/parser.go	/^type tokenType int$/;"	t
+DeleteKey	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) DeleteKey(name string) {$/;"	f
+GetKey	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) GetKey(name string) (*Key, error) {$/;"	f
+HasKey	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) HasKey(name string) bool {$/;"	f
+HasValue	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) HasValue(value string) bool {$/;"	f
+Haskey	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) Haskey(name string) bool {$/;"	f
+Key	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) Key(name string) *Key {$/;"	f
+KeyStrings	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) KeyStrings() []string {$/;"	f
+Keys	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) Keys() []*Key {$/;"	f
+KeysHash	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) KeysHash() map[string]string {$/;"	f
+Name	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) Name() string {$/;"	f
+NewKey	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func (s *Section) NewKey(name, val string) (*Key, error) {$/;"	f
+Section	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^type Section struct {$/;"	t
+ini	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^package ini$/;"	p
+newSection	Godeps/_workspace/src/gopkg.in/ini.v1/section.go	/^func newSection(f *File, name string) *Section {$/;"	f
+AllCapsUnderscore	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^var ($/;"	v
+MapTo	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (f *File) MapTo(v interface{}) error {$/;"	f
+MapTo	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (s *Section) MapTo(v interface{}) error {$/;"	f
+MapTo	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func MapTo(v, source interface{}, others ...interface{}) error {$/;"	f
+MapToWithMapper	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func MapToWithMapper(v interface{}, mapper NameMapper, source interface{}, others ...interface{}) error {$/;"	f
+NameMapper	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^type NameMapper func(string) string$/;"	t
+ReflectFrom	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (f *File) ReflectFrom(v interface{}) error {$/;"	f
+ReflectFrom	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (s *Section) ReflectFrom(v interface{}) error {$/;"	f
+ReflectFrom	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func ReflectFrom(cfg *File, v interface{}) error {$/;"	f
+ReflectFromWithMapper	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func ReflectFromWithMapper(cfg *File, v interface{}, mapper NameMapper) error {$/;"	f
+TitleUnderscore	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^	}$/;"	v
+ini	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^package ini$/;"	p
+mapTo	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (s *Section) mapTo(val reflect.Value) error {$/;"	f
+parseDelim	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func parseDelim(actual string) string {$/;"	f
+parseFieldName	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (s *Section) parseFieldName(raw, actual string) string {$/;"	f
+reflectFrom	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func (s *Section) reflectFrom(val reflect.Value) error {$/;"	f
+reflectTime	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^var reflectTime = reflect.TypeOf(time.Now()).Kind()$/;"	v
+reflectWithProperType	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func reflectWithProperType(t reflect.Type, key *Key, field reflect.Value, delim string) error {$/;"	f
+setWithProperType	Godeps/_workspace/src/gopkg.in/ini.v1/struct.go	/^func setWithProperType(t reflect.Type, key *Key, field reflect.Value, delim string) error {$/;"	f
+Body	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (r *Request) Body() *RequestBody {$/;"	f
+Bytes	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (rb *RequestBody) Bytes() ([]byte, error) {$/;"	f
+ChangeStaticPath	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ChangeStaticPath(oldPath, newPath string) {$/;"	f
+Context	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^type Context struct {$/;"	t
+GetCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetCookie(name string) string {$/;"	f
+GetCookieFloat64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetCookieFloat64(name string) float64 {$/;"	f
+GetCookieInt	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetCookieInt(name string) int {$/;"	f
+GetCookieInt64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetCookieInt64(name string) int64 {$/;"	f
+GetFile	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetFile(name string) (multipart.File, *multipart.FileHeader, error) {$/;"	f
+GetSecureCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetSecureCookie(key string) (string, bool) {$/;"	f
+GetSuperSecureCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) GetSuperSecureCookie(secret, key string) (string, bool) {$/;"	f
+HTML	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) HTML(status int, name string, data ...interface{}) {$/;"	f
+HTMLSet	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) HTMLSet(status int, setName, tplName string, data ...interface{}) {$/;"	f
+Locale	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^type Locale interface {$/;"	t
+MaxMemory	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^var MaxMemory = int64(1024 * 1024 * 10)$/;"	v
+Next	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (c *Context) Next() {$/;"	f
+Params	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) Params(name string) string {$/;"	f
+ParamsEscape	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ParamsEscape(name string) string {$/;"	f
+ParamsFloat64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ParamsFloat64(name string) float64 {$/;"	f
+ParamsInt	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ParamsInt(name string) int {$/;"	f
+ParamsInt64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ParamsInt64(name string) int64 {$/;"	f
+Query	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) Query(name string) string {$/;"	f
+QueryEscape	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryEscape(name string) string {$/;"	f
+QueryFloat64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryFloat64(name string) float64 {$/;"	f
+QueryInt	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryInt(name string) int {$/;"	f
+QueryInt64	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryInt64(name string) int64 {$/;"	f
+QueryStrings	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryStrings(name string) []string {$/;"	f
+QueryTrim	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) QueryTrim(name string) string {$/;"	f
+ReadCloser	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (rb *RequestBody) ReadCloser() io.ReadCloser {$/;"	f
+Redirect	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) Redirect(location string, status ...int) {$/;"	f
+RemoteAddr	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) RemoteAddr() string {$/;"	f
+Request	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^type Request struct {$/;"	t
+RequestBody	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^type RequestBody struct {$/;"	t
+SaveToFile	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) SaveToFile(name, savePath string) error {$/;"	f
+ServeContent	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ServeContent(name string, r io.ReadSeeker, params ...interface{}) {$/;"	f
+ServeFile	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ServeFile(file string, names ...string) {$/;"	f
+ServeFileContent	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) ServeFileContent(file string, names ...string) {$/;"	f
+SetCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) SetCookie(name string, value string, others ...interface{}) {$/;"	f
+SetDefaultCookieSecret	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (m *Macaron) SetDefaultCookieSecret(secret string) {$/;"	f
+SetParams	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) SetParams(name, val string) {$/;"	f
+SetSecureCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) SetSecureCookie(name, value string, others ...interface{}) {$/;"	f
+SetSuperSecureCookie	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) SetSuperSecureCookie(secret, name, value string, others ...interface{}) {$/;"	f
+String	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (rb *RequestBody) String() (string, error) {$/;"	f
+Written	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (c *Context) Written() bool {$/;"	f
+defaultCookieSecret	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^var defaultCookieSecret string$/;"	v
+handler	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (c *Context) handler() Handler {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^package macaron$/;"	p
+parseForm	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) parseForm() {$/;"	f
+renderHTML	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) renderHTML(status int, setName, tplName string, data ...interface{}) {$/;"	f
+run	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (c *Context) run() {$/;"	f
+setRawContentHeader	Godeps/_workspace/src/gopkg.in/macaron.v1/context.go	/^func (ctx *Context) setRawContentHeader() {$/;"	f
+ColorLog	Godeps/_workspace/src/gopkg.in/macaron.v1/logger.go	/^var ($/;"	v
+LogTimeFormat	Godeps/_workspace/src/gopkg.in/macaron.v1/logger.go	/^	ColorLog      = true$/;"	v
+Logger	Godeps/_workspace/src/gopkg.in/macaron.v1/logger.go	/^func Logger() Handler {$/;"	f
+init	Godeps/_workspace/src/gopkg.in/macaron.v1/logger.go	/^func init() {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/logger.go	/^package macaron$/;"	p
+Action	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) Action(handler Handler) {$/;"	f
+Before	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) Before(handler BeforeHandler) {$/;"	f
+BeforeHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^type BeforeHandler func(rw http.ResponseWriter, req *http.Request) bool$/;"	t
+Classic	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func Classic() *Macaron {$/;"	f
+Config	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func Config() *ini.File {$/;"	f
+DEV	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^const ($/;"	c
+Env	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^var ($/;"	v
+FlashNow	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	Root string$/;"	v
+GetDefaultListenInfo	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func GetDefaultListenInfo() (string, int) {$/;"	f
+Handler	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^type Handler interface{}$/;"	t
+Handlers	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) Handlers(handlers ...Handler) {$/;"	f
+Macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^type Macaron struct {$/;"	t
+New	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func New() *Macaron {$/;"	f
+NewWithLogger	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func NewWithLogger(out io.Writer) *Macaron {$/;"	f
+PROD	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	DEV  = "development"$/;"	c
+Root	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	envLock sync.Mutex$/;"	v
+Run	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) Run(args ...interface{}) {$/;"	f
+ServeHTTP	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) ServeHTTP(rw http.ResponseWriter, req *http.Request) {$/;"	f
+SetConfig	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func SetConfig(source interface{}, others ...interface{}) (_ *ini.File, err error) {$/;"	f
+SetURLPrefix	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) SetURLPrefix(prefix string) {$/;"	f
+TEST	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	PROD = "production"$/;"	c
+Use	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) Use(handler Handler) {$/;"	f
+Version	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func Version() string {$/;"	f
+_VERSION	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^const _VERSION = "1.1.2.0312"$/;"	c
+cfg	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	FlashNow bool$/;"	v
+createContext	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func (m *Macaron) createContext(rw http.ResponseWriter, req *http.Request) *Context {$/;"	f
+envLock	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^	Env     = DEV$/;"	v
+init	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func init() {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^package macaron$/;"	p
+safeEnv	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func safeEnv() string {$/;"	f
+setENV	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func setENV(e string) {$/;"	f
+validateHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func validateHandler(h Handler) {$/;"	f
+validateHandlers	Godeps/_workspace/src/gopkg.in/macaron.v1/macaron.go	/^func validateHandlers(handlers []Handler) {$/;"	f
+Recovery	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^func Recovery() Handler {$/;"	f
+centerDot	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^	dunno     = []byte("???")$/;"	v
+dot	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^	centerDot = []byte("·")$/;"	v
+dunno	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^var ($/;"	v
+function	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^func function(pc uintptr) []byte {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^package macaron$/;"	p
+panicHtml	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^const ($/;"	c
+slash	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^	dot       = []byte(".")$/;"	v
+source	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^func source(lines [][]byte, n int) []byte {$/;"	f
+stack	Godeps/_workspace/src/gopkg.in/macaron.v1/recovery.go	/^func stack(skip int) []byte {$/;"	f
+Data	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (f *TplFile) Data() []byte {$/;"	f
+Delims	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	t
+DummyRender	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type DummyRender struct {$/;"	t
+Error	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) Error(int, ...string) {$/;"	f
+Error	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) Error(status int, message ...string) {$/;"	f
+Ext	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (f *TplFile) Ext() string {$/;"	f
+Get	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (ts *templateSet) Get(name string) *template.Template {$/;"	f
+GetDir	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (ts *templateSet) GetDir(name string) string {$/;"	f
+GetExt	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func GetExt(s string) string {$/;"	f
+HTML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTML(int, string, interface{}, ...HTMLOptions) {$/;"	f
+HTML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTML(status int, name string, data interface{}, htmlOpt ...HTMLOptions) {$/;"	f
+HTMLBytes	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTMLBytes(string, interface{}, ...HTMLOptions) ([]byte, error) {$/;"	f
+HTMLBytes	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTMLBytes(name string, data interface{}, htmlOpt ...HTMLOptions) ([]byte, error) {$/;"	f
+HTMLOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	t
+HTMLSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTMLSet(int, string, string, interface{}, ...HTMLOptions) {$/;"	f
+HTMLSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTMLSet(status int, setName, tplName string, data interface{}, htmlOpt ...HTMLOptions) {$/;"	f
+HTMLSetBytes	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTMLSetBytes(string, string, interface{}, ...HTMLOptions) ([]byte, error) {$/;"	f
+HTMLSetBytes	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTMLSetBytes(setName, tplName string, data interface{}, htmlOpt ...HTMLOptions) ([]byte, error) {$/;"	f
+HTMLSetString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTMLSetString(string, string, interface{}, ...HTMLOptions) (string, error) {$/;"	f
+HTMLSetString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTMLSetString(setName, tplName string, data interface{}, htmlOpt ...HTMLOptions) (string, error) {$/;"	f
+HTMLString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HTMLString(string, interface{}, ...HTMLOptions) (string, error) {$/;"	f
+HTMLString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HTMLString(name string, data interface{}, htmlOpt ...HTMLOptions) (string, error) {$/;"	f
+HasTemplateSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) HasTemplateSet(string) bool {$/;"	f
+HasTemplateSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) HasTemplateSet(name string) bool {$/;"	f
+JSON	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) JSON(int, interface{}) {$/;"	f
+JSON	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) JSON(status int, v interface{}) {$/;"	f
+JSONString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) JSONString(interface{}) (string, error) {$/;"	f
+JSONString	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) JSONString(v interface{}) (string, error) {$/;"	f
+ListFiles	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (fs TplFileSystem) ListFiles() []TemplateFile {$/;"	f
+Name	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (f *TplFile) Name() string {$/;"	f
+NewTemplateFileSystem	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func NewTemplateFileSystem(opt RenderOptions, omitData bool) TplFileSystem {$/;"	f
+NewTplFile	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func NewTplFile(name string, data []byte, ext string) *TplFile {$/;"	f
+ParseTplSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func ParseTplSet(tplSet string) (tplName string, tplDir string) {$/;"	f
+PlainText	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) PlainText(int, []byte) {$/;"	f
+PlainText	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) PlainText(status int, v []byte) {$/;"	f
+PrepareCharset	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func PrepareCharset(charset string) string {$/;"	f
+RawData	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) RawData(int, []byte) {$/;"	f
+RawData	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) RawData(status int, v []byte) {$/;"	f
+Render	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	t
+RenderOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	t
+Renderer	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func Renderer(options ...RenderOptions) Handler {$/;"	f
+Renderers	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func Renderers(options RenderOptions, tplSets ...string) Handler {$/;"	f
+Set	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (ts *templateSet) Set(name string, opt *RenderOptions) *template.Template {$/;"	f
+SetResponseWriter	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) SetResponseWriter(http.ResponseWriter) {$/;"	f
+SetResponseWriter	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) SetResponseWriter(rw http.ResponseWriter) {$/;"	f
+SetTemplatePath	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) SetTemplatePath(string, string) {$/;"	f
+SetTemplatePath	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) SetTemplatePath(setName, dir string) {$/;"	f
+Status	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) Status(int) {$/;"	f
+Status	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) Status(status int) {$/;"	f
+TemplateFile	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type ($/;"	t
+TemplateFileSystem	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	t
+TplFile	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type TplFile struct {$/;"	t
+TplFileSystem	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type TplFileSystem struct {$/;"	t
+TplRender	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type TplRender struct {$/;"	t
+XML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *DummyRender) XML(int, interface{}) {$/;"	f
+XML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) XML(status int, v interface{}) {$/;"	f
+_CONTENT_BINARY	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_LENGTH  = "Content-Length"$/;"	c
+_CONTENT_HTML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_JSON    = "application\/json"$/;"	c
+_CONTENT_JSON	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_BINARY  = "application\/octet-stream"$/;"	c
+_CONTENT_LENGTH	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_TYPE    = "Content-Type"$/;"	c
+_CONTENT_PLAIN	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_HTML    = "text\/html"$/;"	c
+_CONTENT_TYPE	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^const ($/;"	c
+_CONTENT_XHTML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_PLAIN   = "text\/plain"$/;"	c
+_CONTENT_XML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_XHTML   = "application\/xhtml+xml"$/;"	c
+_DEFAULT_CHARSET	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	_CONTENT_XML     = "text\/xml"$/;"	c
+_DEFAULT_TPL_SET_NAME	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^const ($/;"	c
+addYield	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) addYield(t *template.Template, tplName string, data interface{}) {$/;"	f
+bufpool	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^var ($/;"	v
+compile	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func compile(opt RenderOptions) *template.Template {$/;"	f
+data	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) data(status int, contentType string, v []byte) {$/;"	f
+execute	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) execute(t *template.Template, name string, data interface{}) (*bytes.Buffer, error) {$/;"	f
+helperFuncs	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^	}$/;"	v
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^package macaron$/;"	p
+newTemplateSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func newTemplateSet() *templateSet {$/;"	f
+prepareHTMLOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) prepareHTMLOptions(htmlOpt []HTMLOptions) HTMLOptions {$/;"	f
+prepareRenderOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func prepareRenderOptions(options []RenderOptions) RenderOptions {$/;"	f
+renderBytes	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) renderBytes(setName, tplName string, data interface{}, htmlOpt ...HTMLOptions) (*bytes.Buffer, error) {$/;"	f
+renderHTML	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func (r *TplRender) renderHTML(status int, setName, tplName string, data interface{}, htmlOpt ...HTMLOptions) {$/;"	f
+renderHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func renderHandler(opt RenderOptions, tplSets []string) Handler {$/;"	f
+renderNotRegistered	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^func renderNotRegistered() {$/;"	f
+templateSet	Godeps/_workspace/src/gopkg.in/macaron.v1/render.go	/^type templateSet struct {$/;"	t
+Before	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Before(before BeforeFunc) {$/;"	f
+BeforeFunc	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^type BeforeFunc func(ResponseWriter)$/;"	t
+CloseNotify	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) CloseNotify() <-chan bool {$/;"	f
+Flush	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Flush() {$/;"	f
+Hijack	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {$/;"	f
+NewResponseWriter	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func NewResponseWriter(rw http.ResponseWriter) ResponseWriter {$/;"	f
+ResponseWriter	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^type ResponseWriter interface {$/;"	t
+Size	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Size() int {$/;"	f
+Status	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Status() int {$/;"	f
+Write	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Write(b []byte) (int, error) {$/;"	f
+WriteHeader	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) WriteHeader(s int) {$/;"	f
+Written	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) Written() bool {$/;"	f
+callBefore	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^func (rw *responseWriter) callBefore() {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^package macaron$/;"	p
+responseWriter	Godeps/_workspace/src/gopkg.in/macaron.v1/response_writer.go	/^type responseWriter struct {$/;"	t
+ReturnHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^type ReturnHandler func(*Context, []reflect.Value)$/;"	t
+canDeref	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^func canDeref(val reflect.Value) bool {$/;"	f
+defaultReturnHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^func defaultReturnHandler() ReturnHandler {$/;"	f
+isByteSlice	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^func isByteSlice(val reflect.Value) bool {$/;"	f
+isError	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^func isError(val reflect.Value) bool {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/return_handler.go	/^package macaron$/;"	p
+Any	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Any(pattern string, h ...Handler) *Route {$/;"	f
+Combo	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Combo(pattern string, h ...Handler) *ComboRouter {$/;"	f
+ComboRouter	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type ComboRouter struct {$/;"	t
+Delete	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Delete(h ...Handler) *ComboRouter {$/;"	f
+Delete	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Delete(pattern string, h ...Handler) *Route {$/;"	f
+Get	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Get(h ...Handler) *ComboRouter {$/;"	f
+Get	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Get(pattern string, h ...Handler) (leaf *Route) {$/;"	f
+Group	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Group(pattern string, fn func(), h ...Handler) {$/;"	f
+Handle	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Handle(method string, pattern string, handlers []Handler) *Route {$/;"	f
+Handle	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type Handle func(http.ResponseWriter, *http.Request, Params)$/;"	t
+Head	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Head(h ...Handler) *ComboRouter {$/;"	f
+Head	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Head(pattern string, h ...Handler) *Route {$/;"	f
+InternalServerError	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) InternalServerError(handlers ...Handler) {$/;"	f
+Name	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Name(name string) {$/;"	f
+Name	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Route) Name(name string) {$/;"	f
+NewRouteMap	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func NewRouteMap() *routeMap {$/;"	f
+NewRouter	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func NewRouter() *Router {$/;"	f
+NotFound	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) NotFound(handlers ...Handler) {$/;"	f
+Options	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Options(h ...Handler) *ComboRouter {$/;"	f
+Options	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Options(pattern string, h ...Handler) *Route {$/;"	f
+Params	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type Params map[string]string$/;"	t
+Patch	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Patch(h ...Handler) *ComboRouter {$/;"	f
+Patch	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Patch(pattern string, h ...Handler) *Route {$/;"	f
+Post	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Post(h ...Handler) *ComboRouter {$/;"	f
+Post	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Post(pattern string, h ...Handler) *Route {$/;"	f
+Put	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) Put(h ...Handler) *ComboRouter {$/;"	f
+Put	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Put(pattern string, h ...Handler) *Route {$/;"	f
+Route	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) Route(pattern, methods string, h ...Handler) (route *Route) {$/;"	f
+Route	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type Route struct {$/;"	t
+Router	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type Router struct {$/;"	t
+ServeHTTP	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {$/;"	f
+SetAutoHead	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) SetAutoHead(v bool) {$/;"	f
+URLFor	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) URLFor(name string, pairs ...string) string {$/;"	f
+_HTTP_METHODS	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^var ($/;"	v
+add	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (rm *routeMap) add(method, pattern string, leaf *Leaf) {$/;"	f
+checkMethod	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) checkMethod(name string) {$/;"	f
+getLeaf	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (rm *routeMap) getLeaf(method, pattern string) *Leaf {$/;"	f
+group	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type group struct {$/;"	t
+handle	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (r *Router) handle(method, pattern string, handle Handle) *Route {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^package macaron$/;"	p
+route	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^func (cr *ComboRouter) route(fn func(string, ...Handler) *Route, method string, h ...Handler) *ComboRouter {$/;"	f
+routeMap	Godeps/_workspace/src/gopkg.in/macaron.v1/router.go	/^type routeMap struct {$/;"	t
+Delete	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func (sm *staticMap) Delete(name string) {$/;"	f
+Get	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func (sm *staticMap) Get(name string) *http.Dir {$/;"	f
+Open	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func (fs staticFileSystem) Open(name string) (http.File, error) {$/;"	f
+Set	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func (sm *staticMap) Set(dir *http.Dir) {$/;"	f
+Static	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func Static(directory string, staticOpt ...StaticOptions) Handler {$/;"	f
+StaticOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^type StaticOptions struct {$/;"	t
+Statics	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func Statics(opt StaticOptions, dirs ...string) Handler {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^package macaron$/;"	p
+newStaticFileSystem	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func newStaticFileSystem(directory string) staticFileSystem {$/;"	f
+prepareStaticOption	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func prepareStaticOption(dir string, opt StaticOptions) StaticOptions {$/;"	f
+prepareStaticOptions	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func prepareStaticOptions(dir string, options []StaticOptions) StaticOptions {$/;"	f
+staticFileSystem	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^type staticFileSystem struct {$/;"	t
+staticHandler	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^func staticHandler(ctx *Context, log *log.Logger, opt StaticOptions) bool {$/;"	f
+staticMap	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^type staticMap struct {$/;"	t
+statics	Godeps/_workspace/src/gopkg.in/macaron.v1/static.go	/^var statics = staticMap{sync.RWMutex{}, map[string]*http.Dir{}}$/;"	v
+Add	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) Add(pattern string, handle Handle) *Leaf {$/;"	f
+Leaf	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^type Leaf struct {$/;"	t
+Match	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) Match(url string) (Handle, Params, bool) {$/;"	f
+MatchTest	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func MatchTest(pattern, url string) bool {$/;"	f
+NewLeaf	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func NewLeaf(parent *Tree, pattern string, handle Handle) *Leaf {$/;"	f
+NewSubtree	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func NewSubtree(parent *Tree, pattern string) *Tree {$/;"	f
+NewTree	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func NewTree() *Tree {$/;"	f
+Tree	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^type Tree struct {$/;"	t
+URLPath	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (l *Leaf) URLPath(pairs ...string) string {$/;"	f
+_PATTERN_HOLDER	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^	_PATTERN_PATH_EXT                     \/\/ \/*.*$/;"	c
+_PATTERN_MATCH_ALL	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^	_PATTERN_HOLDER                       \/\/ \/:user$/;"	c
+_PATTERN_PATH_EXT	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^	_PATTERN_REGEXP                       \/\/ \/:id([0-9]+)$/;"	c
+_PATTERN_REGEXP	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^	_PATTERN_STATIC    patternType = iota \/\/ \/home$/;"	c
+_PATTERN_STATIC	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^const ($/;"	c
+addLeaf	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) addLeaf(pattern string, handle Handle) *Leaf {$/;"	f
+addNextSegment	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) addNextSegment(pattern string, handle Handle) *Leaf {$/;"	f
+addSubtree	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) addSubtree(segment, pattern string, handle Handle) *Leaf {$/;"	f
+checkPattern	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func checkPattern(pattern string) (typ patternType, rawPattern string, wildcards []string, reg *regexp.Regexp) {$/;"	f
+getNextWildcard	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func getNextWildcard(pattern string) (wildcard, _ string) {$/;"	f
+getRawPattern	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func getRawPattern(rawPattern string) string {$/;"	f
+getWildcards	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func getWildcards(pattern string) (string, []string) {$/;"	f
+isSpecialRegexp	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func isSpecialRegexp(pattern, regStr string, pos []int) bool {$/;"	f
+macaron	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^package macaron$/;"	p
+matchLeaf	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) matchLeaf(globLevel int, url string, params Params) (Handle, bool) {$/;"	f
+matchNextSegment	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) matchNextSegment(globLevel int, url string, params Params) (Handle, bool) {$/;"	f
+matchSubtree	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^func (t *Tree) matchSubtree(globLevel int, segment, url string, params Params) (Handle, bool) {$/;"	f
+patternType	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^type patternType int8$/;"	t
+wildcardPattern	Godeps/_workspace/src/gopkg.in/macaron.v1/tree.go	/^var wildcardPattern = regexp.MustCompile(`:[a-zA-Z0-9]+`)$/;"	v
+cmd	cmd/database.go	/^package cmd$/;"	p
+GetCmdWeb	cmd/web.go	/^func GetCmdWeb() cli.Command {$/;"	f
+cmd	cmd/web.go	/^package cmd$/;"	p
+runWeb	cmd/web.go	/^func runWeb(c *cli.Context) {$/;"	f
+BaseResp	handler/base.go	/^type BaseResp struct {$/;"	t
+CodeError	handler/base.go	/^	CodeSuccess = 200$/;"	c
+CodeSuccess	handler/base.go	/^const ($/;"	c
+MsgError	handler/base.go	/^	MsgSuccess = "success"$/;"	c
+MsgSuccess	handler/base.go	/^	CodeError = 500$/;"	c
+handler	handler/base.go	/^package handler$/;"	p
+ParamPOSTJSON	handler/param.go	/^type ParamPOSTJSON struct {$/;"	t
+V1DELETEParamHandler	handler/param.go	/^func V1DELETEParamHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1GETListParamsHandler	handler/param.go	/^func V1GETListParamsHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1GETParamHandler	handler/param.go	/^func V1GETParamHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1POSTParamHandler	handler/param.go	/^func V1POSTParamHandler(ctx *macaron.Context, param ParamPOSTJSON) (int, []byte) {$/;"	f
+V1PUTParamHandler	handler/param.go	/^func V1PUTParamHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+handler	handler/param.go	/^package handler$/;"	p
+V1DELETEPipelineHandler	handler/pipeline.go	/^func V1DELETEPipelineHandler(ctx *macaron.Context, reqData models.PipelineSpecTemplate) (int, []byte) {	$/;"	f
+V1GETPipelineHandler	handler/pipeline.go	/^func V1GETPipelineHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1POSTPipelineHandler	handler/pipeline.go	/^func V1POSTPipelineHandler(ctx *macaron.Context, reqData models.PipelineSpecTemplate) (int, []byte) {$/;"	f
+V1PUTPipelineHandler	handler/pipeline.go	/^func V1PUTPipelineHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1RunPipelineHandler	handler/pipeline.go	/^func V1RunPipelineHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1StatusGETHandler	handler/pipeline.go	/^func V1StatusGETHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+handler	handler/pipeline.go	/^package handler$/;"	p
+PointPOSTJSON	handler/point.go	/^type PointPOSTJSON struct {$/;"	t
+V1DELETEPointHandler	handler/point.go	/^func V1DELETEPointHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1GETPointHandler	handler/point.go	/^func V1GETPointHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1POSTPointHandler	handler/point.go	/^func V1POSTPointHandler(ctx *macaron.Context, point PointPOSTJSON) (int, []byte) {$/;"	f
+V1PUTPointHandler	handler/point.go	/^func V1PUTPointHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+handler	handler/point.go	/^package handler$/;"	p
+handler	handler/project.go	/^package handler$/;"	p
+handler	handler/requestData.go	/^package handler$/;"	p
+StagePOSTJSON	handler/stage.go	/^type StagePOSTJSON struct {$/;"	t
+V1DELETEStageHandler	handler/stage.go	/^func V1DELETEStageHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1GETStageHandler	handler/stage.go	/^func V1GETStageHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+V1POSTStageHandler	handler/stage.go	/^func V1POSTStageHandler(ctx *macaron.Context, stage StagePOSTJSON) (int, []byte) {$/;"	f
+V1PUTStageHandler	handler/stage.go	/^func V1PUTStageHandler(ctx *macaron.Context) (int, []byte) {$/;"	f
+handler	handler/stage.go	/^package handler$/;"	p
+handler	handler/workspace.go	/^package handler$/;"	p
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+main	main.go	/^func main() {$/;"	f
+main	main.go	/^package main$/;"	p
+InitLog	middleware/logger.go	/^func InitLog(runmode, path string) {$/;"	f
+logger	middleware/logger.go	/^func logger(runmode string) macaron.Handler {$/;"	f
+middleware	middleware/logger.go	/^package middleware$/;"	p
+SetMiddlewares	middleware/middleware.go	/^func SetMiddlewares(m *macaron.Macaron) {$/;"	f
+middleware	middleware/middleware.go	/^package middleware$/;"	p
+InitEtcd	models/models.go	/^func InitEtcd() error {$/;"	f
+models	models/models.go	/^package models$/;"	p
+models	models/param.go	/^package models$/;"	p
+models	models/pipeline.go	/^package models$/;"	p
+PipelineMetaData	models/pipelinetemplate.go	/^type PipelineMetaData struct {$/;"	t
+PipelineSpecTemplate	models/pipelinetemplate.go	/^type PipelineSpecTemplate struct {$/;"	t
+StageSpec	models/pipelinetemplate.go	/^type StageSpec struct {$/;"	t
+models	models/pipelinetemplate.go	/^package models$/;"	p
+models	models/point.go	/^package models$/;"	p
+models	models/project.go	/^package models$/;"	p
+models	models/stage.go	/^package models/;"	p
+models	models/workspace.go	/^package models$/;"	p
+dependence	module/dependence/dependence.go	/^package dependence$/;"	p
+etcd	module/etcd/etcd.go	/^package etcd$/;"	p
+kubernetes	module/kubernetes/bussiness.go	/^package kubernetes$/;"	p
+kubernetes	module/kubernetes/kubernetes.go	/^package kubernetes/;"	p
+kubernetes	module/kubernetes/namespace.go	/^package kubernetes$/;"	p
+kubernetes	module/kubernetes/pod.go	/^package kubernetes$/;"	p
+kubernetes	module/kubernetes/replicationcontroller.go	/^package kubernetes$/;"	p
+kubernetes	module/kubernetes/service.go	/^package kubernetes$/;"	p
+kubernetes	module/kubernetes/stage.go	/^package kubernetes$/;"	p
+InitModule	module/module.go	/^func InitModule() {$/;"	f
+module	module/module.go	/^package module$/;"	p
+organization	module/organization/organization.go	/^package organization$/;"	p
+pipeline	module/pipeline/pipeline.go	/^package pipeline$/;"	p
+pipeline	module/pipeline/pipelineVersion.go	/^package pipeline$/;"	p
+project	module/project/project.go	/^package project$/;"	p
+scheduler	module/scheduler/scheduler.go	/^package scheduler$/;"	p
+stage	module/stage/stage.go	/^package stage$/;"	p
+stage	module/stage/stageVersion.go	/^package stage$/;"	p
+team	module/team/team.go	/^package team$/;"	p
+user	module/user/user.go	/^package user$/;"	p
+workspace	module/workspace/workspace.go	/^package workspace$/;"	p
+SetRouters	router/router.go	/^func SetRouters(m *macaron.Macaron) {$/;"	f
+router	router/router.go	/^package router$/;"	p
+Global	setting/setting.go	/^var ($/;"	v
+GlobalConf	setting/setting.go	/^type GlobalConf struct {$/;"	t
+InitConf	setting/setting.go	/^func InitConf(globalFilePath string, runtimeFilePath string) error {$/;"	f
+RunTime	setting/setting.go	/^	Global  *GlobalConf$/;"	v
+RunTimeConf	setting/setting.go	/^type RunTimeConf struct {$/;"	t
+setting	setting/setting.go	/^package setting$/;"	p
+InitTimer	utils/timer/timer.go	/^func InitTimer() {$/;"	f
+timer	utils/timer/timer.go	/^package timer$/;"	p
+utils	utils/utils.go	/^package utils$/;"	p
+SetVesselMacaron	web/web.go	/^func SetVesselMacaron(m *macaron.Macaron) {$/;"	f
+web	web/web.go	/^package web$/;"	p

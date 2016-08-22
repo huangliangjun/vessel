@@ -1,17 +1,6 @@
 package module
 
-// log "github.com/Sirupsen/logrus"
-// "github.com/jinzhu/gorm"
-
-// const (
-// 	//MaxIdleConnNum : MaxIdleConnNum
-// 	MaxIdleConnNum = 0
-// 	// MaxOpenConnNum : MaxOpenConnNum
-// 	MaxOpenConnNum = 100
-// )
-
-// var db *gorm.DB
-
+// InitModule for vessel
 func InitModule() {
 
 	// var err error

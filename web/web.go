@@ -1,13 +1,12 @@
 package web
 
 import (
-	"gopkg.in/macaron.v1"
-
 	"github.com/containerops/vessel/middleware"
-	_ "github.com/containerops/vessel/models"
 	"github.com/containerops/vessel/router"
+	"gopkg.in/macaron.v1"
 )
 
+// SetVesselMacaron set middle wares and routers to macaron
 func SetVesselMacaron(m *macaron.Macaron) {
 	//Setting Middleware
 	middleware.SetMiddlewares(m)

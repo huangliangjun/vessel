@@ -1,12 +1,38 @@
 package utils
 
-func TransMapToStr(sourceMap map[string]string) string {
-	result := "{"
+import (
+	"crypto/md5"
+	"encoding/hex"
+	"strconv"
+	"sync"
+	"time"
+)
 
-	for k, v := range sourceMap {
-		result += `"` + k + `":"` + v + `"`
+var (
+	uuidLock *sync.Mutex
+	lastNum  int64
+)
+
+func init() {
+	uuidLock = new(sync.Mutex)
+}
+
+// UUID generate unique values
+func UUID() string {
+	uuidLock.Lock()
+	result := time.Now().UnixNano()
+
+	for lastNum == result {
+		result = time.Now().UnixNano()
 	}
+	lastNum = result
+	uuidLock.Unlock()
+	return MD5String(strconv.Itoa(int(lastNum)))
+}
 
-	result += "}"
-	return result
+// MD5String MD5 string
+func MD5String(input string) string {
+	h := md5.New()
+	h.Write([]byte(input))
+	return hex.EncodeToString(h.Sum(nil))
 }

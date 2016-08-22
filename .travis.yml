@@ -1,0 +1,21 @@
+language: go
+
+go:
+  - 1.5.3
+
+env:
+   global:
+      - "GO15VENDOREXPERIMENT=1"
+sudo: false
+
+before_install:
+  - go get github.com/golang/lint/golint
+  - go get github.com/GeertJohan/fgt
+
+install: true
+
+script:
+  - sed -i "s/containerops/zenlinTechnofreak/g" `find ./ -type f |grep -v vendor |grep -v .git |grep -v Godeps`
+  - go vet `go list  ./... |grep -v /vendor/`
+  - fgt $HOME/gopath/bin/golint ./... |grep -v vendor/ | tee /dev/stderr
+  - go build

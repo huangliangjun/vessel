@@ -1,119 +1,138 @@
 package kubernetes
 
 import (
-	// "encoding/json"
-	// "errors"
 	"fmt"
+	"log"
 	"time"
 
-	// "k8s.io/kubernetes/pkg/api"
 	"github.com/containerops/vessel/models"
+	"github.com/containerops/vessel/utils/timer"
 	"k8s.io/kubernetes/pkg/api"
 	"k8s.io/kubernetes/pkg/labels"
 	"k8s.io/kubernetes/pkg/watch"
-	// "k8s.io/kubernetes/pkg/util/intstr"
 )
 
-func CreateRC(piplelineVersion *models.PipelineVersion) error {
-	// piplineMetadata := piplelineVersion.MetaData
-	stagespecs := piplelineVersion.StageSpecs
-	for _, stagespec := range stagespecs {
-		rc := &api.ReplicationController{
-			ObjectMeta: api.ObjectMeta{
-				Labels: map[string]string{},
-			},
-			Spec: api.ReplicationControllerSpec{
-				Template: &api.PodTemplateSpec{
-					ObjectMeta: api.ObjectMeta{
-						Labels: map[string]string{},
-					},
+func createRC(stage *models.Stage) error {
+	if err := getClient(); err != nil {
+		return err
+	}
+	rc := &api.ReplicationController{
+		ObjectMeta: api.ObjectMeta{
+			Labels: map[string]string{},
+		},
+		Spec: api.ReplicationControllerSpec{
+			Template: &api.PodTemplateSpec{
+				ObjectMeta: api.ObjectMeta{
+					Labels: map[string]string{},
 				},
-				Selector: map[string]string{},
+			},
+			Selector: map[string]string{},
+		},
+	}
+	rc.Spec.Template.Spec.Containers = make([]api.Container, 1)
+	rc.SetName(stage.Name)
+	rc.SetNamespace(stage.Namespace)
+	rc.Labels[models.LabelKey] = stage.Name
+	rc.Spec.Replicas = int(stage.Replicas)
+	rc.Spec.Template.SetName(stage.Name)
+	rc.Spec.Template.Labels[models.LabelKey] = stage.Name
+	rc.Spec.Template.Spec.Containers[0] = api.Container{
+		Ports: []api.ContainerPort{
+			api.ContainerPort{
+				Name:          stage.Name,
+				ContainerPort: int(stage.Port),
+			},
+		},
+		Name:            stage.Name,
+		Image:           stage.Image,
+		ImagePullPolicy: "IfNotPresent",
+	}
+	if stage.EnvName != "" && stage.EnvValue != "" {
+		rc.Spec.Template.Spec.Containers[0].Env = []api.EnvVar{
+			api.EnvVar{
+				Name:  stage.EnvName,
+				Value: stage.EnvValue,
 			},
 		}
-
-		rc.Spec.Template.Spec.Containers = make([]api.Container, 1)
-		rc.SetName(stagespec.Name)
-		// rc.SetNamespace(piplineMetadata.Namespace)
-		// rc.SetNamespace(api.NamespaceDefault)
-		rc.SetNamespace("zenlin-namespace")
-		rc.Labels["app"] = stagespec.Name
-		rc.Spec.Replicas = stagespec.Replicas
-		rc.Spec.Template.SetName(stagespec.Name)
-		rc.Spec.Template.Labels["app"] = stagespec.Name
-		rc.Spec.Template.Spec.Containers[0] = api.Container{Ports: []api.ContainerPort{api.ContainerPort{
-			Name:          stagespec.Name,
-			ContainerPort: stagespec.Port}},
-			Name:  stagespec.Name,
-			Image: stagespec.Image}
-		rc.Spec.Selector["app"] = stagespec.Name
-
-		if _, err := CLIENT.ReplicationControllers("zenlin-namespace").Create(rc); err != nil {
-			fmt.Println("Create rc err : %v\n", err)
-			return err
-		}
+	}
+	rc.Spec.Selector[models.LabelKey] = stage.Name
+	if _, err := k8sClient.ReplicationControllers(stage.Namespace).Create(rc); err != nil {
+		log.Println("Create rc err :", err)
+		return err
 	}
 	return nil
 }
 
-func DeleteRC(pipelineVersion *models.PipelineVersion) error {
-	return nil
+func deleteRC(stage *models.Stage) error {
+	if err := getClient(); err != nil {
+		return err
+	}
+	return k8sClient.ReplicationControllers(stage.Namespace).Delete(stage.Name)
 }
 
-// WatchServiceStatus return status of the operation(specified by checkOp) of the pod, OK, TIMEOUT.
-func WatchRCStatus(Namespace string, labelKey string, labelValue string, timeout int64, checkOp string, ch chan string) {
-	if checkOp != string(watch.Deleted) && checkOp != string(watch.Added) {
-		fmt.Errorf("Params checkOp err, checkOp: %v", checkOp)
+func checkRC(stage *models.Stage) (bool, error) {
+	if err := getClient(); err != nil {
+		return false, err
 	}
-
-	//opts := api.ListOptions{FieldSelector: fields.Set{"kind": "pod"}.AsSelector()}
-	opts := api.ListOptions{LabelSelector: labels.Set{labelKey: labelValue}.AsSelector()}
-
-	w, err := CLIENT.ReplicationControllers(Namespace).Watch(opts)
+	rcs, err := k8sClient.ReplicationControllers(stage.Namespace).List(api.ListOptions{})
 	if err != nil {
-		ch <- Error
-		// return "", err
-		// fmt.Errorf("Get watch interface err")
+		return false, nil
 	}
-
-	t := time.NewTimer(time.Second * time.Duration(timeout))
-
-	for {
-		select {
-		case event, ok := <-w.ResultChan():
-			//fmt.Println(event.Type)
-			if !ok {
-				ch <- Error
-				return
-				// fmt.Errorf("Watch err\n")
-				// return "", errors.New("error occours from watch chanle")
-			}
-			//fmt.Println(event.Type)
-			if string(event.Type) == checkOp {
-				ch <- OK
-				return
-				// return "OK", nil
-			}
-
-		case <-t.C:
-			ch <- Timeout
-			return
-			// return "TIMEOUT", nil
-		}
-	}
-}
-
-// checkRC rc have no status, once the rc are found, it is with running status
-func CheckRC(namespace string, rcName string) bool {
-	rcs, err := CLIENT.ReplicationControllers(namespace).List(api.ListOptions{})
-	if err != nil {
-		fmt.Errorf("List rcs err: %v\n", err.Error())
-	}
-
 	for _, rc := range rcs.Items {
-		if rc.Name == rcName {
-			return true
+		if rc.Name == stage.Name {
+			return true, nil
 		}
 	}
-	return false
+	return false, nil
+}
+
+func watchRCStatus(stage *models.Stage, checkOp string, hourglass *timer.Hourglass, ch chan *models.K8SRes) {
+	if err := getClient(); err != nil {
+		ch <- formatResult(models.ResultFailed, err.Error())
+		return
+	}
+	if checkOp != string(watch.Added) && checkOp != string(watch.Deleted) {
+		ch <- formatResult(models.ResultFailed, fmt.Sprintf("Unexpected err when watch RC : name = %v", stage.Name))
+		return
+	}
+	if hourglass.GetLeftNanoseconds() <= 0 {
+		ch <- formatResult(models.ResultTimeout, fmt.Sprintf("Watch RC insterface timeout when name = %v", stage.Name))
+		return
+	}
+
+	opts := api.ListOptions{LabelSelector: labels.Set{models.LabelKey: stage.Name}.AsSelector()}
+	w, err := k8sClient.ReplicationControllers(stage.Namespace).Watch(opts)
+	if err != nil {
+		ch <- formatResult(models.ResultFailed, err.Error())
+		return
+	}
+	timeChan := time.After(time.Duration(hourglass.GetLeftNanoseconds()))
+	select {
+	case event, ok := <-w.ResultChan():
+		if !ok {
+			ch <- formatResult(models.ResultFailed, fmt.Sprintf("Unexpected err when watch RC : name = %v", stage.Name))
+			w.Stop()
+			return
+		}
+		if string(event.Type) == checkOp {
+			ch <- formatResult(models.ResultSuccess, "")
+			w.Stop()
+			return
+		}
+	case <-timeChan:
+		ch <- formatResult(models.ResultTimeout, fmt.Sprintf("Watch RC insterface timeout when name = %v", stage.Name))
+		w.Stop()
+		return
+	}
+}
+
+func getRCCount(stage *models.Stage) (int, error) {
+	if err := getClient(); err != nil {
+		return 0, err
+	}
+	rcs, err := k8sClient.ReplicationControllers(stage.Namespace).List(api.ListOptions{})
+	if err != nil {
+		return 0, err
+	}
+	return len(rcs.Items), nil
 }

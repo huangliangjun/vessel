@@ -3,68 +3,80 @@ package cmd
 import (
 	"crypto/tls"
 	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/codegangsta/cli"
-	"gopkg.in/macaron.v1"
+	"strings"
 
+	"errors"
+
+	"github.com/codegangsta/cli"
 	"github.com/containerops/vessel/models"
 	"github.com/containerops/vessel/setting"
 	"github.com/containerops/vessel/web"
+	"gopkg.in/macaron.v1"
 )
 
+// GetCmdWeb get a client command
 func GetCmdWeb() cli.Command {
-	var CmdWeb = cli.Command{
+	return cli.Command{
 		Name:        "web",
 		Usage:       "start vessel web service",
 		Description: "vessel is a CI module.",
 		Action:      runWeb,
 		Flags: []cli.Flag{
 			cli.StringFlag{
-				Name:  "address",
-				Value: setting.RunTime.Http.Host,
-				Usage: "web service listen ip, default is 0.0.0.0; if listen with Unix Socket, the value is sock file path.",
-			},
-			cli.StringFlag{
-				Name:  "port",
-				Value: setting.RunTime.Http.Port,
-				Usage: "web service listen at port 80; if run with https will be 443.",
+				Name:  "conf",
+				Value: "./conf/global.yaml",
+				Usage: "configuraion file path; defaults to './conf/global.yaml'",
 			},
 		},
 	}
-	return CmdWeb
 }
 
 func runWeb(c *cli.Context) {
-	if err := models.InitDatabase(); err != nil {
-		fmt.Println(err)
+	if err := parseConf(c); err != nil {
+		log.Println(err)
 		return
 	}
 	if err := models.InitEtcd(); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
-	models.SyncDatabase()
+	if err := models.InitK8S(); err != nil {
+		log.Println(err)
+		return
+	}
 
 	m := macaron.New()
 
 	//Set Macaron Web Middleware And Routers
 	web.SetVesselMacaron(m)
-	switch setting.RunTime.Http.ListenMode {
+	switch setting.RunTime.HTTP.ListenMode {
 	case "http":
-		listenaddr := fmt.Sprintf("%s:%s", c.String("address"), c.String("port"))
+		listenaddr := fmt.Sprintf("%s:%s", setting.RunTime.HTTP.Host, setting.RunTime.HTTP.Port)
 		if err := http.ListenAndServe(listenaddr, m); err != nil {
-			fmt.Printf("Start http service error: %v", err.Error())
+			log.Printf("Start http service error: %v", err.Error())
 		}
 		break
 	case "https":
-		listenaddr := fmt.Sprintf("%s:%s", c.String("address"), c.String("port"))
+		listenaddr := fmt.Sprintf("%s:%s", setting.RunTime.HTTP.Host, setting.RunTime.HTTP.Port)
 		server := &http.Server{Addr: listenaddr, TLSConfig: &tls.Config{MinVersion: tls.VersionTLS10}, Handler: m}
-		if err := server.ListenAndServeTLS(setting.RunTime.Http.HttpsCertFile, setting.RunTime.Http.HttpsKeyFile); err != nil {
-			fmt.Printf("Start Dockyard https service error: %v", err.Error())
+		if err := server.ListenAndServeTLS(setting.RunTime.HTTP.HTTPSCertFile, setting.RunTime.HTTP.HTTPSKeyFile); err != nil {
+			log.Printf("Start https service error: %v", err.Error())
 		}
 		break
 	default:
 		break
 	}
+}
+
+func parseConf(c *cli.Context) (err error) {
+	globalConf := c.String("conf")
+	if !strings.HasSuffix(globalConf, "global.yaml") {
+		err = errors.New("Conf file must be named 'global.yaml'")
+	} else {
+		err = setting.InitGlobalConf(globalConf)
+	}
+	return err
 }

@@ -6,21 +6,26 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
+// StagePOSTJSON stage JSON data for HTTP POST
 type StagePOSTJSON struct {
 }
 
-func V1POSTStageHandler(ctx *macaron.Context, stage StagePOSTJSON) (int, []byte) {
+// V1POSTStage handler for HTTP POST
+func V1POSTStage(ctx *macaron.Context, stage StagePOSTJSON) (int, []byte) {
 	return http.StatusOK, []byte("")
 }
 
-func V1PUTStageHandler(ctx *macaron.Context) (int, []byte) {
+// V1PUTStage handler for HTTP PUT
+func V1PUTStage(ctx *macaron.Context) (int, []byte) {
 	return http.StatusOK, []byte("")
 }
 
-func V1GETStageHandler(ctx *macaron.Context) (int, []byte) {
+// V1GETStage handler for HTTP GET
+func V1GETStage(ctx *macaron.Context) (int, []byte) {
 	return http.StatusOK, []byte("")
 }
 
-func V1DELETEStageHandler(ctx *macaron.Context) (int, []byte) {
+// V1DELETEStage handler for HTTP DELETE
+func V1DELETEStage(ctx *macaron.Context) (int, []byte) {
 	return http.StatusOK, []byte("")
 }
