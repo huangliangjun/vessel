@@ -1,11 +1,14 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/containerops/vessel/setting"
 	"github.com/coreos/etcd/client"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"k8s.io/kubernetes/pkg/client/restclient"
 	"k8s.io/kubernetes/pkg/client/unversioned"
 )
@@ -15,6 +18,21 @@ var (
 	EtcdClient client.Client
 	// K8sClient k8s client
 	K8sClient *unversioned.Client
+	// Db mysql client
+	Db *gorm.DB
+	//the sql data is valid (general)
+	DataValidStatus uint = 0
+	//the sql data is invalid (delete)
+	DataInValidStatus uint = 1
+	ErrTxHasBegan          = errors.New("<Gorm.Begin> transaction already begin")
+	ErrTxDone              = errors.New("<Gorm.Commit/Rollback> transaction not begin")
+	ErrMultiRows           = errors.New("<Gorm.QuerySeter> return multi rows")
+	ErrNoRows              = errors.New("<Gorm.QuerySeter> no row found")
+	ErrArgs                = errors.New("<Gorm.Args> args error may be empty")
+
+	VersionReady   = "ready"
+	VersionRunning = "running"
+	VersionDelete  = "Delete"
 )
 
 const (
@@ -61,5 +79,43 @@ func InitK8S() error {
 		}
 		K8sClient = client
 	}
+	return nil
+}
+
+// InitDatabase for mysql init
+func InitDatabase() error {
+	fmt.Println("the Db is ", Db)
+	var err error
+	if Db == nil {
+		dbArgs := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=%s&loc=%s&parseTime=%s",
+			setting.RunTime.Database.Username, setting.RunTime.Database.Password,
+			setting.RunTime.Database.Protocol, setting.RunTime.Database.Host, setting.RunTime.Database.Port,
+			setting.RunTime.Database.Schema, setting.RunTime.Database.Param["charset"],
+			setting.RunTime.Database.Param["loc"], setting.RunTime.Database.Param["parseTime"])
+		Db, err = gorm.Open("mysql", dbArgs)
+
+		if err != nil {
+			panic(err)
+		}
+		Db.LogMode(true)
+		Db.DB().SetMaxIdleConns(10)
+		Db.DB().SetMaxOpenConns(100)
+		Db.SingularTable(true)
+		if err = Sync(); err != nil {
+			panic(err)
+		}
+	}
+	return nil
+}
+
+//Sync database structs
+func Sync() error {
+	fmt.Println("Sync database structs ")
+	Db.AutoMigrate(&Pipeline{})
+	Db.AutoMigrate(&PipelineVersion{})
+	Db.AutoMigrate(&Point{})
+	Db.AutoMigrate(&Stage{})
+	Db.AutoMigrate(&StageVersion{})
+
 	return nil
 }

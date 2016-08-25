@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/containerops/vessel/models"
-	"github.com/containerops/vessel/module/pipeline"
+	//"github.com/containerops/vessel/module/pipeline"
 	"gopkg.in/macaron.v1"
 )
 
 // V1POSTPipeline handler for HTTP POST
 func V1POSTPipeline(ctx *macaron.Context, reqData models.PipelineSpecTemplate) (int, []byte) {
-	bytes := pipeline.StartPipeline(&reqData)
+	//bytes := pipeline.StartPipeline(&reqData)
+	bytes := []byte{}
 	return http.StatusOK, bytes
 }
 
@@ -26,7 +27,8 @@ func V1GETPipeline(ctx *macaron.Context) (int, []byte) {
 
 // V1DELETEPipeline handler for HTTP DELETE
 func V1DELETEPipeline(ctx *macaron.Context, reqData models.PipelineSpecTemplate) (int, []byte) {
-	bytes := pipeline.StopPipeline(&reqData)
+	//bytes := pipeline.StopPipeline(&reqData)
+	bytes := []byte{}
 	return http.StatusOK, bytes
 }
 
