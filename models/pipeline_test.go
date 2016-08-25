@@ -50,13 +50,13 @@ func Test_AddPipeline(t *testing.T) {
 	var pipelineSpecTemplate PipelineSpecTemplate
 	err := json.Unmarshal([]byte(pipelineJson), &pipelineSpecTemplate)
 	if err != nil {
-		t.Log("json Unmarshal failure")
+		t.Error("json Unmarshal failure")
 	} else {
 		t.Log(pipelineSpecTemplate.MetaData)
 	}
 	id, err := AddPipeline(&pipelineSpecTemplate)
 	if id == 0 || err != nil {
-		t.Log("AddPipeline failure ", err)
+		t.Error("AddPipeline failure ", err)
 	}
 
 }
@@ -70,7 +70,7 @@ func Test_QueryPipeline(t *testing.T) {
 	}
 	pipelineSpecTemplate, err := QueryPipeline(where)
 	if err != nil {
-		t.Log("QueryPipeline failure ", err)
+		t.Error("QueryPipeline failure ", err)
 	} else {
 		t.Log(pipelineSpecTemplate.MetaData)
 	}
@@ -82,7 +82,7 @@ func Test_DeletePipeline(t *testing.T) {
 	var pid int64 = 1
 	err := DeletePipeline(pid)
 	if err != nil {
-		t.Log("DeletePipeline failure ", err)
+		t.Error("DeletePipeline failure ", err)
 	} else {
 		t.Log("DeletePipeline success")
 	}
@@ -93,7 +93,7 @@ func Test_UpdatePipeline(t *testing.T) {
 	pipelineSpecTemplate := new(PipelineSpecTemplate)
 	err := UpdatePipeline(pipelineSpecTemplate)
 	if err != nil {
-		t.Log("UpdatePipeline failure ", err)
+		t.Error("UpdatePipeline failure ", err)
 	} else {
 		t.Log("UpdatePipeline success")
 	}
@@ -107,7 +107,7 @@ func Test_AddPipelineVersion(t *testing.T) {
 	}
 	id, err := AddPipelineVersion(pipelineVersion)
 	if id == -1 || id == 0 || err != nil {
-		t.Log("AddPipelineVersion failure ", err)
+		t.Error("AddPipelineVersion failure ", err)
 	} else {
 		t.Log("AddPipelineVersion success ", pipelineVersion)
 	}
@@ -121,7 +121,7 @@ func Test_UpdatePipelineVersion(t *testing.T) {
 	}
 	err := UpdatePipelineVersion(pipelineVersion)
 	if err != nil {
-		t.Log("UpdatePipelineVersion failure ", err)
+		t.Error("UpdatePipelineVersion failure ", err)
 	} else {
 		t.Log("UpdatePipelineVersion success")
 	}
@@ -131,7 +131,7 @@ func Test_QueryPipelineVersionByPid(t *testing.T) {
 	var pid int64 = 1
 	pipelineVersion, err := QueryPipelineVersionByPid(pid)
 	if err != nil {
-		t.Log("GetPipelineVersionByPid failure ", err)
+		t.Error("GetPipelineVersionByPid failure ", err)
 	} else {
 		t.Log("GetPipelineVersionByPid success ", pipelineVersion)
 	}

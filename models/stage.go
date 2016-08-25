@@ -80,12 +80,12 @@ type Container struct {
 	TTY            bool               `json:"tty,omitempty"`
 }
 
-//custom table name stage
+//custom set Stage's table name to be pipeline_stage
 func (Stage) TableName() string {
 	return "pipeline_stage"
 }
 
-//custom table name stage_version
+//custom set StageVersion's table name to be pipeline_stage_version
 func (StageVersion) TableName() string {
 	return "pipeline_stage_version"
 }

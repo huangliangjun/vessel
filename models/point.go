@@ -24,7 +24,7 @@ type Point struct {
 	DeletedAt  *time.Time `json:"deleted"`
 }
 
-//custom table name point
+//custom set Point's table name to be pipeline_point
 func (Point) TableName() string {
 	return "pipeline_point"
 }

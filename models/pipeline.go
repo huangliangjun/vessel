@@ -84,12 +84,12 @@ func init() {
 	}
 }
 
-//custom table name pipeline
+//custom  set Pipeline's table name to be pipeline
 func (Pipeline) TableName() string {
 	return "pipeline"
 }
 
-//custom table name pipeline_version
+//custom set PipelineVersion's table name to be pipeline_version
 func (PipelineVersion) TableName() string {
 	return "pipeline_version"
 }

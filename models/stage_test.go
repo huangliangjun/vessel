@@ -13,7 +13,7 @@ func Test_AddStageVersion(t *testing.T) {
 	}
 	id, err := AddStageVersion(stageVersion)
 	if id == -1 || id == 0 || err != nil {
-		t.Log("AddStageVersion failure ", err)
+		t.Error("AddStageVersion failure ", err)
 	} else {
 		t.Log("AddStageVersion success ", stageVersion)
 	}
@@ -27,7 +27,7 @@ func Test_UpdateStageVersion(t *testing.T) {
 	}
 	err := UpdateStageVersion(stageVersion)
 	if err != nil {
-		t.Log("UpdateStageVersion failure ", err)
+		t.Error("UpdateStageVersion failure ", err)
 	} else {
 		t.Log("UpdateStageVersion success")
 	}
@@ -37,7 +37,7 @@ func Test_QueryStageVersionBySid(t *testing.T) {
 	var sid int64 = 1
 	stageVersion, err := QueryStageVersionBySid(sid)
 	if err != nil {
-		t.Log("GetStageVersionBySid failure ", err)
+		t.Error("GetStageVersionBySid failure ", err)
 	} else {
 		t.Log("GetStageVersionBySid success ", stageVersion)
 	}
