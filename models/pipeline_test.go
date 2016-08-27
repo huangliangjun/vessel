@@ -46,7 +46,7 @@ var pipelineJson = `{
     }
 }`
 
-func Test_AddPipeline(t *testing.T) {
+func Test_PipelineAdd(t *testing.T) {
 	var pipelineSpecTemplate PipelineSpecTemplate
 	err := json.Unmarshal([]byte(pipelineJson), &pipelineSpecTemplate)
 	if err != nil {
@@ -54,85 +54,92 @@ func Test_AddPipeline(t *testing.T) {
 	} else {
 		t.Log(pipelineSpecTemplate.MetaData)
 	}
-	id, err := AddPipeline(&pipelineSpecTemplate)
-	if id == 0 || err != nil {
-		t.Error("AddPipeline failure ", err)
+	pipeline := pipelineSpecTemplate.MetaData
+
+	if err = pipeline.Add(); err != nil {
+		t.Error("Pipeline Add failure ", err)
+	} else {
+		t.Log("Pipeline Add success .")
 	}
 
 }
 
-func Test_QueryPipeline(t *testing.T) {
+func Test_PipelineQueryOne(t *testing.T) {
 
-	where := map[string]interface{}{
-		"id":        1,
-		"namespace": "vessel",
-		"name":      "vessel",
-	}
-	pipelineSpecTemplate, err := QueryPipeline(where)
-	if err != nil {
-		t.Error("QueryPipeline failure ", err)
-	} else {
-		t.Log(pipelineSpecTemplate.MetaData)
+	pipeline := &Pipeline{
+		Id:        1,
+		Namespace: "vessel",
+		Name:      "vessel",
+		//Status:    1,
 	}
 
-}
-
-func Test_DeletePipeline(t *testing.T) {
-
-	var pid int64 = 1
-	err := DeletePipeline(pid)
-	if err != nil {
-		t.Error("DeletePipeline failure ", err)
+	if err := pipeline.QueryOne(); err != nil {
+		t.Error("Pipeline QueryOne failure ", err)
 	} else {
-		t.Log("DeletePipeline success")
+		t.Log(pipeline)
 	}
 
 }
 
-func Test_UpdatePipeline(t *testing.T) {
-	pipelineSpecTemplate := new(PipelineSpecTemplate)
-	err := UpdatePipeline(pipelineSpecTemplate)
-	if err != nil {
-		t.Error("UpdatePipeline failure ", err)
+func Test_PipelineDelete(t *testing.T) {
+	pipeline := &Pipeline{
+		Id: 1,
+	}
+
+	if err := pipeline.Delete(); err != nil {
+		t.Error("Pipeline Delete failure ", err)
 	} else {
-		t.Log("UpdatePipeline success")
+		t.Log("Pipeline Delete success")
+	}
+
+}
+
+func Test_PipelineUpdate(t *testing.T) {
+	pipeline := &Pipeline{}
+
+	if err := pipeline.Update(); err != nil {
+		t.Error("Update Pipeline failure ", err)
+	} else {
+		t.Log("Update Pipeline success")
 	}
 }
 
 func Test_AddPipelineVersion(t *testing.T) {
-	pipelineVersion := &PipelineVersion{
+	pv := &PipelineVersion{
 		Pid:           1,
 		Detail:        "",
 		VersionStatus: "ready",
 	}
-	id, err := AddPipelineVersion(pipelineVersion)
-	if id == -1 || id == 0 || err != nil {
-		t.Error("AddPipelineVersion failure ", err)
+
+	if err := pv.Add(); err != nil {
+		t.Error("PipelineVersion Add failure ", err)
 	} else {
-		t.Log("AddPipelineVersion success ", pipelineVersion)
+		t.Log("PipelineVersion Add success ", pv)
 	}
 }
 
-func Test_UpdatePipelineVersion(t *testing.T) {
-	pipelineVersion := &PipelineVersion{
+func Test_PipelineVersionUpdate(t *testing.T) {
+	pv := &PipelineVersion{
 		Pid:           1,
 		Detail:        "",
 		VersionStatus: "running",
 	}
-	err := UpdatePipelineVersion(pipelineVersion)
-	if err != nil {
-		t.Error("UpdatePipelineVersion failure ", err)
+
+	if err := pv.Update(); err != nil {
+		t.Error("PipelineVersion Update failure ", err)
 	} else {
-		t.Log("UpdatePipelineVersion success")
+		t.Log("PipelineVersion Update success", pv)
 	}
 }
 
-func Test_QueryPipelineVersionByPid(t *testing.T) {
-	var pid int64 = 1
-	pipelineVersion, err := QueryPipelineVersionByPid(pid)
-	if err != nil {
-		t.Error("GetPipelineVersionByPid failure ", err)
+func Test_PipelineVersionQueryOne(t *testing.T) {
+	pv := &PipelineVersion{
+		Pid: 1,
+	}
+
+	if err := pv.QueryOne(); err != nil {
+		t.Error("PipelineVersion QueryOne failure ", err)
 	} else {
-		t.Log("GetPipelineVersionByPid success ", pipelineVersion)
+		t.Log("PipelineVersion QueryOne success ", pv)
 	}
 }

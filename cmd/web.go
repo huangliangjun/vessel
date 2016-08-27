@@ -73,7 +73,6 @@ func runWeb(c *cli.Context) {
 
 func parseConf(c *cli.Context) (err error) {
 	globalConf := c.String("conf")
-
 	if !strings.HasSuffix(globalConf, "global.yaml") {
 		err = errors.New("Conf file must be named 'global.yaml'")
 	} else {

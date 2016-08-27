@@ -5,13 +5,18 @@ import (
 )
 
 const (
-	StarPoint  PointKind = "star"
-	CheckPoint PointKind = "check"
-	EndPoint   PointKind = "end"
+	// StarPoint point type
+	StarPoint = "Start"
+	// CheckPoint point type
+	CheckPoint = "Check"
+	// EndPoint point type
+	EndPoint = "End"
+
+	StartPointMark = "$StartPointMark$"
+	EndPointMark   = "$EndPointMark$"
 )
 
-type PointKind string
-
+// Point data
 type Point struct {
 	Id         int64      `json:"id" gorm:"primary_key"`
 	Pid        int64      `json:"pid" gorm:"type:bigint;not null;index"`
@@ -29,13 +34,11 @@ func (Point) TableName() string {
 	return "pipeline_point"
 }
 
-//query pipeline's points data by pid
-func QueryPoints(where map[string]interface{}) (points []*Point, err error) {
+//query pipeline's points data
+func (p *Point) Query() ([]*Point, error) {
 	engineDb := Db
-	if pid, ok := where["pid"].(int); ok {
-		engineDb = engineDb.Where("pid=?", pid)
-	}
-
-	err = engineDb.Where("status = ?", DataValidStatus).Find(&points).Error
-	return
+	points := make([]*Point, 0, 10)
+	p.Status = DataValidStatus
+	err := engineDb.Find(&points, p).Error
+	return points, err
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -14,7 +13,7 @@ func main() {
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	cmdWeb := cmd.GetCmdWeb()
-	//cmdDatabase := cmd.GetCmdDatabase()
+
 	app := cli.NewApp()
 
 	app.Name = "Vessel"
@@ -23,7 +22,6 @@ func main() {
 
 	app.Commands = []cli.Command{
 		cmdWeb,
-		//cmdDatabase,
 	}
 
 	app.Flags = append(app.Flags, []cli.Flag{}...)

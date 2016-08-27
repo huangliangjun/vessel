@@ -1,7 +1,7 @@
 package models
 
 import (
-	"encoding/json"
+	//	"encoding/json"
 	"fmt"
 	"time"
 
@@ -95,176 +95,143 @@ func (PipelineVersion) TableName() string {
 }
 
 //add pipeline data
-func AddPipeline(pipelineSpecTemplate *PipelineSpecTemplate) (id int64, err error) {
+func (p *Pipeline) Add() error {
 	engineDb := Db
 	//begin transaction
 	tx := engineDb.Begin()
-
-	pipeline := Pipeline{
-		Namespace: pipelineSpecTemplate.MetaData.Namespace,
-		Name:      pipelineSpecTemplate.MetaData.Name,
-		Timeout:   pipelineSpecTemplate.MetaData.Timeout,
-	}
-
+	var err error
 	//save pipeline data
-	if err = tx.Create(&pipeline).Error; err != nil {
+	if err = tx.Create(p).Error; err != nil {
 		//rallback transaction
 		tx.Rollback()
-		return
+		return err
 	}
-	if pipelineSpecTemplate.MetaData.Points != nil {
-		for _, value := range pipelineSpecTemplate.MetaData.Points {
-			point := Point{
-				Pid:        pipeline.Id,
-				Type:       value.Type,
-				Triggers:   value.Triggers,
-				Conditions: value.Conditions,
-			}
-			//save  pipeline's point data
-			if err = tx.Create(&point).Error; err != nil {
-				tx.Rollback()
-				return
-			}
+
+	for _, point := range p.Points {
+		//save  pipeline's point data
+		point.Pid = p.Id
+		if err = tx.Create(point).Error; err != nil {
+			tx.Rollback()
+			return err
 		}
 	}
 
-	if pipelineSpecTemplate.MetaData.Stages != nil {
-		for _, value := range pipelineSpecTemplate.MetaData.Stages {
-			bsArtifacts, err := json.Marshal(value.Artifacts)
-			if err != nil {
-				tx.Rollback()
-				return -1, err
-			}
-			artifactsJson := string(bsArtifacts)
-			bsVolumes, err := json.Marshal(value.Volumes)
-			if err != nil {
-				tx.Rollback()
-				return -1, err
-			}
-			volumesJson := string(bsVolumes)
-			stage := Stage{
-				Pid:           pipeline.Id,
-				Name:          value.Name,
-				Type:          value.Type,
-				Dependencies:  value.Dependencies,
-				ArtifactsJson: artifactsJson,
-				VolumesJson:   volumesJson,
-			}
-			//save pipeline's stage data
-			if err = tx.Create(&stage).Error; err != nil {
-				tx.Rollback()
-				return -1, err
-			}
+	for _, stage := range p.Stages {
+		//save  pipeline's point data
+		err := stage.ObjToJson()
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		stage.Pid = p.Id
+		if err = tx.Create(stage).Error; err != nil {
+			tx.Rollback()
+			return err
 		}
 	}
 	//commit transaction
 	tx.Commit()
-	return pipeline.Id, err
+	return err
 }
 
 //Query pipeline data
-func QueryPipeline(where map[string]interface{}) (*PipelineSpecTemplate, error) {
+func (p *Pipeline) QueryOne() error {
 	engineDb := Db
-	var pipeline Pipeline
-	if id, ok := where["id"].(int); ok {
-		engineDb = engineDb.Where("id=?", id)
-	}
-	if namespace, ok := where["namespace"].(string); ok {
-		engineDb = engineDb.Where("namespace=?", namespace)
-	}
-	if name, ok := where["name"].(string); ok {
-		engineDb = engineDb.Where("name=?", name)
-	}
+	var err error
 	//query pipeline data
-	err := engineDb.Where("status = ?", DataValidStatus).First(&pipeline).Error
+	err = engineDb.First(p, p).Error
 	if err != nil {
-		return nil, err
+		return err
 	}
-	stageWhere := map[string]interface{}{
-		"pid": pipeline.Id,
-	}
+
 	//query pipeline's stages data
-	stages, err := QueryStages(stageWhere)
-	if err != nil {
-		return nil, err
-	}
-	for i, value := range stages {
-		var artifacts []*Artifact
-		var volumes []*Volume
-		json.Unmarshal([]byte(value.ArtifactsJson), &artifacts)
-		stages[i].Artifacts = artifacts
-		json.Unmarshal([]byte(value.VolumesJson), &volumes)
-		stages[i].Volumes = volumes
-	}
-	pipeline.Stages = stages
+	stage := &Stage{Pid: p.Id}
+	stages, err := stage.Query()
 
-	pointWhere := map[string]interface{}{
-		"pid": pipeline.Id,
+	if err != nil {
+		return err
 	}
+	for i, s := range stages {
+		err := s.JsonToObj()
+		stages[i] = s
+		if err != nil {
+			return err
+		}
+	}
+	p.Stages = stages
+
 	//query pipeline's points data
-	points, err := QueryPoints(pointWhere)
-	if err != nil {
-		return nil, err
-	}
-	pipeline.Points = points
-	pipelineSpecTemplate := new(PipelineSpecTemplate)
-	pipelineSpecTemplate.MetaData = &pipeline
+	point := &Point{Pid: p.Id}
+	points, err := point.Query()
 
-	return pipelineSpecTemplate, nil
+	if err != nil {
+		return err
+	}
+	p.Points = points
+
+	return nil
 }
 
 //delete pipeline data
-func DeletePipeline(id int64) (err error) {
+func (p *Pipeline) Delete() error {
 	engineDb := Db
 	//begin transaction
 	tx := engineDb.Begin()
+
 	//modify pipeline status
-	err = tx.Table("pipeline").Where("id=?", id).Update(&Pipeline{Status: DataInValidStatus}).Error
+	p.Status = DataInValidStatus
+	err := tx.Model(p).Update(p).Error
 	if err != nil {
 		//rollback transaction
 		tx.Rollback()
 	}
-	//modify pipeline'stage status
-	err = tx.Table("pipeline_stage").Where("pid=?", id).Update(&Stage{Status: DataInValidStatus}).Error
-	if err != nil {
-		tx.Rollback()
-	}
-	//modify pipeline'point status
-	err = tx.Table("pipeline_point").Where("pid=?", id).Update(&Point{Status: DataInValidStatus}).Error
-	if err != nil {
-		tx.Rollback()
-	}
-	//commit transaction
-	err = tx.Commit().Error
 
-	return
+	//modify pipeline'stage status
+	stage := &Stage{
+		Pid:    p.Id,
+		Status: DataInValidStatus,
+	}
+	err = tx.Model(&Stage{}).Update(stage).Error
+	if err != nil {
+		//rollback transaction
+		tx.Rollback()
+	}
+
+	//modify pipeline'point status
+	point := &Point{
+		Pid:    p.Id,
+		Status: DataInValidStatus,
+	}
+	err = tx.Model(&Point{}).Update(point).Error
+	if err != nil {
+		//rollback transaction
+		tx.Rollback()
+	}
+
+	//commit transaction
+	return tx.Commit().Error
 }
 
 //update pipeline data
-func UpdatePipeline(pipelineSpecTemplate *PipelineSpecTemplate) (err error) {
-	return
+func (p *Pipeline) Update() error {
+	engineDb := Db
+	return engineDb.Model(p).Update(p).Error
 }
 
-//save pipeline version data
-func AddPipelineVersion(pipelineVersion *PipelineVersion) (id int64, err error) {
+//add pipeline version data
+func (pv *PipelineVersion) Add() error {
 	engineDb := Db
-	err = engineDb.Create(pipelineVersion).Error
-	return pipelineVersion.Id, err
+	return engineDb.Create(pv).Error
 }
 
 //update pipeline version data
-func UpdatePipelineVersion(pipelineVersion *PipelineVersion) (err error) {
+func (pv *PipelineVersion) Update() error {
 	engineDb := Db
-	err = engineDb.Table("pipeline_version").Where("pid = ?", pipelineVersion.Pid).Update(
-		&PipelineVersion{
-			VersionStatus: pipelineVersion.VersionStatus}).Error
-	return
+	return engineDb.Model(pv).Update(pv).Error
 }
 
 //query pipeline version data by pid
-func QueryPipelineVersionByPid(pid int64) (*PipelineVersion, error) {
-	var pipelineVersion PipelineVersion
+func (pv *PipelineVersion) QueryOne() error {
 	engineDb := Db
-	err := engineDb.Where("pid = ?", pid).Where("status = ?", DataValidStatus).First(&pipelineVersion).Error
-	return &pipelineVersion, err
+	return engineDb.First(pv).Error
 }

@@ -16,10 +16,10 @@ const (
 	ResultTimeout = "Timeout"
 )
 
-// Executor executor for scheduler
-type Executor struct {
-	From []string
-	Info interface{}
+type Executor interface {
+	Start(readyMap map[string]bool, finishChan chan *ExecutedResult) bool
+	Stop(readyMap map[string]bool, finishChan chan *ExecutedResult) bool
+	GetFrom() []string
 }
 
 // ExecutedResult executor operating result

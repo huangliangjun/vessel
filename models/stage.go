@@ -3,7 +3,8 @@ package models
 import (
 	"time"
 
-	//"fmt"
+	"encoding/json"
+	//	"fmt"
 
 	"k8s.io/kubernetes/pkg/api/v1"
 )
@@ -90,40 +91,63 @@ func (StageVersion) TableName() string {
 	return "pipeline_stage_version"
 }
 
-//query pipeline'statge data by pid
-func QueryStages(where map[string]interface{}) (stages []*Stage, err error) {
+//query pipeline'statge data
+func (s *Stage) Query() ([]*Stage, error) {
 	engineDb := Db
-	if pid, ok := where["pid"].(int); ok {
-		engineDb = engineDb.Where("pid=?", pid)
+	stages := make([]*Stage, 0, 10)
+	s.Status = DataValidStatus
+	err := engineDb.Find(&stages, s).Error
+	return stages, err
+}
+
+// Obj Artifacts and Volumes To Json
+func (s *Stage) ObjToJson() error {
+	bsArtifacts, err := json.Marshal(s.Artifacts)
+	if err != nil {
+
+		return err
 	}
-	if name, ok := where["name"].(string); ok {
-		engineDb = engineDb.Where("name=?", name)
+	s.ArtifactsJson = string(bsArtifacts)
+
+	bsVolumes, err := json.Marshal(s.Volumes)
+	if err != nil {
+		return err
 	}
-	err = engineDb.Where("status = ?", DataValidStatus).Find(&stages).Error
-	return
+	s.VolumesJson = string(bsVolumes)
+	return nil
+}
+
+// ArtifactsJson and VolumesJson To Obj
+func (s *Stage) JsonToObj() error {
+	var artifacts []*Artifact
+	var volumes []*Volume
+	err := json.Unmarshal([]byte(s.ArtifactsJson), &artifacts)
+	if err != nil {
+		return err
+	}
+	s.Artifacts = artifacts
+	err = json.Unmarshal([]byte(s.VolumesJson), &volumes)
+	if err != nil {
+		return err
+	}
+	s.Volumes = volumes
+	return nil
 }
 
 //save stage version data
-func AddStageVersion(stageVersion *StageVersion) (id int64, err error) {
+func (sv *StageVersion) Add() error {
 	engineDb := Db
-	err = engineDb.Create(stageVersion).Error
-	return stageVersion.Id, err
+	return engineDb.Create(sv).Error
 }
 
 //update stage version data
-func UpdateStageVersion(stageVersion *StageVersion) (err error) {
+func (sv *StageVersion) Update() error {
 	engineDb := Db
-	err = engineDb.Table("pipeline_stage_version").Where("sid = ?", stageVersion.Sid).Update(
-		&StageVersion{
-			VersionStatus: stageVersion.VersionStatus}).Error
-	return
+	return engineDb.Model(sv).Update(sv).Error
 }
 
-//query stage version data by sid
-func QueryStageVersionBySid(sid int64) (*StageVersion, error) {
+//query stage version data
+func (sv *StageVersion) QueryOne() error {
 	engineDb := Db
-	var stageVersion StageVersion
-	err := engineDb.Where("sid=?", sid).Where("status = ?", DataValidStatus).First(&stageVersion).Error
-
-	return &stageVersion, err
+	return engineDb.First(sv).Error
 }

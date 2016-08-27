@@ -4,41 +4,45 @@ import (
 	"testing"
 )
 
-func Test_AddStageVersion(t *testing.T) {
-	stageVersion := &StageVersion{
+func Test_StageVersionAdd(t *testing.T) {
+	sv := &StageVersion{
 		Sid:           1,
 		Pvid:          1,
 		Detail:        "",
 		VersionStatus: "ready",
 	}
-	id, err := AddStageVersion(stageVersion)
-	if id == -1 || id == 0 || err != nil {
-		t.Error("AddStageVersion failure ", err)
+
+	if err := sv.Add(); err != nil {
+		t.Error("StageVersion Add failure ", err)
 	} else {
-		t.Log("AddStageVersion success ", stageVersion)
+		t.Log("AddStageVersion success ", sv)
 	}
 }
 
-func Test_UpdateStageVersion(t *testing.T) {
-	stageVersion := &StageVersion{
+func Test_StageVersionUpdate(t *testing.T) {
+	sv := &StageVersion{
 		Sid:           1,
 		Detail:        "",
 		VersionStatus: "running",
 	}
-	err := UpdateStageVersion(stageVersion)
-	if err != nil {
-		t.Error("UpdateStageVersion failure ", err)
+
+	if err := sv.Update(); err != nil {
+		t.Error("StageVersion Update failure ", err)
 	} else {
-		t.Log("UpdateStageVersion success")
+		t.Log("StageVersion Update success", sv)
 	}
 }
 
-func Test_QueryStageVersionBySid(t *testing.T) {
-	var sid int64 = 1
-	stageVersion, err := QueryStageVersionBySid(sid)
-	if err != nil {
-		t.Error("GetStageVersionBySid failure ", err)
+func Test_StageVersionQueryOne(t *testing.T) {
+	sv := &StageVersion{
+		Sid:           1,
+		Detail:        "",
+		VersionStatus: "running",
+	}
+
+	if err := sv.QueryOne(); err != nil {
+		t.Error("StageVersion QueryOne failure ", err)
 	} else {
-		t.Log("GetStageVersionBySid success ", stageVersion)
+		t.Log("StageVersion QueryOne success ", sv)
 	}
 }
