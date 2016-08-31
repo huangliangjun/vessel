@@ -1,0 +1,32 @@
+---
+run:
+  runMode: dev
+  logPath: log/vessel
+http:
+  listenMode: http
+  httpsCertFile: cert/containerops/containerops.crt
+  httpsKeyFile: cert/containerops/containerops.key
+  host: 0.0.0.0
+  port: 4488
+database:
+  username: root
+  password: 
+  protocol: tcp
+  host: 127.0.0.1
+  port: 3306
+  schema: vesseldb
+  param:
+    charset: utf8
+    parseTime: True
+    loc: Local
+etcd:
+  endpoints:
+    - host: 127.0.0.1
+      port: 4001
+    - host: localhost
+      port: 4001
+  username: etcd
+  password: etcd
+k8s:
+  host: 127.0.0.1
+  port: 8080 
