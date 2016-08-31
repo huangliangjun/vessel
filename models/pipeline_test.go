@@ -47,14 +47,14 @@ var pipelineJson = `{
 }`
 
 func Test_PipelineAdd(t *testing.T) {
-	var pipelineSpecTemplate PipelineSpecTemplate
-	err := json.Unmarshal([]byte(pipelineJson), &pipelineSpecTemplate)
+	var pipelineTemplate PipelineTemplate
+	err := json.Unmarshal([]byte(pipelineJson), &pipelineTemplate)
 	if err != nil {
 		t.Error("json Unmarshal failure")
 	} else {
-		t.Log(pipelineSpecTemplate.MetaData)
+		t.Log(pipelineTemplate.MetaData)
 	}
-	pipeline := pipelineSpecTemplate.MetaData
+	pipeline := pipelineTemplate.MetaData
 
 	if err = pipeline.Add(); err != nil {
 		t.Error("Pipeline Add failure ", err)
@@ -67,7 +67,7 @@ func Test_PipelineAdd(t *testing.T) {
 func Test_PipelineQueryOne(t *testing.T) {
 
 	pipeline := &Pipeline{
-		Id:        1,
+		//ID:        1,
 		Namespace: "vessel",
 		Name:      "vessel",
 		//Status:    1,
@@ -83,7 +83,7 @@ func Test_PipelineQueryOne(t *testing.T) {
 
 func Test_PipelineDelete(t *testing.T) {
 	pipeline := &Pipeline{
-		Id: 1,
+		ID: 1,
 	}
 
 	if err := pipeline.Delete(); err != nil {
@@ -106,9 +106,9 @@ func Test_PipelineUpdate(t *testing.T) {
 
 func Test_AddPipelineVersion(t *testing.T) {
 	pv := &PipelineVersion{
-		Pid:           1,
-		Detail:        "",
-		VersionStatus: "ready",
+		PID:    1,
+		Detail: "",
+		State:  "ready",
 	}
 
 	if err := pv.Add(); err != nil {
@@ -120,9 +120,9 @@ func Test_AddPipelineVersion(t *testing.T) {
 
 func Test_PipelineVersionUpdate(t *testing.T) {
 	pv := &PipelineVersion{
-		Pid:           1,
-		Detail:        "",
-		VersionStatus: "running",
+		PID:    1,
+		Detail: "",
+		State:  "running",
 	}
 
 	if err := pv.Update(); err != nil {
@@ -134,7 +134,7 @@ func Test_PipelineVersionUpdate(t *testing.T) {
 
 func Test_PipelineVersionQueryOne(t *testing.T) {
 	pv := &PipelineVersion{
-		Pid: 1,
+		PID: 1,
 	}
 
 	if err := pv.QueryOne(); err != nil {

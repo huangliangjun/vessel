@@ -6,10 +6,10 @@ import (
 
 func Test_StageVersionAdd(t *testing.T) {
 	sv := &StageVersion{
-		Sid:           1,
-		Pvid:          1,
-		Detail:        "",
-		VersionStatus: "ready",
+		SID:    1,
+		PvID:   1,
+		Detail: "",
+		State:  "ready",
 	}
 
 	if err := sv.Add(); err != nil {
@@ -21,9 +21,9 @@ func Test_StageVersionAdd(t *testing.T) {
 
 func Test_StageVersionUpdate(t *testing.T) {
 	sv := &StageVersion{
-		Sid:           1,
-		Detail:        "",
-		VersionStatus: "running",
+		SID:    1,
+		Detail: "",
+		State:  "running",
 	}
 
 	if err := sv.Update(); err != nil {
@@ -35,9 +35,9 @@ func Test_StageVersionUpdate(t *testing.T) {
 
 func Test_StageVersionQueryOne(t *testing.T) {
 	sv := &StageVersion{
-		Sid:           1,
-		Detail:        "",
-		VersionStatus: "running",
+		SID:    1,
+		Detail: "",
+		State:  "running",
 	}
 
 	if err := sv.QueryOne(); err != nil {

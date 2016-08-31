@@ -1,0 +1,50 @@
+{
+    "id": 1,
+    "name": "testadapter",
+    "namespace": "vessel",
+    "type": "container",
+    "replicas": 1,
+    "dependencies": "",
+    "artifacts": [
+        {
+            "name": "test",
+            "path": "gcr.io/google_containers/redis:e2e",
+            "lifecycle": {
+                "before": [
+                    "pwd",
+                    "date"
+                ],
+                "runtime": [
+                    "pwd",
+                    "date"
+                ],
+                "after": [
+                    "pwd",
+                    "date"
+                ]
+            },
+            "container": {
+                "workingDir": "",
+                "ports": [
+                    {
+                        "name": "redis",
+                        "hostPort": 30001,
+                        "containerPort": 6379
+                    }
+                ],
+                "env": [
+                    {
+                        "name": "dns",
+                        "value": "redis"
+                    }
+                ]
+            }
+        }
+    ],
+    "volumes": [
+        {
+            "name": "localvolume",
+            "hostPath": "/home/vessel"
+        }
+    ]
+}

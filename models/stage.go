@@ -4,49 +4,56 @@ import (
 	"time"
 
 	"encoding/json"
-	//	"fmt"
+	//"fmt"
 
-	"k8s.io/kubernetes/pkg/api/v1"
+	"github.com/containerops/vessel/utils/timer"
+	//	"k8s.io/kubernetes/pkg/api/v1"
 )
 
+//Stage Type
 const (
-	StageContainer StageKind = "container"
-	StageVM        StageKind = "vm"
-	StagePC        StageKind = "pc"
+	STAGECONTAINER = "container"
+	STAGEVM        = "vm"
+	STAGEPC        = "pc"
 )
-
-type StageKind string
 
 // Stage stage data
 type Stage struct {
-	ID            int64       `json:"id" gorm:"primary_key"`
-	Pid           int64       `json:"pid" gorm:"type:bigint;not null;index"`
-	Name          string      `json:"name"  binding:"Required" gorm:"type:varchar(30);unique"`
-	Type          string      `json:"type"  binding:"In(container,vm,pc)" gorm:"type:varchar(20)"`
-	Dependencies  string      `json:"dependencies,omitempty" gorm:"varchar(255)"` // eg : "a,b,c"
-	Artifacts     []*Artifact `json:"artifacts" binding:"Required" gorm:"-"`
-	Volumes       []*Volume   `json:"volumes,omitempty" gorm:"-"`
-	ArtifactsJson string      `json:"-" gorm:"column:artifactsJson;type:text;not null"` // json type
-	VolumesJson   string      `json:"-" gorm:"column:volumesJson;type:text;not null"`   // json type
-	Status        uint        `json:"status" gorm:"type:tinyint;default:0"`
-	CreatedAt     *time.Time  `json:"created" `
-	UpdatedAt     *time.Time  `json:"updated"`
-	DeletedAt     *time.Time  `json:"deleted"`
+	ID            uint64           `json:"id" gorm:"primary_key"`
+	PID           uint64           `json:"pid" gorm:"type:int;not null;index"`
+	Namespace     string           `json:"namespace" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
+	Name          string           `json:"name" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
+	Replicas      uint             `json:"replicas" gorm:"type:int;default:0"`
+	PipelineName  string           `json:"-" sql:"-"`
+	Type          string           `json:"type"  binding:"In(container,vm,pc)" gorm:"varchar(20)"`
+	Dependencies  string           `json:"dependencies,omitempty" gorm:"varchar(255)"` // eg : "a,b,c"
+	Status        uint             `json:"status" gorm:"type:int;default:0"`
+	Artifacts     []Artifact       `json:"artifacts"  sql:"-"`
+	Volumes       []Volume         `json:"volumes"  sql:"-"`
+	ArtifactsJSON string           `json:"-" gorm:"column:artifactsJson;type:text;not null"` // json type
+	VolumesJSON   string           `json:"-" gorm:"column:volumesJson;type:text;not null"`   // json type
+	Hourglass     *timer.Hourglass `json:"-" sql:"-"`
+	CreatedAt     *time.Time       `json:"created" `
+	UpdatedAt     *time.Time       `json:"updated"`
+	DeletedAt     *time.Time       `json:"deleted"`
 }
 
 // StageVersion data
 type StageVersion struct {
-	Id            int64      `json:"id" gorm:"primary_key"`
-	Sid           int64      `json:"sid" gorm:"type:bigint;not null"`
-	Pvid          int64      `json:"pvid" gorm:"type:bigint;not null"`
-	Detail        string     `json:"detail" gorm:"type:text;"`
-	VersionStatus string     `json:"versionStatus" gorm:"column:versionStatus;type:varchar(20);not null;"`
-	Status        uint       `json:"status" gorm:"type:tinyint;default:0"`
-	CreatedAt     *time.Time `json:"created" `
-	UpdatedAt     *time.Time `json:"updated"`
-	DeletedAt     *time.Time `json:"deleted"`
+	ID           uint64        `json:"id" gorm:"primary_key"`
+	PvID         uint64        `json:"pvid" gorm:"type:int;not null"`
+	SID          uint64        `json:"sid" gorm:"type:int;not null"`
+	State        string        `json:"state" gorm:"column:state;type:varchar(20)"`
+	Detail       string        `json:"detail" gorm:"type:text;"`
+	MetaData     *Stage        `json:"-" sql:"-"`
+	PointVersion *PointVersion `json:"-" sql:"-"`
+	Status       uint          `json:"status" gorm:"type:tinyint;default:0"`
+	CreatedAt    *time.Time    `json:"created" `
+	UpdatedAt    *time.Time    `json:"updated"`
+	DeletedAt    *time.Time    `json:"deleted"`
 }
 
+// Artifact data
 type Artifact struct {
 	Name      string     `json:"name"`
 	Path      string     `json:"path"`
@@ -54,49 +61,65 @@ type Artifact struct {
 	Container *Container `json:"container,omitempty"`
 }
 
+// Lifecycle data
 type Lifecycle struct {
 	Before  []string `json:"before,omitempty"`
 	Runtime []string `json:"runtime,omitempty"`
 	After   []string `json:"after,omitempty"`
 }
 
-type Volume struct {
-	Name                 string                               `json:"name"`
-	HostPath             *v1.HostPathVolumeSource             `json:"hostPath,omitempty"`
-	EmptyDir             *v1.EmptyDirVolumeSource             `json:"emptyDir,omitempty"`
-	AWSElasticBlockStore *v1.AWSElasticBlockStoreVolumeSource `json:"awsElasticBlockStore,omitempty"`
-	CephFS               *v1.CephFSVolumeSource               `json:"cephfs,omitempty"`
-}
-
+// Container data
 type Container struct {
-	WorkingDir     string             `json:"workingDir,omitempty"`
-	Ports          []v1.ContainerPort `json:"ports,omitempty"`
-	Env            []v1.EnvVar        `json:"env,omitempty"`
-	VolumeMounts   []v1.VolumeMount   `json:"volumeMounts,omitempty"`
-	LivenessProbe  *v1.Probe          `json:"livenessProbe,omitempty"`
-	ReadinessProbe *v1.Probe          `json:"readinessProbe,omitempty"`
-	PullPolicy     v1.PullPolicy      `json:"PullPolicy,omitempty"`
-	Stdin          bool               `json:"stdin,omitempty"`
-	StdinOnce      bool               `json:"stdinOnce,omitempty"`
-	TTY            bool               `json:"tty,omitempty"`
+	WorkingDir string          `json:"workingDir,omitempty"`
+	Ports      []ContainerPort `json:"ports,omitempty"`
+	Env        []EnvVar        `json:"env,omitempty"`
 }
 
-//custom set Stage's table name to be pipeline_stage
-func (Stage) TableName() string {
-	return "pipeline_stage"
+// ContainerPort data
+type ContainerPort struct {
+	Name          string `json:"name,omitempty"`
+	HostPort      int32  `json:"hostPort,omitempty"`
+	ContainerPort int32  `json:"containerPort,omitempty"`
 }
 
-//custom set StageVersion's table name to be pipeline_stage_version
+// EnvVar data
+type EnvVar struct {
+	Name  string `json:"name,omitempty"`
+	Value string `json:"value,omitempty"`
+}
+
+// Volume data
+type Volume struct {
+	Name     string `json:"name,omitempty"`
+	HostPath string `json:"hostPath,omitempty"`
+}
+
+// StageResult stage result
+type StageResult struct {
+	Namespace string `json:"-"`
+	ID        uint64 `json:"stageVersionID"`
+	Name      string `json:"stageName"`
+	Status    string `json:"runResult"`
+	Detail    string `json:"detail"`
+}
+
+// custom set Stage's table name is stage in db
+func (s *Stage) TableName() string {
+	return "stage"
+}
+
+// custom set StageVersion's table name is pipeline_stage_version in db
 func (StageVersion) TableName() string {
 	return "pipeline_stage_version"
 }
 
 //query pipeline'statge data
 func (s *Stage) Query() ([]*Stage, error) {
-	engineDb := Db
+	engineDb := db
 	stages := make([]*Stage, 0, 10)
-	s.Status = DataValidStatus
+	//s.Status = DataValidStatus
 	err := engineDb.Find(&stages, s).Error
+
 	return stages, err
 }
 
@@ -107,26 +130,26 @@ func (s *Stage) ObjToJson() error {
 
 		return err
 	}
-	s.ArtifactsJson = string(bsArtifacts)
+	s.ArtifactsJSON = string(bsArtifacts)
 
 	bsVolumes, err := json.Marshal(s.Volumes)
 	if err != nil {
 		return err
 	}
-	s.VolumesJson = string(bsVolumes)
+	s.VolumesJSON = string(bsVolumes)
 	return nil
 }
 
 // ArtifactsJson and VolumesJson To Obj
 func (s *Stage) JsonToObj() error {
-	var artifacts []*Artifact
-	var volumes []*Volume
-	err := json.Unmarshal([]byte(s.ArtifactsJson), &artifacts)
+	var artifacts []Artifact
+	var volumes []Volume
+	err := json.Unmarshal([]byte(s.ArtifactsJSON), &artifacts)
 	if err != nil {
 		return err
 	}
 	s.Artifacts = artifacts
-	err = json.Unmarshal([]byte(s.VolumesJson), &volumes)
+	err = json.Unmarshal([]byte(s.VolumesJSON), &volumes)
 	if err != nil {
 		return err
 	}
@@ -136,18 +159,18 @@ func (s *Stage) JsonToObj() error {
 
 //save stage version data
 func (sv *StageVersion) Add() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.Create(sv).Error
 }
 
 //update stage version data
 func (sv *StageVersion) Update() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.Model(sv).Update(sv).Error
 }
 
 //query stage version data
 func (sv *StageVersion) QueryOne() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.First(sv).Error
 }

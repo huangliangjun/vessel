@@ -1,30 +1,45 @@
 package point
 
 import (
+	//	"fmt"
+
 	"github.com/containerops/vessel/models"
-	"github.com/containerops/vessel/module/stage"
 )
 
-type Point struct {
-	Info *models.Stage
-	From []string
-}
-
-func (p Point) Start(readyMap map[string]bool, finishChan chan *models.ExecutedResult) bool {
-	for _, from := range p.From {
-		if isReady, _ := readyMap[from]; !isReady {
-			return false
+func CheckPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, bool) {
+	meet := true
+	ended := false
+	if pointVsn.Kind == models.StartPoint {
+		err := AddAndUpdate(pointVsn)
+		if err != nil {
+			return meet, ended
+		}
+		return meet, ended
+	}
+	for _, condition := range pointVsn.Conditions {
+		if meet := readyMap[condition]; !meet {
+			return meet, ended
 		}
 	}
-	go stage.StartStage(p.Info, finishChan)
-	return true
+	err := AddAndUpdate(pointVsn)
+	if err != nil {
+		return meet, ended
+	}
+	ended = pointVsn.Kind == models.EndPoint
+	return meet, ended
 }
 
-func (p Point) Stop(readyMap map[string]bool, finishChan chan *models.ExecutedResult) bool {
-	go stage.StopStage(p.Info, finishChan)
-	return true
-}
+func AddAndUpdate(pointVsn *models.PointVersion) error {
+	if pointVsn.Kind != models.TemporaryPoint {
+		pointVsn.State = models.StateReady
+		if err := pointVsn.Add(); err != nil {
+			return err
+		}
+		pointVsn.State = models.StateRunning
+		if err := pointVsn.Update(); err != nil {
+			return err
+		}
+	}
 
-func (p Point) GetFrom() []string {
-	return p.From
+	return nil
 }

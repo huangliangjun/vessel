@@ -9,7 +9,7 @@ const (
 	WatchDeleted = "DELETED"
 )
 
-// K8SRes call result from K8S
+// K8SRes k8s result
 type K8SRes struct {
 	Result string
 	Detail string

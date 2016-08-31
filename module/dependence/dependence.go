@@ -6,174 +6,180 @@ import (
 	"strings"
 	"time"
 
+	"encoding/json"
 	"log"
 
-	"encoding/json"
-
 	"github.com/containerops/vessel/models"
-	"github.com/containerops/vessel/module/point"
 	"github.com/containerops/vessel/utils"
 	"github.com/containerops/vessel/utils/timer"
 )
 
-// CheckPipeline check point dependence
-func CheckPipeline(pipeline *models.Pipeline) error {
-	if err := checkUserPoint(pipeline.Points); err != nil {
-		return err
-	}
+// ParsePipelineVersion parse executor map
+func ParsePipelineVersion(pipelineVsn *models.PipelineVersion) []interface{} {
+	pipe := pipelineVsn.MetaData
+	hourglass := timer.InitHourglass(time.Duration(pipe.Timeout) * time.Second)
+	executorList := make([]interface{}, 0, len(pipe.Stages)+1)
 
-	executorMap, err := ParsePipeline(pipeline)
-	if err != nil {
-		return err
-	}
-
-	bytes, err := json.Marshal(executorMap)
-	if err != nil {
-		log.Println(err)
-	} else {
-		log.Println(string(bytes))
-	}
-	return checkValidity(executorMap, models.StartPointMark)
-}
-
-// ParsePipeline parse point map from pipeline
-func ParsePipeline(pipeline *models.Pipeline) (map[string]models.Executor, error) {
-	hourglass := timer.InitHourglass(time.Duration(pipeline.Timeout) * time.Second)
-	//parse user point
-	pointMap, err := parsePoints(pipeline.Points)
-	if err != nil {
-		return nil, err
-	}
-
-	//endPoint
-	execPoint := pointMap[models.EndPointMark]
-	executorMap := map[string]models.Executor{models.EndPointMark: execPoint}
-	execPoint.Info = &models.Stage{Name: models.EndPointMark}
-	delete(pointMap, models.EndPointMark)
-
-	//parse point from stage
-	for _, stage := range pipeline.Stages {
-		if stage.Name == "" {
-			return nil, errors.New("Stage name must be not empty")
+	//parse point
+	pointVsnMap := make(map[string]*models.PointVersion, 0)
+	var endPoint *models.PointVersion
+	for _, point := range pipe.Points {
+		triggers := utils.JSONStrToSlice(point.Triggers)
+		pointVsn := &models.PointVersion{
+			PvID:       pipelineVsn.ID,
+			PointID:    point.ID,
+			Conditions: utils.JSONStrToSlice(point.Conditions),
+			MetaData:   point,
+			Kind:       point.Type,
 		}
-		if execPoint, ok := pointMap[stage.Name]; ok {
-			execPoint.Info = stage
-			executorMap[stage.Name] = execPoint
-			delete(pointMap, stage.Name)
-		} else {
-			if _, ok := executorMap[stage.Name]; ok {
-				return nil, fmt.Errorf("Stage name: %v already exist", stage.Name)
-			}
-			if stage.Dependencies == "" {
-				return nil, fmt.Errorf("No point stage: '%v' dependencies must be not empty", stage.Name)
-			}
-			executorMap[stage.Name] = &point.Point{
-				Info: stage,
-				From: utils.JSONStrToSlice(stage.Dependencies),
-			}
+		if point.Type == models.EndPoint {
+			endPoint = pointVsn
+			continue
+		}
+		for _, trigger := range triggers {
+			pointVsnMap[trigger] = pointVsn
+		}
+	}
+
+	//parse stage
+	log.Println("the pointVsnMap is ", pointVsnMap)
+	for _, stage := range pipe.Stages {
+		log.Println("the stage is ", stage)
+		stageVsn := &models.StageVersion{
+			PvID:     pipelineVsn.ID,
+			SID:      stage.ID,
+			MetaData: stage,
 		}
 		stage.Hourglass = hourglass
-		stage.Namespace = pipeline.Namespace
-		stage.PipelineName = pipeline.Name
-	}
-	if len(pointMap) > 0 {
-		byteArr, _ := json.Marshal(pointMap)
-		return nil, fmt.Errorf("Pipeline points has unused point %v", string(byteArr))
-	}
-	return executorMap, nil
-}
-
-func parsePoints(points []*models.Point) (map[string]*point.Point, error) {
-	pointMap := make(map[string]*point.Point, 0)
-	for _, pointInfo := range points {
-		triggers := utils.JSONStrToSlice(pointInfo.Triggers)
-		for _, trigger := range triggers {
-			if trigger == "" {
-				trigger = models.EndPointMark
+		stage.PipelineName = pipe.Name
+		pointVsn, ok := pointVsnMap[stage.Name]
+		if !ok {
+			pointVsn = &models.PointVersion{
+				PvID:       pipelineVsn.ID,
+				Kind:       models.TemporaryPoint,
+				Conditions: utils.JSONStrToSlice(stage.Dependencies),
 			}
-			if _, ok := pointMap[trigger]; ok {
-				return nil, fmt.Errorf("Point trigger :%v is already exist", trigger)
-			}
-			conditions := utils.JSONStrToSlice(pointInfo.Conditions)
-			if conditions[0] == "" {
-				conditions[0] = models.StartPointMark
-			}
-			pointMap[trigger] = &point.Point{From: conditions}
+			pointVsnMap[stage.Name] = pointVsn
 		}
+		stageVsn.PointVersion = pointVsn
+		executorList = append(executorList, stageVsn)
 	}
-	return pointMap, nil
+
+	return append(executorList, &models.StageVersion{
+		PointVersion: endPoint,
+	})
 }
 
-func checkUserPoint(points []*models.Point) error {
-	starPointCount := 0
+// CheckDependence check pipeline dependence
+func CheckDependence(pipeline *models.Pipeline) error {
+	conditionMap, err := checkPoints(pipeline.Points)
+	if err != nil {
+		return err
+	}
+	return checkStages(pipeline.Stages, conditionMap)
+}
+
+func checkPoints(points []*models.Point) (map[string][]string, error) {
+	conditionMap := make(map[string][]string, 0)
+	startPointCount := 0
 	endPointCount := 0
 	for _, pointInfo := range points {
 		triggers := utils.JSONStrToSlice(pointInfo.Triggers)
 		conditions := utils.JSONStrToSlice(pointInfo.Conditions)
-		switch pointInfo.Type {
-		case models.StarPoint:
+
+		if pointInfo.Type == models.StartPoint {
 			if conditions[0] != "" {
-				return fmt.Errorf("%v point condition must be empty", pointInfo.Type)
+				return nil, fmt.Errorf("%v point condition must be empty", pointInfo.Type)
 			}
-			if triggers[0] == "" {
-				return fmt.Errorf("%v point trigger must be not empty", pointInfo.Type)
-			}
-			starPointCount++
-		case models.CheckPoint:
-			if conditions[0] == "" {
-				return fmt.Errorf("%v point condition must be not empty", pointInfo.Type)
-			}
-			if triggers[0] == "" {
-				return fmt.Errorf("%v point trigger must be not empty", pointInfo.Type)
-			}
-		case models.EndPoint:
-			if conditions[0] == "" {
-				return fmt.Errorf("%v point condition must be not empty", pointInfo.Type)
-			}
+			startPointCount++
+		} else if conditions[0] == "" {
+			return nil, fmt.Errorf("%v point condition must be not empty", pointInfo.Type)
+		}
+
+		if pointInfo.Type == models.EndPoint {
 			if triggers[0] != "" {
-				return fmt.Errorf("%v point trigger must be empty", pointInfo.Type)
+				return nil, fmt.Errorf("%v point trigger must be empty", pointInfo.Type)
 			}
 			endPointCount++
+		} else if triggers[0] == "" {
+			return nil, fmt.Errorf("%v point trigger must be not empty", pointInfo.Type)
+		}
+
+		for _, trigger := range triggers {
+			if _, ok := conditionMap[trigger]; ok {
+				return nil, fmt.Errorf("Point trigger: %v is already exist", trigger)
+			}
+			conditionMap[trigger] = conditions
 		}
 	}
-	if starPointCount < 1 {
-		return errors.New("Start point count must be greater than 0")
+	if startPointCount < 1 {
+		return nil, errors.New("Start point count must be greater than 0")
 	}
 	if endPointCount != 1 {
-		return errors.New("End point count must be 1")
+		return nil, errors.New("End point count must be 1")
 	}
-	return nil
+	return conditionMap, nil
 }
 
-func checkValidity(executorMap map[string]models.Executor, startName string) error {
-	pointListMap := make(map[string][]string, 0)
-	for name, execPoint := range executorMap {
-		pointFrom := execPoint.GetFrom()
-		for _, from := range pointFrom {
-			//Check stage name is exist
-			if from == models.StartPointMark {
-				continue
+func checkStages(stages []*models.Stage, conditionMap map[string][]string) error {
+	stageMap := make(map[string]*models.Stage, 0)
+	stageListMap := make(map[string][]string, 0)
+	for _, stage := range stages {
+		if stage.Name == "" {
+			return errors.New("Stage has an empty name")
+		}
+		if _, ok := stageMap[stage.Name]; ok {
+			return fmt.Errorf("Stage name: %v already exist", stage.Name)
+		}
+		bytes, _ := json.Marshal(stage)
+		log.Println(string(bytes))
+		dependencies := strings.Split(stage.Dependencies, ",")
+		if conditions, ok := conditionMap[stage.Name]; ok {
+			dependencies = conditions
+			delete(conditionMap, stage.Name)
+		} else {
+			if _, ok := stageMap[stage.Name]; ok {
+				return fmt.Errorf("Stage name: %v already exist", stage.Name)
 			}
-			if _, ok := executorMap[from]; !ok {
-				return fmt.Errorf("Stage name: %v is not exist", from)
+			if dependencies[0] == "" {
+				return fmt.Errorf("No point stage: '%v' dependencies must be not empty", stage.Name)
 			}
-
-			pointList, ok := pointListMap[from]
+		}
+		stageMap[stage.Name] = stage
+		for _, dependence := range dependencies {
+			stageList, ok := stageListMap[dependence]
 			if !ok {
-				pointList = make([]string, 0, 10)
+				stageList = make([]string, 0, 10)
 			}
-			pointList = append(pointList, name)
-			pointListMap[from] = pointList
+			stageList = append(stageList, stage.Name)
+			stageListMap[dependence] = stageList
+		}
+	}
+	return checkDependenceValidity(stageListMap, stageMap)
+}
 
+func checkDependenceValidity(stageListMap map[string][]string, stageMap map[string]*models.Stage) error {
+	if len(stageListMap[""]) == 0 {
+		return errors.New("The first start stage list is empty")
+	}
+
+	//Check dependence stage name is exist
+	for dependenceName := range stageListMap {
+		if dependenceName == "" {
+			continue
+		}
+		_, ok := stageMap[dependenceName]
+		if !ok {
+			return fmt.Errorf("Dependence stage name: %v is not exist", dependenceName)
 		}
 	}
 
 	//Check dependence directed acyclic graph
-	return checkEndlessChain(pointListMap, make([]string, 0, 10), startName)
+	return checkEndlessChain(stageListMap, make([]string, 0, 10), "")
 
 }
 
-func checkEndlessChain(pointListMap map[string][]string, chain []string, checkName string) error {
+func checkEndlessChain(stageListMap map[string][]string, chain []string, checkName string) error {
 	if checkName != "" {
 		for _, chainItem := range chain {
 			if chainItem == checkName {
@@ -181,11 +187,11 @@ func checkEndlessChain(pointListMap map[string][]string, chain []string, checkNa
 			}
 		}
 	}
-	stageList, ok := pointListMap[checkName]
+	stageList, ok := stageListMap[checkName]
 	if ok {
 		for _, nextStage := range stageList {
 			chain = append(chain, checkName)
-			err := checkEndlessChain(pointListMap, chain, nextStage)
+			err := checkEndlessChain(stageListMap, chain, nextStage)
 			if err != nil {
 				return err
 			}

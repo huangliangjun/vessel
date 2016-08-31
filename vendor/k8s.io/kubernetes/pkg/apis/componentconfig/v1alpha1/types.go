@@ -62,10 +62,15 @@ type KubeProxyConfiguration struct {
 	// udpIdleTimeout is how long an idle UDP connection will be kept open (e.g. '250ms', '2s').
 	// Must be greater than 0. Only applicable for proxyMode=userspace.
 	UDPIdleTimeout unversioned.Duration `json:"udpTimeoutMilliseconds"`
-	// conntrackMax is the maximum number of NAT connections to track (0 to leave as-is)")
+	// conntrackMax is the maximum number of NAT connections to track (0 to
+	// leave as-is).  This takes precendence over conntrackMaxPerCore.
 	ConntrackMax int32 `json:"conntrackMax"`
-	// conntrackTCPEstablishedTimeout is how long an idle UDP connection will be kept open
-	// (e.g. '250ms', '2s').  Must be greater than 0. Only applicable for proxyMode is Userspace
+	// conntrackMaxPerCore is the maximum number of NAT connections to track
+	// per CPU core (0 to leave as-is).  This value is only considered if
+	// conntrackMax == 0.
+	ConntrackMaxPerCore int32 `json:"conntrackMaxPerCore"`
+	// conntrackTCPEstablishedTimeout is how long an idle TCP connection will be kept open
+	// (e.g. '250ms', '2s').  Must be greater than 0.
 	ConntrackTCPEstablishedTimeout unversioned.Duration `json:"conntrackTCPEstablishedTimeout"`
 }
 
@@ -95,6 +100,8 @@ type KubeSchedulerConfiguration struct {
 	PolicyConfigFile string `json:"policyConfigFile"`
 	// enableProfiling enables profiling via web interface.
 	EnableProfiling *bool `json:"enableProfiling"`
+	// contentType is contentType of requests sent to apiserver.
+	ContentType string `json:"contentType"`
 	// kubeAPIQPS is the QPS to use while talking with kubernetes apiserver.
 	KubeAPIQPS float32 `json:"kubeAPIQPS"`
 	// kubeAPIBurst is the QPS burst to use while talking with kubernetes apiserver.
@@ -103,6 +110,12 @@ type KubeSchedulerConfiguration struct {
 	// will be processed by this scheduler, based on pod's annotation with
 	// key 'scheduler.alpha.kubernetes.io/name'.
 	SchedulerName string `json:"schedulerName"`
+	// RequiredDuringScheduling affinity is not symmetric, but there is an implicit PreferredDuringScheduling affinity rule
+	// corresponding to every RequiredDuringScheduling affinity rule.
+	// HardPodAffinitySymmetricWeight represents the weight of implicit PreferredDuringScheduling affinity rule, in the range 0-100.
+	HardPodAffinitySymmetricWeight int `json:"hardPodAffinitySymmetricWeight"`
+	// Indicate the "all topologies" set for empty topologyKey when it's used for PreferredDuringScheduling pod anti-affinity.
+	FailureDomains string `json:"failureDomains"`
 	// leaderElection defines the configuration of leader election client.
 	LeaderElection LeaderElectionConfiguration `json:"leaderElection"`
 }

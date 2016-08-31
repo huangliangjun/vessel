@@ -5,58 +5,71 @@ import (
 	"log"
 
 	"github.com/containerops/vessel/models"
-	kubeclt "github.com/containerops/vessel/module/kubernetes"
-	"github.com/containerops/vessel/utils"
+	"github.com/containerops/vessel/module/deployment"
+	//	kubeclt "github.com/containerops/vessel/module/kubernetes"
+	"github.com/containerops/vessel/module/point"
 )
 
-// StartStage start stage workflow
-func StartStage(stage *models.Stage, finishChan chan *models.ExecutedResult) {
-	if stage.Name == models.EndPointMark {
-		finishChan <- fillSchedulingResult(stage, models.ResultSuccess, "")
+// Start stage
+func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.ExecutedResult) {
+	stageVsn := info.(*models.StageVersion)
+	metaData := stageVsn.MetaData
+	if stageVsn.State != "" {
 		return
 	}
+	meet, ended := point.CheckPoint(stageVsn.PointVersion, readyMap)
+	if ended {
+		log.Println("endPointMark")
+		finishChan <- FillSchedulingResult(stageVsn.ID, models.EndPointMark, models.ResultSuccess, "")
+		return
+	}
+	if !meet {
+		return
+	}
+	readyMap[metaData.Name] = true
 	//TODO:Save stageVersion
-	//stageVersion :=
-	//stageVersion.Status = models.StateReady
-
-	res := kubeclt.CreateStage(stage)
-	if res.Result != models.ResultSuccess {
-		finishChan <- fillSchedulingResult(stage, res.Result, res.Detail)
+	stageVsn.State = models.StateReady
+	if err := stageVsn.Add(); err != nil {
+		return
+	}
+	deployment := deployment.NewDeployment(metaData)
+	res := deployment.Deploy()
+	//res := kubeclt.CreateStage(metaData)
+	if res.Status != models.ResultSuccess {
+		finishChan <- FillSchedulingResult(stageVsn.ID, metaData.Name, res.Status, res.Detail)
 		return
 	}
 
 	//TODO:Update stageVersion
-	//stageVersion.Status = models.StateRunning
-
-	finishChan <- fillSchedulingResult(stage, models.ResultSuccess, "")
-}
-
-// StopStage stop stage workflow
-func StopStage(stage *models.Stage, finishChan chan *models.ExecutedResult) {
-	res := kubeclt.DeleteStage(stage)
-
-	//TODO:Update stageVersion
-	//stageVersion.Status = models.StateDeleted
-	finishChan <- fillSchedulingResult(stage, res.Result, res.Detail)
-}
-
-func fillSchedulingResult(stage *models.Stage, result string, detail string) *models.ExecutedResult {
-	log.Println(fmt.Sprintf("Stage name = %v result is %v, detail is %v", stage.Name, result, detail))
-	stageName := ""
-	namespace := ""
-	if stage != nil {
-		stageName = stage.Name
-		namespace = stage.Namespace
+	stageVsn.State = models.StateRunning
+	if err := stageVsn.Update(); err != nil {
+		finishChan <- FillSchedulingResult(stageVsn.ID, metaData.Name, res.Status, res.Detail)
+		return
 	}
+	finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, models.ResultSuccess, "")
+}
+
+// Stop stage
+func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.ExecutedResult) {
+	//	stageVsn := info.(*models.StageVersion)
+	//	metaData := stageVsn.MetaData
+	//	if stageVsn.State != models.StateReady || stageVsn.State != models.StateRunning {
+	//		return
+	//	}
+	//	readyMap[metaData.Name] = true
+
+	//	res := kubeclt.DeleteStage(stageVsn.MetaData)
+	//	//TODO:Update stageVersion
+	//	stageVsn.State = models.StateDeleted
+	//	finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, res.Status, res.Detail)
+}
+
+func FillSchedulingResult(svid uint64, stageName, result string, detail string) *models.ExecutedResult {
+	log.Println(fmt.Sprintf("Stage name = %v result is %v, detail is %v", stageName, result, detail))
 	return &models.ExecutedResult{
+		SID:    svid,
 		Name:   stageName,
 		Status: result,
-		Result: &models.StageResult{
-			ID:        utils.UUID(),
-			Namespace: namespace,
-			Name:      stageName,
-			Result:    result,
-			Detail:    detail,
-		},
+		Detail: detail,
 	}
 }

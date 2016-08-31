@@ -1,102 +1,67 @@
 package models
 
 import (
-	//	"encoding/json"
 	"fmt"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
 )
 
-const (
-	CCloud PipelineKind = "CCloud"
-	V1     APIVersion   = "v1"
-)
-
-type PipelineKind string
-type APIVersion string
-
-// PipelineSpecTemplate template for request data
-type PipelineSpecTemplate struct {
-	Kind       PipelineKind `json:"kind" binding:"In(CCloud)"`
-	APIVersion APIVersion   `json:"apiVersion" binding:"In(v1)"`
-	MetaData   *Pipeline    `json:"metadata" binding:"Required"`
+// PipelineTemplate template for request data
+type PipelineTemplate struct {
+	Kind       string    `json:"kind" binding:"In(CCloud)"`
+	APIVersion string    `json:"apiVersion" binding:"In(v1)"`
+	MetaData   *Pipeline `json:"metadata" binding:"Required"`
 }
 
 // Pipeline pipeline data
 type Pipeline struct {
-	Id        int64      `json:"id" gorm:"primary_key"`
-	Namespace string     `json:"namespace" binding:"Required" gorm:"type:varchar(50);not null;unique_index:idx_namespace_name"`
-	Name      string     `json:"name" binding:"Required" gorm:"type:varchar(30);not null;unique_index:idx_namespace_name"`
+	ID        uint64     `json:"id" gorm:"primary_key"`
+	Namespace string     `json:"namespace" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
+	Name      string     `json:"name" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
 	Timeout   uint64     `json:"timeout" gorm:"type:int;"`
+	Stages    []*Stage   `json:"stages" binding:"Required" gorm:"-"`
+	Points    []*Point   `json:"points" binding:"Required" gorm:"-"`
 	Status    uint       `json:"status" gorm:"type:tinyint;default:0"`
 	CreatedAt *time.Time `json:"created" `
 	UpdatedAt *time.Time `json:"updated"`
 	DeletedAt *time.Time `json:"deleted"`
-	Stages    []*Stage   `json:"stages" gorm:"-"`
-	Points    []*Point   `json:"points" gorm:"-"`
 }
-
-//func (Pipeline) TableName() string {
-//	return "pipeline"
-//}
 
 // PipelineVersion data
 type PipelineVersion struct {
-	Id            int64      `json:"id" gorm:"primary_key"`
-	Pid           int64      `json:"Pid" gorm:"type:bigint;not null;index"`
-	Detail        string     `json:"detail" gorm:"type:text;"`
-	VersionStatus string     `json:"versionStatus" gorm:"column:versionStatus;type:varchar(20);not null;"`
-	Status        uint       `json:"status" gorm:"type:tinyint;default:0"`
-	CreatedAt     *time.Time `json:"created" `
-	UpdatedAt     *time.Time `json:"updated"`
-	DeletedAt     *time.Time `json:"deleted"`
+	ID        uint64     `json:"id" gorm:"primary_key"`
+	PID       uint64     `json:"Pid" gorm:"type:int;not null;index"`
+	State     string     `json:"state" gorm:"column:state;type:varchar(20)"`
+	Detail    string     `json:"detail" gorm:"type:text;"`
+	MetaData  *Pipeline  `json:"-" sql:"-"`
+	Status    uint       `json:"status" gorm:"type:tinyint;default:0"`
+	CreatedAt *time.Time `json:"created" `
+	UpdatedAt *time.Time `json:"updated"`
+	DeletedAt *time.Time `json:"deleted"`
 }
 
-// PipelineResult pipeline result
+// PipelineResult data
 type PipelineResult struct {
-	PID       uint   `json:"pid"`
-	PvID      uint   `json:"pvid"`
+	PID       uint64 `json:"pid"`
+	PvID      uint64 `json:"pvid"`
 	Namespace string `json:"namespace"`
 	Name      string `json:"name"`
 	Status    string `json:"status"`
-	Message   string `json:"message"`
+	Detail    string `json:"detail"`
 }
 
-func init() {
-	fmt.Println("the Db is ", Db)
-	var err error
-	if Db == nil {
-		dbArgs := "root@tcp(127.0.0.1:3306)/vesseldb?loc=Local&parseTime=True&charset=utf8"
-		Db, err = gorm.Open("mysql", dbArgs)
-
-		if err != nil {
-			panic(err)
-		}
-		Db.LogMode(true)
-		Db.DB().SetMaxIdleConns(10)
-		Db.DB().SetMaxOpenConns(100)
-		Db.SingularTable(true)
-		if err = Sync(); err != nil {
-			panic(err)
-		}
-	}
-}
-
-//custom  set Pipeline's table name to be pipeline
-func (Pipeline) TableName() string {
+// custom set pipeline's table name is pipeline_version in db
+func (p *Pipeline) TableName() string {
 	return "pipeline"
 }
 
-//custom set PipelineVersion's table name to be pipeline_version
+//custom set PipelineVersion's table name is pipeline_version in db
 func (PipelineVersion) TableName() string {
 	return "pipeline_version"
 }
 
 //add pipeline data
 func (p *Pipeline) Add() error {
-	engineDb := Db
+	engineDb := db
 	//begin transaction
 	tx := engineDb.Begin()
 	var err error
@@ -109,7 +74,7 @@ func (p *Pipeline) Add() error {
 
 	for _, point := range p.Points {
 		//save  pipeline's point data
-		point.Pid = p.Id
+		point.PID = p.ID
 		if err = tx.Create(point).Error; err != nil {
 			tx.Rollback()
 			return err
@@ -123,7 +88,7 @@ func (p *Pipeline) Add() error {
 			tx.Rollback()
 			return err
 		}
-		stage.Pid = p.Id
+		stage.PID = p.ID
 		if err = tx.Create(stage).Error; err != nil {
 			tx.Rollback()
 			return err
@@ -136,18 +101,17 @@ func (p *Pipeline) Add() error {
 
 //Query pipeline data
 func (p *Pipeline) QueryOne() error {
-	engineDb := Db
+	engineDb := db
 	var err error
 	//query pipeline data
-	err = engineDb.First(p, p).Error
+	err = engineDb.First(p, &Pipeline{Name: p.Name, Namespace: p.Namespace}).Error
 	if err != nil {
 		return err
 	}
 
 	//query pipeline's stages data
-	stage := &Stage{Pid: p.Id}
+	stage := &Stage{PID: p.ID}
 	stages, err := stage.Query()
-
 	if err != nil {
 		return err
 	}
@@ -161,7 +125,7 @@ func (p *Pipeline) QueryOne() error {
 	p.Stages = stages
 
 	//query pipeline's points data
-	point := &Point{Pid: p.Id}
+	point := &Point{PID: p.ID}
 	points, err := point.Query()
 
 	if err != nil {
@@ -174,7 +138,7 @@ func (p *Pipeline) QueryOne() error {
 
 //delete pipeline data
 func (p *Pipeline) Delete() error {
-	engineDb := Db
+	engineDb := db
 	//begin transaction
 	tx := engineDb.Begin()
 
@@ -188,7 +152,7 @@ func (p *Pipeline) Delete() error {
 
 	//modify pipeline'stage status
 	stage := &Stage{
-		Pid:    p.Id,
+		PID:    p.ID,
 		Status: DataInValidStatus,
 	}
 	err = tx.Model(&Stage{}).Update(stage).Error
@@ -199,7 +163,7 @@ func (p *Pipeline) Delete() error {
 
 	//modify pipeline'point status
 	point := &Point{
-		Pid:    p.Id,
+		PID:    p.ID,
 		Status: DataInValidStatus,
 	}
 	err = tx.Model(&Point{}).Update(point).Error
@@ -214,24 +178,39 @@ func (p *Pipeline) Delete() error {
 
 //update pipeline data
 func (p *Pipeline) Update() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.Model(p).Update(p).Error
+}
+
+//check pipeline exist
+func (p *Pipeline) CheckExist() error {
+	engineDb := db
+	err := engineDb.First(p, &Pipeline{Name: p.Name, Namespace: p.Namespace}).Error
+	fmt.Println(err)
+	if err == nil && p.ID > 0 {
+		return ErrHasExist
+	}
+	if err.Error() == ErrNotExist.Error() {
+		return nil
+	}
+
+	return err
 }
 
 //add pipeline version data
 func (pv *PipelineVersion) Add() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.Create(pv).Error
 }
 
 //update pipeline version data
 func (pv *PipelineVersion) Update() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.Model(pv).Update(pv).Error
 }
 
 //query pipeline version data by pid
 func (pv *PipelineVersion) QueryOne() error {
-	engineDb := Db
+	engineDb := db
 	return engineDb.First(pv).Error
 }

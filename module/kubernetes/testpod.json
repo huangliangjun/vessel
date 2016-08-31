@@ -1,0 +1,55 @@
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "podtest",
+    "namespace": "vessel"
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "string",
+        "hostPath": {
+          "path": "string"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "helloworld",
+        "image": "hello-world",
+        "command": [
+          "string"
+        ],
+        "args": [
+          "string"
+        ],
+        "workingDir": "string",
+        "ports": [
+          {
+            "name": "string",
+            "hostPort": 9090,
+            "containerPort": 9090
+          }
+        ],
+        "lifecycle": {
+          "postStart": {
+            "exec": {
+              "command": [
+                "string"
+              ]
+            }
+          },
+          "preStop": {
+            "exec": {
+              "command": [
+                "string"
+              ]
+            }
+          }
+        },
+        "imagePullPolicy": "IfNotPresent"
+      }
+    ]
+  }
+}

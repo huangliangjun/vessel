@@ -1,0 +1,64 @@
+{
+  "kind": "ReplicationController",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "testrc",
+    "namespace": "vessel"
+  },
+  "spec": {
+    "replicas": 2,
+    "template": {
+      "metadata": {
+        "name": "testpod",
+        "namespace": "vessel"
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "string",
+            "hostPath": {
+              "path": "string"
+            }
+          }
+        ],
+        "containers": [
+          {
+            "name": "helloworld",
+            "image": "hello-world",
+            "command": [
+              "string"
+            ],
+            "args": [
+              "string"
+            ],
+            "workingDir": "string",
+            "ports": [
+              {
+                "name": "string",
+                "hostPort": 9090,
+                "containerPort": 9090
+              }
+            ],
+            "lifecycle": {
+              "postStart": {
+                "exec": {
+                  "command": [
+                    "string"
+                  ]
+                }
+              },
+              "preStop": {
+                "exec": {
+                  "command": [
+                    "string"
+                  ]
+                }
+              }
+            },
+            "imagePullPolicy": "IfNotPresent"
+          }
+        ]
+      }
+    }
+  }
+}

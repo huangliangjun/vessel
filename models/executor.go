@@ -1,30 +1,29 @@
 package models
 
 const (
-	// StateReady  operating state ready
+	// StateReady  state ready
 	StateReady = "Ready"
-	// StateRunning  operating state running
+	// StateRunning  state running
 	StateRunning = "Running"
-	// StateDeleted  operating state deleted
+	// StateDeleted  state deleted
 	StateDeleted = "Deleted"
 
-	// ResultSuccess  operating result success
+	// ResultSuccess  result success
 	ResultSuccess = "OK"
-	// ResultFailed  operating result failed
+	// ResultFailed  result failed
 	ResultFailed = "Error"
-	// ResultTimeout  operating result timeout
+	// ResultTimeout  result timeout
 	ResultTimeout = "Timeout"
 )
 
-type Executor interface {
-	Start(readyMap map[string]bool, finishChan chan *ExecutedResult) bool
-	Stop(readyMap map[string]bool, finishChan chan *ExecutedResult) bool
-	GetFrom() []string
-}
-
 // ExecutedResult executor operating result
 type ExecutedResult struct {
-	Name   string
-	Status string
-	Result interface{}
+	//	Name   string
+	//	Status string
+	//	Detail string
+	SID       uint64 `json:"stageVersionID"`
+	Namespace string `json:"-"`
+	Name      string `json:"stageName"`
+	Status    string `json:"runResult"`
+	Detail    string `json:"detail"`
 }

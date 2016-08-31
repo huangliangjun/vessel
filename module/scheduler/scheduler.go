@@ -4,53 +4,59 @@ import (
 	"fmt"
 	"log"
 
+	"sync"
+
 	"github.com/containerops/vessel/models"
+	"github.com/containerops/vessel/module/stage"
 )
 
-type schedulerHand func(executor models.Executor, readyMap map[string]bool, finishChan chan *models.ExecutedResult) bool
+type schedulerHand func(interface{}, map[string]bool, chan *models.ExecutedResult)
 
-func Start(executorMap map[string]models.Executor, startMark string) []*models.ExecutedResult {
-	return execute(executorMap, startMark, startProgress)
+// StartStage start point on scheduler
+func StartPoint(executorList []interface{}, startMark string) []*models.ExecutedResult {
+	return execute(executorList, startMark, stage.Start)
 }
 
-func Stop(executorMap map[string]models.Executor, startMark string) []*models.ExecutedResult {
-	return execute(executorMap, startMark, stopProgress)
+// StopPoint stop point on scheduler
+func StopPoint(executorList []interface{}, startMark string) []*models.ExecutedResult {
+	return execute(executorList, startMark, stage.Stop)
 }
 
-func execute(executorMap map[string]models.Executor, startMark string, handler schedulerHand) []*models.ExecutedResult {
-	count := len(executorMap)
+func execute(executorList []interface{}, startMark string, handler schedulerHand) []*models.ExecutedResult {
+	var wg sync.WaitGroup
+	count := len(executorList)
 	readyMap := map[string]bool{startMark: true}
 	finishChan := make(chan *models.ExecutedResult, count)
 	resultList := make([]*models.ExecutedResult, 0, count)
 	running := true
 	for running {
-		for name, executor := range executorMap {
-			if _, ok := readyMap[name]; ok {
-				continue
-			}
-			if !handler(executor, readyMap, finishChan) {
-				continue
-			}
-			readyMap[name] = false
+		for _, executor := range executorList {
+			wg.Add(1)
+			go func(exec interface{}, ready map[string]bool, finish chan *models.ExecutedResult) {
+				defer wg.Done()
+				handler(exec, ready, finish)
+			}(executor, readyMap, finishChan)
 		}
 		result := <-finishChan
+
 		resultList = append(resultList, result)
 		if result.Status != models.ResultSuccess {
+			sv := &models.StageVersion{
+				SID:    result.SID,
+				Detail: result.Detail,
+			}
+			err := sv.Update()
+			if err != nil {
+				return resultList
+			}
 			running = false
 		} else {
-			readyMap[result.Name] = true
 			resultLen := len(resultList)
 			running = resultLen != count
 			log.Println(fmt.Sprintf("scheduler StartStage name = %v and finish num = %d", result.Name, resultLen))
 		}
 	}
+
+	wg.Wait()
 	return resultList
-}
-
-func startProgress(executor models.Executor, readyMap map[string]bool, finishChan chan *models.ExecutedResult) bool {
-	return executor.Start(readyMap, finishChan)
-}
-
-func stopProgress(executor models.Executor, readyMap map[string]bool, finishChan chan *models.ExecutedResult) bool {
-	return executor.Stop(readyMap, finishChan)
 }
