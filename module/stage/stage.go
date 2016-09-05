@@ -29,6 +29,7 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	readyMap[metaData.Name] = true
 	//TODO:Save stageVersion
 	stageVsn.State = models.StateReady
+	stageVsn.Status = models.DataValidStatus
 	if err := stageVsn.Add(); err != nil {
 		return
 	}

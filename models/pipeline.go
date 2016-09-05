@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -66,6 +65,7 @@ func (p *Pipeline) Add() error {
 	tx := engineDb.Begin()
 	var err error
 	//save pipeline data
+	p.Status = DataValidStatus
 	if err = tx.Create(p).Error; err != nil {
 		//rallback transaction
 		tx.Rollback()
@@ -75,6 +75,7 @@ func (p *Pipeline) Add() error {
 	for _, point := range p.Points {
 		//save  pipeline's point data
 		point.PID = p.ID
+		point.Status = DataValidStatus
 		if err = tx.Create(point).Error; err != nil {
 			tx.Rollback()
 			return err
@@ -89,6 +90,7 @@ func (p *Pipeline) Add() error {
 			return err
 		}
 		stage.PID = p.ID
+		stage.Status = DataValidStatus
 		if err = tx.Create(stage).Error; err != nil {
 			tx.Rollback()
 			return err
@@ -155,7 +157,7 @@ func (p *Pipeline) Delete() error {
 		PID:    p.ID,
 		Status: DataInValidStatus,
 	}
-	err = tx.Model(&Stage{}).Update(stage).Error
+	err = tx.Model(&Stage{}).Where(&Stage{PID: p.ID}).Update(stage).Error
 	if err != nil {
 		//rollback transaction
 		tx.Rollback()
@@ -166,7 +168,7 @@ func (p *Pipeline) Delete() error {
 		PID:    p.ID,
 		Status: DataInValidStatus,
 	}
-	err = tx.Model(&Point{}).Update(point).Error
+	err = tx.Model(&Point{}).Where(&Point{PID: p.ID}).Update(point).Error
 	if err != nil {
 		//rollback transaction
 		tx.Rollback()
@@ -183,18 +185,17 @@ func (p *Pipeline) Update() error {
 }
 
 //check pipeline exist
-func (p *Pipeline) CheckExist() error {
+func (p *Pipeline) CheckIsExist() bool {
 	engineDb := db
-	err := engineDb.First(p, &Pipeline{Name: p.Name, Namespace: p.Namespace}).Error
-	fmt.Println(err)
-	if err == nil && p.ID > 0 {
-		return ErrHasExist
+	err := engineDb.First(p, p).Error
+	if err == nil {
+		return true
 	}
 	if err.Error() == ErrNotExist.Error() {
-		return nil
+		return false
 	}
 
-	return err
+	return false
 }
 
 //add pipeline version data
@@ -206,11 +207,11 @@ func (pv *PipelineVersion) Add() error {
 //update pipeline version data
 func (pv *PipelineVersion) Update() error {
 	engineDb := db
-	return engineDb.Model(pv).Update(pv).Error
+	return engineDb.Model(pv).Where(&PipelineVersion{ID: pv.ID, PID: pv.PID}).Update(pv).Error
 }
 
 //query pipeline version data by pid
 func (pv *PipelineVersion) QueryOne() error {
 	engineDb := db
-	return engineDb.First(pv).Error
+	return engineDb.First(pv, pv).Error
 }

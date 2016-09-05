@@ -27,12 +27,14 @@ type Stage struct {
 	PipelineName  string           `json:"-" sql:"-"`
 	Type          string           `json:"type"  binding:"In(container,vm,pc)" gorm:"varchar(20)"`
 	Dependencies  string           `json:"dependencies,omitempty" gorm:"varchar(255)"` // eg : "a,b,c"
-	Status        uint             `json:"status" gorm:"type:int;default:0"`
 	Artifacts     []Artifact       `json:"artifacts"  sql:"-"`
 	Volumes       []Volume         `json:"volumes"  sql:"-"`
 	ArtifactsJSON string           `json:"-" gorm:"column:artifactsJson;type:text;not null"` // json type
 	VolumesJSON   string           `json:"-" gorm:"column:volumesJson;type:text;not null"`   // json type
+	Ports         []ServicePort    `json:"port,omitempty" sql:"-"`
+	PortsJSON     string           `json:"-" gorm:"column:portsJSON;type:text;not null"` // json type
 	Hourglass     *timer.Hourglass `json:"-" sql:"-"`
+	Status        uint             `json:"status" gorm:"type:int;default:0"`
 	CreatedAt     *time.Time       `json:"created" `
 	UpdatedAt     *time.Time       `json:"updated"`
 	DeletedAt     *time.Time       `json:"deleted"`
@@ -80,6 +82,12 @@ type ContainerPort struct {
 	Name          string `json:"name,omitempty"`
 	HostPort      int32  `json:"hostPort,omitempty"`
 	ContainerPort int32  `json:"containerPort,omitempty"`
+}
+
+//ServicePort data
+type ServicePort struct {
+	Name string `json:"name,omitempty"`
+	Port int32  `json:"port,omitempty"`
 }
 
 // EnvVar data
@@ -137,6 +145,12 @@ func (s *Stage) ObjToJson() error {
 		return err
 	}
 	s.VolumesJSON = string(bsVolumes)
+
+	bsPorts, err := json.Marshal(s.Ports)
+	if err != nil {
+		return err
+	}
+	s.PortsJSON = string(bsPorts)
 	return nil
 }
 
@@ -144,6 +158,8 @@ func (s *Stage) ObjToJson() error {
 func (s *Stage) JsonToObj() error {
 	var artifacts []Artifact
 	var volumes []Volume
+	var ports []ServicePort
+
 	err := json.Unmarshal([]byte(s.ArtifactsJSON), &artifacts)
 	if err != nil {
 		return err
@@ -154,6 +170,12 @@ func (s *Stage) JsonToObj() error {
 		return err
 	}
 	s.Volumes = volumes
+
+	err = json.Unmarshal([]byte(s.PortsJSON), &ports)
+	if err != nil {
+		return err
+	}
+	s.Ports = ports
 	return nil
 }
 
@@ -166,11 +188,11 @@ func (sv *StageVersion) Add() error {
 //update stage version data
 func (sv *StageVersion) Update() error {
 	engineDb := db
-	return engineDb.Model(sv).Update(sv).Error
+	return engineDb.Model(sv).Where(&StageVersion{ID: sv.ID, SID: sv.SID}).Update(sv).Error
 }
 
 //query stage version data
 func (sv *StageVersion) QueryOne() error {
 	engineDb := db
-	return engineDb.First(sv).Error
+	return engineDb.First(sv, sv).Error
 }

@@ -23,9 +23,9 @@ var (
 	db *gorm.DB
 
 	//DataValidStatus the sql data is valid (general)
-	DataValidStatus uint = 0
+	DataValidStatus uint = 1
 	//DataInValidStatus the sql data is invalid (delete)
-	DataInValidStatus uint = 1
+	DataInValidStatus uint = 2
 
 	ErrNotExist = errors.New("record not found")
 	ErrHasExist = errors.New("record had exist")

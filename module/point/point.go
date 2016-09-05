@@ -32,6 +32,7 @@ func CheckPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, 
 func AddAndUpdate(pointVsn *models.PointVersion) error {
 	if pointVsn.Kind != models.TemporaryPoint {
 		pointVsn.State = models.StateReady
+		pointVsn.Status = models.DataValidStatus
 		if err := pointVsn.Add(); err != nil {
 			return err
 		}
@@ -42,4 +43,13 @@ func AddAndUpdate(pointVsn *models.PointVersion) error {
 	}
 
 	return nil
+}
+
+func Delete(pvid uint64) error {
+	pointVsn := &models.PointVersion{
+		PvID:   pvid,
+		State:  models.StateDeleted,
+		Status: models.DataInValidStatus,
+	}
+	return pointVsn.Update()
 }

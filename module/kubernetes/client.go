@@ -74,7 +74,7 @@ func (c *RESTClient) Get(params *Params) *Result {
 		}
 	}
 
-	return c.doRequest(req)
+	return c.doRequest(req, "application/json")
 }
 
 func (c *RESTClient) Create(params *Params, body []byte) *Result {
@@ -97,7 +97,31 @@ func (c *RESTClient) Create(params *Params, body []byte) *Result {
 		}
 	}
 
-	return c.doRequest(req)
+	return c.doRequest(req, "application/json")
+}
+
+func (c *RESTClient) Update(params *Params, body []byte) *Result {
+	log.Println(string(body))
+	path := params.BuildPath()
+	if path == "" {
+		return &Result{
+			Err:        errors.New("Not supported yet"),
+			StatusCode: -1,
+		}
+	}
+
+	url := c.Verb("Get").URL()
+	url.Path = _APIPATH + path
+	log.Println(url.String())
+	req, err := http.NewRequest("PATCH", url.String(), bytes.NewReader(body))
+	if err != nil {
+		return &Result{
+			Err:        err,
+			StatusCode: -1,
+		}
+	}
+
+	return c.doRequest(req, string(api.JSONPatchType))
 }
 
 func (c *RESTClient) Delete(params *Params) *Result {
@@ -120,11 +144,11 @@ func (c *RESTClient) Delete(params *Params) *Result {
 		}
 	}
 
-	return c.doRequest(req)
+	return c.doRequest(req, "application/json")
 }
 
-func (c *RESTClient) doRequest(req *http.Request) *Result {
-	req.Header.Set("Content-Type", "application/json")
+func (c *RESTClient) doRequest(req *http.Request, t string) *Result {
+	req.Header.Set("Content-Type", t)
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return &Result{
@@ -148,12 +172,13 @@ func (c *RESTClient) doRequest(req *http.Request) *Result {
 	}
 }
 
-func (c *RESTClient) Watch(params *Params, events chan *watch.Event) {
+func (c *RESTClient) Watch(params *Params) (watch.Interface, error) {
 	if !params.IsSetWatcher {
 		params.IsSetWatcher = true
 	}
 
 	req := c.RESTClient.Get()
-	log.Println(req.URL().Path)
-
+	req = req.AbsPath(_APIPATH + params.BuildPath())
+	log.Println(req.URL().String())
+	return req.Watch()
 }

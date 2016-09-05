@@ -5,6 +5,12 @@
     "type": "container",
     "replicas": 1,
     "dependencies": "",
+    "ports": [
+        {
+            "name": "redis",
+            "port": 80
+        }
+    ],
     "artifacts": [
         {
             "name": "test",

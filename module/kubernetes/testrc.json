@@ -1,64 +1,47 @@
 {
-  "kind": "ReplicationController",
-  "apiVersion": "v1",
-  "metadata": {
-    "name": "testrc",
-    "namespace": "vessel"
-  },
-  "spec": {
-    "replicas": 2,
-    "template": {
-      "metadata": {
-        "name": "testpod",
-        "namespace": "vessel"
-      },
-      "spec": {
-        "volumes": [
-          {
-            "name": "string",
-            "hostPath": {
-              "path": "string"
-            }
-          }
-        ],
-        "containers": [
-          {
-            "name": "helloworld",
-            "image": "hello-world",
-            "command": [
-              "string"
-            ],
-            "args": [
-              "string"
-            ],
-            "workingDir": "string",
-            "ports": [
-              {
-                "name": "string",
-                "hostPort": 9090,
-                "containerPort": 9090
-              }
-            ],
-            "lifecycle": {
-              "postStart": {
-                "exec": {
-                  "command": [
-                    "string"
-                  ]
+    "kind": "ReplicationController",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "testrc",
+        "namespace": "vessel",
+        "labels": {
+            "app": "testrc"
+        }
+    },
+    "spec": {
+        "replicas": 2,
+        "template": {
+            "metadata": {
+                "name": "testpod",
+                "namespace": "vessel",
+                "labels": {
+                    "app": "testrc"
                 }
-              },
-              "preStop": {
-                "exec": {
-                  "command": [
-                    "string"
-                  ]
-                }
-              }
             },
-            "imagePullPolicy": "IfNotPresent"
-          }
-        ]
-      }
+            "spec": {
+                "volumes": [
+                    {
+                        "name": "string",
+                        "hostPath": {
+                            "path": "string"
+                        }
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "helloworld",
+                        "image": "hello-world",
+                        "ports": [
+                            {
+                                "name": "http",
+                                "hostPort": 30001,
+                                "containerPort": 9090
+                            }
+                        ],
+                        "imagePullPolicy": "IfNotPresent"
+                    }
+                ]
+            }
+        }
     }
-  }
 }

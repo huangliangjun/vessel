@@ -8,6 +8,7 @@ import (
 
 	"github.com/containerops/vessel/models"
 	"github.com/containerops/vessel/module/dependence"
+	"github.com/containerops/vessel/module/point"
 	"github.com/containerops/vessel/module/scheduler"
 )
 
@@ -17,8 +18,8 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 	pipeline := pipelineTemplate.MetaData
 
 	// Check pipeline exist
-	if err := pipeline.CheckExist(); err != nil {
-		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+	if is := pipeline.CheckIsExist(); is == true {
+		bytes, _ := outputResult(pipeline, 0, nil, "pipeline had exist.")
 		return bytes
 	}
 	log.Println("the pipeline is ", pipeline)
@@ -42,6 +43,7 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 
 }
 
+//StartPipeline start pipeline in k8s
 func StartPipeline(pID uint64) []byte {
 	log.Println("Start pipeline")
 	pipeline := &models.Pipeline{ID: pID}
@@ -56,6 +58,7 @@ func StartPipeline(pID uint64) []byte {
 		PID:      pipeline.ID,
 		State:    models.StateReady,
 		MetaData: pipeline,
+		Status:   models.DataValidStatus,
 	}
 
 	// Insert pipelineVersion
@@ -90,44 +93,70 @@ func StartPipeline(pID uint64) []byte {
 	//return nil
 }
 
+//StopPipeline stop pipeline in k8s
 func StopPipeline(pID uint64, pvID uint64) []byte {
 	log.Println("Stop pipeline")
 	// TODO: Get pipeline form db
 	pipeline := &models.Pipeline{
 		ID: pID,
 	}
+	if err := pipeline.QueryOne(); err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+		return bytes
+	}
+	// TODO: Get pipeline version form db
+	pipelineVersion := &models.PipelineVersion{
+		ID:       pvID,
+		MetaData: pipeline,
+	}
+	if err := pipelineVersion.QueryOne(); err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+		return bytes
+	}
+	executorMap := dependence.ParseRuntimePipelineVersion(pipelineVersion)
 
-	//executorMap, err := dependence.ParsePipeline(pipeline)
-	//if err != nil {
-	//	bytes, _ := outputResult(pipeline, 0, nil, err.Error())
-	//	return bytes
-	//}
-	//
-	//// TODO: Get pipeline version form db
-	//pipelineVersion := &models.PipelineVersion{
-	//	ID: pvID,
-	//}
-	//
-	//schedulingRes := removePipeline(executorMap, pipelineVersion, "")
-	bytes, _ := outputResult(pipeline, 0, nil, "")
+	//point version delete
+	if err := point.Delete(pvID); err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+		return bytes
+	}
+
+	//stop pipeline
+	schedulingRes := removePipeline(executorMap, pipelineVersion, "")
+	bytes, _ := outputResult(pipeline, 0, schedulingRes, "")
 	log.Printf("Delete pipeline name = %v in namespace '%v' is over", pipeline.Namespace, pipeline.Name)
 	log.Print("Delete job is done")
 	return bytes
 }
 
+// DeletePipeline delete pipeline by pID
 func DeletePipeline(pID uint64) []byte {
 	log.Println("Delete pipeline")
 	// TODO: Get pipeline form db
 	pipeline := &models.Pipeline{
-		ID: pID,
+		ID:     pID,
+		Status: models.DataInValidStatus,
+	}
+	// Check pipeline exist
+	if is := pipeline.CheckIsExist(); is == false {
+		bytes, _ := outputResult(pipeline, 0, nil, "pipeline not exist")
+		return bytes
+	}
+	// TODO: Get pipeline version list form db with pID when is not delete
+	pipelineVsn := &models.PipelineVersion{
+		PID:    pID,
+		Status: models.DataValidStatus,
+	}
+	if err := pipelineVsn.QueryOne(); err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, "pipeline is running,could not delete")
+		return bytes
 	}
 
-	// TODO: Get pipeline version list form db with pID when is not delete
-	// if len(list) != 0{
-	//return has running can not delete
-	//}
-
 	// TODO:delete pipeline
+	if err := pipeline.Delete(); err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, "pipeline delete failure")
+		return bytes
+	}
 	log.Printf("Delete pipeline name = %v in namespace '%v' is over", pipeline.Namespace, pipeline.Name)
 	log.Print("Delete job is done")
 	bytes, _ := outputResult(pipeline, 0, nil, "")
@@ -167,6 +196,7 @@ func RenewPipeline(pID uint64, pipelineTemplate *models.PipelineTemplate) []byte
 	return nil
 }
 
+//get pipeline info by pid
 func GetPipeline(pID uint64) []byte {
 	log.Println("Renew pipeline")
 	// TODO:Get pipeline
@@ -174,14 +204,18 @@ func GetPipeline(pID uint64) []byte {
 }
 
 func removePipeline(executorList []interface{}, pipelineVersion *models.PipelineVersion, detail string) []*models.ExecutedResult {
-	//schedulingRes := scheduler.Stop(executorMap, models.StartPointMark)
-	//pipelineVersion.Status = models.StateDeleted
-	pipelineVersion.Detail = detail
+	schedulingRes := scheduler.StopPoint(executorList, models.StartPointMark)
 	// TODO: delete pipeline version
-
-	return nil
+	pipelineVersion.State = models.StateDeleted
+	pipelineVersion.Detail = detail
+	pipelineVersion.Status = models.DataInValidStatus
+	if err := pipelineVersion.Update(); err != nil {
+		return schedulingRes
+	}
+	return schedulingRes
 }
 
+//format output result
 func outputResult(pipeline *models.Pipeline, pvID uint64, schedulingRes []*models.ExecutedResult, detail string) ([]byte, bool) {
 	log.Println("Pipeline result :", schedulingRes)
 	status := models.ResultFailed

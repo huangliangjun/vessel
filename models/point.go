@@ -78,11 +78,11 @@ func (pv *PointVersion) Add() error {
 //update point's version data
 func (pv *PointVersion) Update() error {
 	engineDb := db
-	return engineDb.Model(pv).Update(pv).Error
+	return engineDb.Model(pv).Where(&PointVersion{ID: pv.ID, PvID: pv.PvID, PointID: pv.PointID}).Update(pv).Error
 }
 
 //query point's version data by pid
 func (pv *PointVersion) QueryOne() error {
 	engineDb := db
-	return engineDb.First(pv).Error
+	return engineDb.First(pv, pv).Error
 }

@@ -70,6 +70,55 @@ func ParsePipelineVersion(pipelineVsn *models.PipelineVersion) []interface{} {
 	})
 }
 
+// ParseRuntimePipelineVersion parse runtime pipeline to executor map
+func ParseRuntimePipelineVersion(pipelineVsn *models.PipelineVersion) []interface{} {
+	pipe := pipelineVsn.MetaData
+	hourglass := timer.InitHourglass(time.Duration(pipe.Timeout) * time.Second)
+	executorList := make([]interface{}, 0, len(pipe.Stages)+1)
+
+	//parse point
+	pointVsnMap := make(map[string]*models.PointVersion, 0)
+	for _, point := range pipe.Points {
+		triggers := utils.JSONStrToSlice(point.Triggers)
+		pointVsn := &models.PointVersion{
+			PvID:       pipelineVsn.ID,
+			PointID:    point.ID,
+			Conditions: utils.JSONStrToSlice(point.Conditions),
+			MetaData:   point,
+			Kind:       point.Type,
+		}
+		for _, trigger := range triggers {
+			pointVsnMap[trigger] = pointVsn
+		}
+	}
+
+	//parse stage
+	log.Println("the pointVsnMap is ", pointVsnMap)
+	for _, stage := range pipe.Stages {
+		log.Println("the stage is ", stage)
+		stageVsn := &models.StageVersion{
+			PvID:     pipelineVsn.ID,
+			SID:      stage.ID,
+			MetaData: stage,
+		}
+		stage.Hourglass = hourglass
+		stage.PipelineName = pipe.Name
+		pointVsn, ok := pointVsnMap[stage.Name]
+		if !ok {
+			pointVsn = &models.PointVersion{
+				PvID:       pipelineVsn.ID,
+				Kind:       models.TemporaryPoint,
+				Conditions: utils.JSONStrToSlice(stage.Dependencies),
+			}
+			pointVsnMap[stage.Name] = pointVsn
+		}
+		stageVsn.PointVersion = pointVsn
+		executorList = append(executorList, stageVsn)
+	}
+
+	return executorList
+}
+
 // CheckDependence check pipeline dependence
 func CheckDependence(pipeline *models.Pipeline) error {
 	conditionMap, err := checkPoints(pipeline.Points)
@@ -79,6 +128,7 @@ func CheckDependence(pipeline *models.Pipeline) error {
 	return checkStages(pipeline.Stages, conditionMap)
 }
 
+//check pipeline's point
 func checkPoints(points []*models.Point) (map[string][]string, error) {
 	conditionMap := make(map[string][]string, 0)
 	startPointCount := 0
@@ -121,6 +171,7 @@ func checkPoints(points []*models.Point) (map[string][]string, error) {
 	return conditionMap, nil
 }
 
+//check pipeline's stages
 func checkStages(stages []*models.Stage, conditionMap map[string][]string) error {
 	stageMap := make(map[string]*models.Stage, 0)
 	stageListMap := make(map[string][]string, 0)
@@ -158,6 +209,7 @@ func checkStages(stages []*models.Stage, conditionMap map[string][]string) error
 	return checkDependenceValidity(stageListMap, stageMap)
 }
 
+//Validity pipeline's stages dependence
 func checkDependenceValidity(stageListMap map[string][]string, stageMap map[string]*models.Stage) error {
 	if len(stageListMap[""]) == 0 {
 		return errors.New("The first start stage list is empty")
@@ -179,6 +231,7 @@ func checkDependenceValidity(stageListMap map[string][]string, stageMap map[stri
 
 }
 
+//Validity stages chain dependence
 func checkEndlessChain(stageListMap map[string][]string, chain []string, checkName string) error {
 	if checkName != "" {
 		for _, chainItem := range chain {
