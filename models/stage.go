@@ -31,7 +31,7 @@ type Stage struct {
 	Volumes       []Volume         `json:"volumes"  sql:"-"`
 	ArtifactsJSON string           `json:"-" gorm:"column:artifactsJson;type:text;not null"` // json type
 	VolumesJSON   string           `json:"-" gorm:"column:volumesJson;type:text;not null"`   // json type
-	Ports         []ServicePort    `json:"port,omitempty" sql:"-"`
+	Ports         []ServicePort    `json:"ports,omitempty" sql:"-"`
 	PortsJSON     string           `json:"-" gorm:"column:portsJSON;type:text;not null"` // json type
 	Hourglass     *timer.Hourglass `json:"-" sql:"-"`
 	Status        uint             `json:"status" gorm:"type:int;default:0"`

@@ -89,7 +89,7 @@ var pipelineJson = `{
                 "Artifacts": [
 			        {
 			            "name": "redis-slave",
-			            "path": "gcr.io/google_containers/gb-redisslave:v1",
+			            "path": "gcr.io/google_samples/gb-redisslave:v1",
 			            "container": {
 			                "workingDir": "",
 			                "ports": [
