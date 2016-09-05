@@ -52,17 +52,24 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 
 // Stop stage
 func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.ExecutedResult) {
-	//	stageVsn := info.(*models.StageVersion)
-	//	metaData := stageVsn.MetaData
+	stageVsn := info.(*models.StageVersion)
+	metaData := stageVsn.MetaData
 	//	if stageVsn.State != models.StateReady || stageVsn.State != models.StateRunning {
 	//		return
 	//	}
-	//	readyMap[metaData.Name] = true
+	//readyMap[metaData.Name] = true
+	deployment := deployment.NewDeployment(metaData)
+	res := deployment.UnDeploy()
+	//res := kubeclt.DeleteStage(stageVsn.MetaData)
+	//TODO:Update stageVersion
+	stageVsn.State = models.StateDeleted
+	stageVsn.Status = models.DataInValidStatus
+	if err := stageVsn.Update(); err != nil {
+		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, models.ResultFailed, "stageVersion update failure")
+	} else {
+		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, res.Status, res.Detail)
+	}
 
-	//	res := kubeclt.DeleteStage(stageVsn.MetaData)
-	//	//TODO:Update stageVersion
-	//	stageVsn.State = models.StateDeleted
-	//	finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, res.Status, res.Detail)
 }
 
 func FillSchedulingResult(svid uint64, stageName, result string, detail string) *models.ExecutedResult {

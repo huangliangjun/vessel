@@ -22,23 +22,20 @@ var pipelineJson = `{
             },
             {
                 "type": "Check",
-                "triggers": "redis-slave,frontend",
+                "triggers": "redis-slave",
                 "conditions": "redis-master"
             },
-            {
-                "type": "Check",
-                "triggers": "frontend1",
-                "conditions": "redis-slave,frontend"
-            },
+           
             {
                 "type": "End",
                 "triggers": "",
-                "conditions": "frontend2"
+                "conditions": "frontend"
             }
         ],
         "Stages": [
             {
                 "Name": "redis-master",
+				"Namespace":"vessel",
                 "Type": "container",
 				"Replicas":1,
                 "Dependencies": "",
@@ -79,6 +76,7 @@ var pipelineJson = `{
             },
 			{
                 "Name": "redis-slave",
+				"Namespace":"vessel",
                 "Type": "container",
 				"Replicas":1,
                 "Dependencies": "redis-master",
@@ -119,6 +117,7 @@ var pipelineJson = `{
             },
 			{
                 "Name": "frontend",
+				"Namespace":"vessel",
                 "Type": "container",
 				"Replicas":1,
                 "Dependencies": "redis-slave",
@@ -156,44 +155,7 @@ var pipelineJson = `{
                         "HostPath": "/home/vessel"
                     }
                 ]
-            },
-			{
-                "Name": "frontend1",
-                "Type": "container",
-				"Replicas":1,
-                "Dependencies": "frontend",
-                "Artifacts": [
-                    {
-                        "Name": "ddd",
-                        "Path": "/d"
-                    }
-                ],
-                "Volumes": [
-                    {
-                        "Name": "ddd",
-                        "HostPath": "/d"
-                    }
-                ]
-            },
-			{
-                "Name": "frontend2",
-                "Type": "container",
-				"Replicas":1,
-                "Dependencies": "frontend1",
-                "Artifacts": [
-                    {
-                        "Name": "eee",
-                        "Path": "/e"
-                    }
-                ],
-                "Volumes": [
-                    {
-                        "Name": "eee",
-                        "HostPath": "/e"
-                    }
-                ]
-            }
-			
+            }	
         ]
     }
 }`

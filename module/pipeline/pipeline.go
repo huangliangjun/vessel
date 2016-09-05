@@ -135,7 +135,7 @@ func DeletePipeline(pID uint64) []byte {
 	// TODO: Get pipeline form db
 	pipeline := &models.Pipeline{
 		ID:     pID,
-		Status: models.DataInValidStatus,
+		Status: models.DataValidStatus,
 	}
 	// Check pipeline exist
 	if is := pipeline.CheckIsExist(); is == false {
@@ -147,7 +147,7 @@ func DeletePipeline(pID uint64) []byte {
 		PID:    pID,
 		Status: models.DataValidStatus,
 	}
-	if err := pipelineVsn.QueryOne(); err != nil {
+	if err := pipelineVsn.QueryOne(); err == nil {
 		bytes, _ := outputResult(pipeline, 0, nil, "pipeline is running,could not delete")
 		return bytes
 	}
