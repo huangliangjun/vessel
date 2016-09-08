@@ -41,23 +41,23 @@ const (
 )
 
 func init() {
-	fmt.Println("the db is ", db)
-	var err error
-	if db == nil {
-		dbArgs := "root@tcp(127.0.0.1:3306)/vesseldb?loc=Local&parseTime=True&charset=utf8"
-		db, err = gorm.Open("mysql", dbArgs)
+	//	fmt.Println("the db is ", db)
+	//	var err error
+	//	if db == nil {
+	//		dbArgs := "root@tcp(127.0.0.1:3306)/vesseldb?loc=Local&parseTime=True&charset=utf8"
+	//		db, err = gorm.Open("mysql", dbArgs)
 
-		if err != nil {
-			panic(err)
-		}
-		//db.LogMode(true)
-		db.DB().SetMaxIdleConns(10)
-		db.DB().SetMaxOpenConns(100)
-		db.SingularTable(true)
-		if err = Sync(); err != nil {
-			panic(err)
-		}
-	}
+	//		if err != nil {
+	//			panic(err)
+	//		}
+	//		//db.LogMode(true)
+	//		db.DB().SetMaxIdleConns(10)
+	//		db.DB().SetMaxOpenConns(100)
+	//		db.SingularTable(true)
+	//		if err = Sync(); err != nil {
+	//			panic(err)
+	//		}
+	//	}
 }
 
 // InitEtcd for etcd init

@@ -5,8 +5,7 @@ import (
 	"log"
 
 	"github.com/containerops/vessel/models"
-	//"github.com/containerops/vessel/module/deployment"
-	//	kubeclt "github.com/containerops/vessel/module/kubernetes"
+	"github.com/containerops/vessel/module/deployment"
 	"github.com/containerops/vessel/module/point"
 )
 

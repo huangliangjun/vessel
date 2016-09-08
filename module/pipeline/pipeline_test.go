@@ -2,9 +2,15 @@ package pipeline
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/containerops/vessel/models"
+	"github.com/containerops/vessel/setting"
+	"github.com/ghodss/yaml"
 )
 
 var pipelineJson = `{
@@ -159,6 +165,50 @@ var pipelineJson = `{
         ]
     }
 }`
+
+func init() {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	arr := strings.Split(dir, "vessel")
+	globalFile, err := ioutil.ReadFile(arr[0] + "vessel/conf/global.yaml")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	setting.Global = &setting.GlobalConf{}
+	if err = yaml.Unmarshal([]byte(globalFile), &setting.Global); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	runtimeFile, err := ioutil.ReadFile(arr[0] + "vessel/conf/runtime.yaml")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	setting.RunTime = &setting.RunTimeConf{}
+	if err := yaml.Unmarshal([]byte(runtimeFile), &setting.RunTime); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if err := models.InitEtcd(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if err := models.InitK8S(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if err := models.InitDatabase(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
 
 func Test_CreatePipeline(t *testing.T) {
 	var pipelineTemplate models.PipelineTemplate

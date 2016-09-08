@@ -21,11 +21,12 @@ func StartPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, 
 			return meet, ended
 		}
 	}
+	ended = pointVsn.Kind == models.EndPoint
 	err := AddAndUpdate(pointVsn)
 	if err != nil {
 		return meet, ended
 	}
-	ended = pointVsn.Kind == models.EndPoint
+
 	return meet, ended
 }
 
