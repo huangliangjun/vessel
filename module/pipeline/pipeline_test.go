@@ -22,7 +22,7 @@ var pipelineJson = `{
             },
             {
                 "type": "Check",
-                "triggers": "redis-slave",
+                "triggers": "redis-slave,frontend",
                 "conditions": "redis-master"
             },
            
@@ -120,7 +120,7 @@ var pipelineJson = `{
 				"Namespace":"vessel",
                 "Type": "container",
 				"Replicas":1,
-                "Dependencies": "redis-slave",
+                "Dependencies": "redis-master",
                 "Ports": [
                     {
                         "name": "frontend",

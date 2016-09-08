@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/containerops/vessel/models"
-	"github.com/containerops/vessel/module/deployment"
+	//"github.com/containerops/vessel/module/deployment"
 	//	kubeclt "github.com/containerops/vessel/module/kubernetes"
 	"github.com/containerops/vessel/module/point"
 )
@@ -17,7 +17,7 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	if stageVsn.State != "" {
 		return
 	}
-	meet, ended := point.CheckPoint(stageVsn.PointVersion, readyMap)
+	meet, ended := point.StartPoint(stageVsn.PointVersion, readyMap)
 	if ended {
 		log.Println("endPointMark")
 		finishChan <- FillSchedulingResult(stageVsn.ID, models.EndPointMark, models.ResultSuccess, "")
@@ -35,7 +35,6 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	}
 	deployment := deployment.NewDeployment(metaData)
 	res := deployment.Deploy()
-	//res := kubeclt.CreateStage(metaData)
 	if res.Status != models.ResultSuccess {
 		finishChan <- FillSchedulingResult(stageVsn.ID, metaData.Name, res.Status, res.Detail)
 		return
@@ -54,20 +53,28 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.ExecutedResult) {
 	stageVsn := info.(*models.StageVersion)
 	metaData := stageVsn.MetaData
-	//	if stageVsn.State != models.StateReady || stageVsn.State != models.StateRunning {
-	//		return
-	//	}
-	//readyMap[metaData.Name] = true
+	if stageVsn.State == models.StateDeleted {
+		return
+	}
+	meet, ended := point.StopPoint(stageVsn.PointVersion, readyMap)
+	if ended {
+		log.Println("endPointMark")
+		finishChan <- FillSchedulingResult(stageVsn.ID, models.EndPointMark, models.ResultSuccess, "")
+		return
+	}
+	if !meet {
+		return
+	}
+	readyMap[metaData.Name] = true
 	deployment := deployment.NewDeployment(metaData)
-	res := deployment.UnDeploy()
-	//res := kubeclt.DeleteStage(stageVsn.MetaData)
+	res := deployment.Undeploy()
 	//TODO:Update stageVersion
 	stageVsn.State = models.StateDeleted
 	stageVsn.Status = models.DataInValidStatus
 	if err := stageVsn.Update(); err != nil {
 		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, models.ResultFailed, "stageVersion update failure")
 	} else {
-		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, res.Status, res.Detail)
+		finishChan <- FillSchedulingResult(stageVsn.ID, res.Name, res.Status, res.Detail)
 	}
 
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/containerops/vessel/models"
 )
 
-func CheckPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, bool) {
+func StartPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, bool) {
 	meet := true
 	ended := false
 	if pointVsn.Kind == models.StartPoint {
@@ -24,6 +24,22 @@ func CheckPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, 
 	err := AddAndUpdate(pointVsn)
 	if err != nil {
 		return meet, ended
+	}
+	ended = pointVsn.Kind == models.EndPoint
+	return meet, ended
+}
+
+func StopPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, bool) {
+	meet := true
+	ended := false
+	if pointVsn.Kind == models.StartPoint {
+
+		return meet, ended
+	}
+	for _, condition := range pointVsn.Conditions {
+		if meet := readyMap[condition]; !meet {
+			return meet, ended
+		}
 	}
 	ended = pointVsn.Kind == models.EndPoint
 	return meet, ended

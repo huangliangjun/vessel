@@ -113,7 +113,7 @@ func StopPipeline(pID uint64, pvID uint64) []byte {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
 		return bytes
 	}
-	executorMap := dependence.ParseRuntimePipelineVersion(pipelineVersion)
+	executorMap := dependence.ParsePipelineVersion(pipelineVersion)
 
 	//point version delete
 	if err := point.Delete(pvID); err != nil {

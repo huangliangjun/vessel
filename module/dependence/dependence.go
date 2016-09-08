@@ -44,7 +44,6 @@ func ParsePipelineVersion(pipelineVsn *models.PipelineVersion) []interface{} {
 	//parse stage
 	log.Println("the pointVsnMap is ", pointVsnMap)
 	for _, stage := range pipe.Stages {
-		log.Println("the stage is ", stage)
 		stageVsn := &models.StageVersion{
 			PvID:     pipelineVsn.ID,
 			SID:      stage.ID,
