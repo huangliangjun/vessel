@@ -34,13 +34,17 @@ type RunTimeConf struct {
 	}
 	// Database config
 	Database struct {
-		Username string
-		Password string
-		Protocol string
-		Host     string
-		Port     string
-		Schema   string
-		Param    map[string]string
+		Username      string
+		Password      string
+		Protocol      string
+		Host          string
+		Port          string
+		Schema        string
+		LogMode       bool
+		SingularTable bool
+		MaxIdleConns  int
+		MaxOpenConns  int
+		Param         map[string]string
 	}
 	// Etcd config
 	Etcd struct {

@@ -111,10 +111,10 @@ func InitDatabase() error {
 		if db, err = gorm.Open("mysql", dbArgs); err != nil {
 			return err
 		}
-		db.LogMode(true)
-		db.DB().SetMaxIdleConns(10)
-		db.DB().SetMaxOpenConns(100)
-		db.SingularTable(true)
+		db.LogMode(setting.RunTime.Database.LogMode)
+		db.SingularTable(setting.RunTime.Database.SingularTable)
+		db.DB().SetMaxIdleConns(setting.RunTime.Database.MaxIdleConns)
+		db.DB().SetMaxOpenConns(setting.RunTime.Database.MaxOpenConns)
 		if err = Sync(); err != nil {
 			return err
 		}

@@ -15,6 +15,10 @@ database:
   host: 127.0.0.1
   port: 3306
   schema: vesseldb
+  LogMode: true
+  SingularTable: true
+  SetMaxIdleConns: 10
+  SetMaxOpenConns: 100
   param:
     charset: utf8
     parseTime: True
