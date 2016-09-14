@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func Test_StageVersionAdd(t *testing.T) {
+func Test_StageVersionCreate(t *testing.T) {
 	sv := &StageVersion{
 		SID:    1,
 		PvID:   1,
@@ -12,15 +12,16 @@ func Test_StageVersionAdd(t *testing.T) {
 		State:  "ready",
 	}
 
-	if err := sv.Add(); err != nil {
-		t.Error("StageVersion Add failure ", err)
+	if err := sv.Create(); err != nil {
+		t.Error("StageVersion Create failure ", err)
 	} else {
-		t.Log("AddStageVersion success ", sv)
+		t.Log("AddStageVersion Create success ", sv)
 	}
 }
 
 func Test_StageVersionUpdate(t *testing.T) {
 	sv := &StageVersion{
+		ID:     1,
 		SID:    1,
 		Detail: "",
 		State:  "running",
@@ -33,16 +34,24 @@ func Test_StageVersionUpdate(t *testing.T) {
 	}
 }
 
-func Test_StageVersionQueryOne(t *testing.T) {
+func Test_StageVersionQueryM(t *testing.T) {
 	sv := &StageVersion{
-		SID:    1,
-		Detail: "",
-		State:  "running",
+		SID: 1,
 	}
-
-	if err := sv.QueryOne(); err != nil {
-		t.Error("StageVersion QueryOne failure ", err)
+	if svs, err := sv.QueryM(); err != nil {
+		t.Error("StageVersion QueryM failure ", err)
 	} else {
-		t.Log("StageVersion QueryOne success ", sv)
+		t.Log("StageVersion QueryM success ", svs)
+	}
+}
+
+func Test_StageVersionDelete(t *testing.T) {
+	sv := &StageVersion{
+		SID: 1,
+	}
+	if err := sv.SoftDelete(); err != nil {
+		t.Error("StageVersion Delete failure ", err)
+	} else {
+		t.Log("StageVersion Delete success ")
 	}
 }

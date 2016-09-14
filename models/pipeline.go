@@ -1,7 +1,11 @@
 package models
 
 import (
+	"errors"
+	//	"fmt"
 	"time"
+
+	"github.com/containerops/vessel/db"
 )
 
 // PipelineTemplate template for request data
@@ -58,26 +62,18 @@ func (PipelineVersion) TableName() string {
 	return "pipeline_version"
 }
 
-//add pipeline data
-func (p *Pipeline) Add() error {
-	engineDb := db
-	//begin transaction
-	tx := engineDb.Begin()
-	var err error
-	//save pipeline data
-	p.Status = DataValidStatus
-	if err = tx.Create(p).Error; err != nil {
+//create pipeline
+func (p *Pipeline) Create() error {
+	if err := db.Instance.Create(p); err != nil {
 		//rallback transaction
-		tx.Rollback()
+		db.Instance.Rollback()
 		return err
 	}
-
 	for _, point := range p.Points {
 		//save  pipeline's point data
 		point.PID = p.ID
-		point.Status = DataValidStatus
-		if err = tx.Create(point).Error; err != nil {
-			tx.Rollback()
+		if err := db.Instance.Create(point); err != nil {
+			db.Instance.Rollback()
 			return err
 		}
 	}
@@ -86,132 +82,159 @@ func (p *Pipeline) Add() error {
 		//save  pipeline's point data
 		err := stage.ObjToJson()
 		if err != nil {
-			tx.Rollback()
+			db.Instance.Rollback()
 			return err
 		}
 		stage.PID = p.ID
-		stage.Status = DataValidStatus
-		if err = tx.Create(stage).Error; err != nil {
-			tx.Rollback()
+		if err := db.Instance.Create(stage); err != nil {
+			db.Instance.Rollback()
 			return err
 		}
 	}
 	//commit transaction
-	tx.Commit()
-	return err
+
+	return db.Instance.Commit()
 }
 
-//Query pipeline data
+//Query one pipeline data
 func (p *Pipeline) QueryOne() error {
-	engineDb := db
-	var err error
 	//query pipeline data
-	err = engineDb.First(p, &Pipeline{Name: p.Name, Namespace: p.Namespace}).Error
-	if err != nil {
-		return err
+	pipeline := &Pipeline{
+		Namespace: p.Namespace,
+		Name:      p.Name,
 	}
-
+	if _, err := db.Instance.Count(pipeline); err != nil {
+		return err
+	} else if pipeline.ID <= 0 {
+		return errors.New("record not found")
+	}
+	*p = *pipeline
 	//query pipeline's stages data
-	stage := &Stage{PID: p.ID}
-	stages, err := stage.Query()
+	stage := &Stage{PID: pipeline.ID}
+	stages, err := stage.QueryM()
 	if err != nil {
 		return err
-	}
-	for i, s := range stages {
-		err := s.JsonToObj()
-		stages[i] = s
-		if err != nil {
-			return err
-		}
 	}
 	p.Stages = stages
 
 	//query pipeline's points data
-	point := &Point{PID: p.ID}
-	points, err := point.Query()
-
+	point := &Point{PID: pipeline.ID}
+	points, err := point.QueryM()
 	if err != nil {
 		return err
 	}
 	p.Points = points
-
 	return nil
 }
 
-//delete pipeline data
-func (p *Pipeline) Delete() error {
-	engineDb := db
-	//begin transaction
-	tx := engineDb.Begin()
-
-	//modify pipeline status
-	p.Status = DataInValidStatus
-	err := tx.Model(p).Update(p).Error
-	if err != nil {
-		//rollback transaction
-		tx.Rollback()
+//Query multi pipeline data
+func (p *Pipeline) QueryMulti() ([]*Pipeline, error) {
+	ps := make([]*Pipeline, 0, 10)
+	if err := db.Instance.QueryM(p, &ps); err != nil {
+		return nil, err
 	}
-
-	//modify pipeline'stage status
-	stage := &Stage{
-		PID:    p.ID,
-		Status: DataInValidStatus,
-	}
-	err = tx.Model(&Stage{}).Where(&Stage{PID: p.ID}).Update(stage).Error
-	if err != nil {
-		//rollback transaction
-		tx.Rollback()
-	}
-
-	//modify pipeline'point status
-	point := &Point{
-		PID:    p.ID,
-		Status: DataInValidStatus,
-	}
-	err = tx.Model(&Point{}).Where(&Point{PID: p.ID}).Update(point).Error
-	if err != nil {
-		//rollback transaction
-		tx.Rollback()
-	}
-
-	//commit transaction
-	return tx.Commit().Error
+	return ps, nil
 }
 
 //update pipeline data
 func (p *Pipeline) Update() error {
-	engineDb := db
-	return engineDb.Model(p).Update(p).Error
+	if err := db.Instance.Update(p); err != nil {
+		db.Instance.Rollback()
+		return err
+	}
+	return db.Instance.Commit()
 }
 
-//check pipeline exist
-func (p *Pipeline) CheckIsExist() bool {
-	engineDb := db
-	err := engineDb.First(p, p).Error
-	if err == nil {
-		return true
+//delete pipeline data
+func (p *Pipeline) SoftDelete() error {
+	pipeline := &Pipeline{
+		Namespace: p.Namespace,
+		Name:      p.Name,
 	}
-	if err.Error() == ErrNotExist.Error() {
-		return false
+	if _, err := db.Instance.Count(pipeline); err != nil {
+		return err
+	} else if pipeline.ID <= 0 {
+		return errors.New("record not exist")
+	}
+	//delete pipeline
+	if err := db.Instance.DeleteS(p); err != nil {
+		//rollback transaction
+		db.Instance.Rollback()
+		return err
+	}
+	//delete pipeline's stage
+	stage := &Stage{
+		PID: pipeline.ID,
+	}
+	if err := db.Instance.DeleteS(stage); err != nil {
+		//rollback transaction
+		db.Instance.Rollback()
+		return err
 	}
 
-	return false
+	//delete pipeline's point
+	point := &Point{
+		PID: pipeline.ID,
+	}
+	if err := db.Instance.DeleteS(point); err != nil {
+		//rollback transaction
+		db.Instance.Rollback()
+		return err
+	}
+
+	//commit transaction
+
+	return db.Instance.Commit()
 }
 
-//add pipeline version data
-func (pv *PipelineVersion) Add() error {
-	engineDb := db
-	return engineDb.Create(pv).Error
+func (p *Pipeline) CheckIsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+//create pipeline version data
+func (pv *PipelineVersion) Create() error {
+	if err := db.Instance.Create(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
 //update pipeline version data
 func (pv *PipelineVersion) Update() error {
-	engineDb := db
-	return engineDb.Model(pv).Where(&PipelineVersion{ID: pv.ID, PID: pv.PID}).Update(pv).Error
+	if err := db.Instance.Update(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
-//query pipeline version data by pid
+//query one pipeline version data
 func (pv *PipelineVersion) QueryOne() error {
-	engineDb := db
-	return engineDb.First(pv, pv).Error
+	if _, err := db.Instance.Count(pv); err != nil {
+		return err
+	} else if pv.ID <= 0 {
+		return errors.New("record not found")
+	}
+	return nil
+}
+
+//query multi pipeline version data
+func (pv *PipelineVersion) QueryM() ([]*PipelineVersion, error) {
+	pvs := make([]*PipelineVersion, 0, 10)
+	if err := db.Instance.QueryM(pv, &pvs); err != nil {
+		return nil, err
+	}
+	return pvs, nil
+}
+
+//delete pipeline version data
+func (pv *PipelineVersion) SoftDelete() error {
+	if err := db.Instance.DeleteS(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }

@@ -29,7 +29,7 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	//TODO:Save stageVersion
 	stageVsn.State = models.StateReady
 	stageVsn.Status = models.DataValidStatus
-	if err := stageVsn.Add(); err != nil {
+	if err := stageVsn.Create(); err != nil {
 		return
 	}
 	deployment := deployment.NewDeployment(metaData)

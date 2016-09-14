@@ -18,7 +18,12 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 	pipeline := pipelineTemplate.MetaData
 
 	// Check pipeline exist
-	if is := pipeline.CheckIsExist(); is == true {
+	is, err := pipeline.CheckIsExist()
+	if err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+		return bytes
+	}
+	if is == true {
 		bytes, _ := outputResult(pipeline, 0, nil, "pipeline had exist.")
 		return bytes
 	}
@@ -31,7 +36,7 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 	}
 
 	// Insert pipeline
-	if err := pipeline.Add(); err != nil {
+	if err := pipeline.Create(); err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
 		return bytes
 	}
@@ -62,7 +67,7 @@ func StartPipeline(pID uint64) []byte {
 	}
 
 	// Insert pipelineVersion
-	if err := pipelineVsn.Add(); err != nil {
+	if err := pipelineVsn.Create(); err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
 		return bytes
 	}
@@ -138,8 +143,13 @@ func DeletePipeline(pID uint64) []byte {
 		Status: models.DataValidStatus,
 	}
 	// Check pipeline exist
-	if is := pipeline.CheckIsExist(); is == false {
-		bytes, _ := outputResult(pipeline, 0, nil, "pipeline not exist")
+	is, err := pipeline.CheckIsExist()
+	if err != nil {
+		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+		return bytes
+	}
+	if is == false {
+		bytes, _ := outputResult(pipeline, 0, nil, "pipeline not exist.")
 		return bytes
 	}
 	// TODO: Get pipeline version list form db with pID when is not delete
@@ -153,7 +163,7 @@ func DeletePipeline(pID uint64) []byte {
 	}
 
 	// TODO:delete pipeline
-	if err := pipeline.Delete(); err != nil {
+	if err := pipeline.SoftDelete(); err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, "pipeline delete failure")
 		return bytes
 	}

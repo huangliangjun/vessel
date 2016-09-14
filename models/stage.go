@@ -5,7 +5,7 @@ import (
 
 	"encoding/json"
 	//"fmt"
-
+	"github.com/containerops/vessel/db"
 	"github.com/containerops/vessel/utils/timer"
 	//	"k8s.io/kubernetes/pkg/api/v1"
 )
@@ -44,7 +44,7 @@ type Stage struct {
 type StageVersion struct {
 	ID           uint64        `json:"id" gorm:"primary_key"`
 	PvID         uint64        `json:"pvid" gorm:"type:int;not null"`
-	SID          uint64        `json:"sid" gorm:"type:int;not null"`
+	SID          uint64        `json:"sid" gorm:"type:int;not null;index"`
 	State        string        `json:"state" gorm:"column:state;type:varchar(20)"`
 	Detail       string        `json:"detail" gorm:"type:text;"`
 	MetaData     *Stage        `json:"-" sql:"-"`
@@ -122,12 +122,19 @@ func (StageVersion) TableName() string {
 }
 
 //query pipeline'statge data
-func (s *Stage) Query() ([]*Stage, error) {
-	engineDb := db
+func (s *Stage) QueryM() ([]*Stage, error) {
 	stages := make([]*Stage, 0, 10)
-	//s.Status = DataValidStatus
-	err := engineDb.Find(&stages, s).Error
-
+	err := db.Instance.QueryM(s, &stages)
+	if err != nil {
+		return nil, err
+	}
+	for i, v := range stages {
+		err := v.JsonToObj()
+		stages[i] = v
+		if err != nil {
+			return nil, err
+		}
+	}
 	return stages, err
 }
 
@@ -179,20 +186,35 @@ func (s *Stage) JsonToObj() error {
 	return nil
 }
 
-//save stage version data
-func (sv *StageVersion) Add() error {
-	engineDb := db
-	return engineDb.Create(sv).Error
+//create stage version data
+func (sv *StageVersion) Create() error {
+	if err := db.Instance.Create(sv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
 //update stage version data
 func (sv *StageVersion) Update() error {
-	engineDb := db
-	return engineDb.Model(sv).Where(&StageVersion{ID: sv.ID, SID: sv.SID}).Update(sv).Error
+	if err := db.Instance.Update(sv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
 //query stage version data
-func (sv *StageVersion) QueryOne() error {
-	engineDb := db
-	return engineDb.First(sv, sv).Error
+func (sv *StageVersion) QueryM() ([]*StageVersion, error) {
+	svs := make([]*StageVersion, 0, 10)
+	if err := db.Instance.QueryM(sv, &svs); err != nil {
+		return nil, err
+	}
+	return svs, nil
+}
+
+//delete stage version data
+func (sv *StageVersion) SoftDelete() error {
+	if err := db.Instance.DeleteS(sv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }

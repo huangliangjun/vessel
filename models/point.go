@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/containerops/vessel/db"
 )
 
 const (
@@ -61,28 +63,44 @@ func (p *PointVersion) TableName() string {
 }
 
 //query pipeline's points data
-func (p *Point) Query() ([]*Point, error) {
-	engineDb := db
+func (p *Point) QueryM() ([]*Point, error) {
 	points := make([]*Point, 0, 10)
-	p.Status = DataValidStatus
-	err := engineDb.Find(&points, p).Error
+	err := db.Instance.QueryM(p, &points)
+	if err != nil {
+		return nil, err
+	}
 	return points, err
 }
 
-//add point's version data
-func (pv *PointVersion) Add() error {
-	engineDb := db
-	return engineDb.Create(pv).Error
+//create point's version data
+func (pv *PointVersion) Create() error {
+	if err := db.Instance.Create(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
 //update point's version data
 func (pv *PointVersion) Update() error {
-	engineDb := db
-	return engineDb.Model(pv).Where(&PointVersion{ID: pv.ID, PvID: pv.PvID, PointID: pv.PointID}).Update(pv).Error
+	if err := db.Instance.Update(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }
 
-//query point's version data by pid
-func (pv *PointVersion) QueryOne() error {
-	engineDb := db
-	return engineDb.First(pv, pv).Error
+//query point's version data
+func (pv *PointVersion) QueryM() ([]*PointVersion, error) {
+	pvs := make([]*PointVersion, 0, 10)
+	if err := db.Instance.QueryM(pv, &pvs); err != nil {
+		return nil, err
+	}
+	return pvs, nil
+}
+
+//delete point's version data
+func (pv *PointVersion) SoftDelete() error {
+	if err := db.Instance.DeleteS(pv); err != nil {
+		return err
+	}
+	return db.Instance.Commit()
 }

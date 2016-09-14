@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/containerops/vessel/db"
 	"github.com/containerops/vessel/models"
 	"github.com/containerops/vessel/setting"
 	"github.com/ghodss/yaml"
@@ -204,9 +205,23 @@ func init() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	if err := models.InitDatabase(); err != nil {
+	//	if err := models.InitDatabase(); err != nil {
+	//		fmt.Println(err)
+	//		os.Exit(1)
+	//	}
+	if err := db.InitDB(setting.RunTime.Database.Driver, setting.RunTime.Database.Username,
+		setting.RunTime.Database.Password, setting.RunTime.Database.Host+":"+setting.RunTime.Database.Port,
+		setting.RunTime.Database.Schema); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+	}
+	if err := db.Instance.RegisterModel(new(models.Pipeline), new(models.PipelineVersion)); err != nil {
+		fmt.Println(err)
+	}
+	if err := db.Instance.RegisterModel(new(models.Stage), new(models.StageVersion)); err != nil {
+		fmt.Println(err)
+	}
+	if err := db.Instance.RegisterModel(new(models.Point), new(models.PointVersion)); err != nil {
+		fmt.Println(err)
 	}
 }
 

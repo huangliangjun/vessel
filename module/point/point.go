@@ -50,7 +50,7 @@ func AddAndUpdate(pointVsn *models.PointVersion) error {
 	if pointVsn.Kind != models.TemporaryPoint {
 		pointVsn.State = models.StateReady
 		pointVsn.Status = models.DataValidStatus
-		if err := pointVsn.Add(); err != nil {
+		if err := pointVsn.Create(); err != nil {
 			return err
 		}
 		pointVsn.State = models.StateRunning

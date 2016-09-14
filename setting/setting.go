@@ -34,6 +34,7 @@ type RunTimeConf struct {
 	}
 	// Database config
 	Database struct {
+		Driver        string
 		Username      string
 		Password      string
 		Protocol      string

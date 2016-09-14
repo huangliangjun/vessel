@@ -9,7 +9,7 @@ import (
 	"github.com/containerops/vessel/setting"
 	"github.com/coreos/etcd/client"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	//	"github.com/jinzhu/gorm"
 	"k8s.io/kubernetes/pkg/client/restclient"
 	"k8s.io/kubernetes/pkg/client/unversioned"
 )
@@ -20,7 +20,7 @@ var (
 	// K8sClient k8s client
 	K8S *unversioned.Client
 
-	db *gorm.DB
+	//db *gorm.DB
 
 	//DataValidStatus the sql data is valid (general)
 	DataValidStatus uint = 1
@@ -100,36 +100,36 @@ func InitK8S() error {
 	return nil
 }
 
-// InitDatabase for mysql init
-func InitDatabase() error {
-	var err error
-	if db == nil {
-		dbArgs := fmt.Sprintf(DBConnectPath, setting.RunTime.Database.Username, setting.RunTime.Database.Password,
-			setting.RunTime.Database.Protocol, setting.RunTime.Database.Host, setting.RunTime.Database.Port,
-			setting.RunTime.Database.Schema, setting.RunTime.Database.Param["charset"],
-			setting.RunTime.Database.Param["loc"], setting.RunTime.Database.Param["parseTime"])
-		if db, err = gorm.Open("mysql", dbArgs); err != nil {
-			return err
-		}
-		db.LogMode(setting.RunTime.Database.LogMode)
-		db.SingularTable(setting.RunTime.Database.SingularTable)
-		db.DB().SetMaxIdleConns(setting.RunTime.Database.MaxIdleConns)
-		db.DB().SetMaxOpenConns(setting.RunTime.Database.MaxOpenConns)
-		if err = Sync(); err != nil {
-			return err
-		}
-	}
-	return nil
-}
+//// InitDatabase for mysql init
+//func InitDatabase() error {
+//	var err error
+//	if db == nil {
+//		dbArgs := fmt.Sprintf(DBConnectPath, setting.RunTime.Database.Username, setting.RunTime.Database.Password,
+//			setting.RunTime.Database.Protocol, setting.RunTime.Database.Host, setting.RunTime.Database.Port,
+//			setting.RunTime.Database.Schema, setting.RunTime.Database.Param["charset"],
+//			setting.RunTime.Database.Param["loc"], setting.RunTime.Database.Param["parseTime"])
+//		if db, err = gorm.Open("mysql", dbArgs); err != nil {
+//			return err
+//		}
+//		db.LogMode(setting.RunTime.Database.LogMode)
+//		db.SingularTable(setting.RunTime.Database.SingularTable)
+//		db.DB().SetMaxIdleConns(setting.RunTime.Database.MaxIdleConns)
+//		db.DB().SetMaxOpenConns(setting.RunTime.Database.MaxOpenConns)
+//		if err = Sync(); err != nil {
+//			return err
+//		}
+//	}
+//	return nil
+//}
 
-//Sync database structs
-func Sync() error {
-	log.Println("Sync database structs ")
-	db.AutoMigrate(&Pipeline{})
-	db.AutoMigrate(&PipelineVersion{})
-	db.AutoMigrate(&Point{})
-	db.AutoMigrate(&PointVersion{})
-	db.AutoMigrate(&Stage{})
-	db.AutoMigrate(&StageVersion{})
-	return nil
-}
+////Sync database structs
+//func Sync() error {
+//	log.Println("Sync database structs ")
+//	db.AutoMigrate(&Pipeline{})
+//	db.AutoMigrate(&PipelineVersion{})
+//	db.AutoMigrate(&Point{})
+//	db.AutoMigrate(&PointVersion{})
+//	db.AutoMigrate(&Stage{})
+//	db.AutoMigrate(&StageVersion{})
+//	return nil
+//}
