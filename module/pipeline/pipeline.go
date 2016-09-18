@@ -63,7 +63,6 @@ func StartPipeline(pID uint64) []byte {
 		PID:      pipeline.ID,
 		State:    models.StateReady,
 		MetaData: pipeline,
-		Status:   models.DataValidStatus,
 	}
 
 	// Insert pipelineVersion
@@ -139,8 +138,7 @@ func DeletePipeline(pID uint64) []byte {
 	log.Println("Delete pipeline")
 	// TODO: Get pipeline form db
 	pipeline := &models.Pipeline{
-		ID:     pID,
-		Status: models.DataValidStatus,
+		ID: pID,
 	}
 	// Check pipeline exist
 	is, err := pipeline.CheckIsExist()
@@ -154,8 +152,7 @@ func DeletePipeline(pID uint64) []byte {
 	}
 	// TODO: Get pipeline version list form db with pID when is not delete
 	pipelineVsn := &models.PipelineVersion{
-		PID:    pID,
-		Status: models.DataValidStatus,
+		PID: pID,
 	}
 	if err := pipelineVsn.QueryOne(); err == nil {
 		bytes, _ := outputResult(pipeline, 0, nil, "pipeline is running,could not delete")
@@ -216,10 +213,18 @@ func GetPipeline(pID uint64) []byte {
 func removePipeline(executorList []interface{}, pipelineVersion *models.PipelineVersion, detail string) []*models.ExecutedResult {
 	schedulingRes := scheduler.StopPoint(executorList, models.StartPointMark)
 	// TODO: delete pipeline version
-	pipelineVersion.State = models.StateDeleted
-	pipelineVersion.Detail = detail
-	pipelineVersion.Status = models.DataInValidStatus
-	if err := pipelineVersion.Update(); err != nil {
+	pv := &models.PipelineVersion{
+		ID:     pipelineVersion.ID,
+		State:  models.StateDeleted,
+		Detail: detail,
+	}
+	if err := pv.Update(); err != nil {
+		return schedulingRes
+	}
+	pv = &models.PipelineVersion{
+		ID: pipelineVersion.ID,
+	}
+	if err := pv.SoftDelete(); err != nil {
 		return schedulingRes
 	}
 	return schedulingRes

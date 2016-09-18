@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/containerops/vessel/models"
-	"github.com/containerops/vessel/module/deployment"
+	//"github.com/containerops/vessel/module/deployment"
 	"github.com/containerops/vessel/module/point"
 )
 
@@ -28,12 +28,17 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	readyMap[metaData.Name] = true
 	//TODO:Save stageVersion
 	stageVsn.State = models.StateReady
-	stageVsn.Status = models.DataValidStatus
 	if err := stageVsn.Create(); err != nil {
 		return
 	}
 	deployment := deployment.NewDeployment(metaData)
 	res := deployment.Deploy()
+	//	res := &models.StageResult{
+	//		Namespace: "vessel",
+	//		Name:      metaData.Name,
+	//		Status:    "OK",
+	//		Detail:    "",
+	//	}
 	if res.Status != models.ResultSuccess {
 		finishChan <- FillSchedulingResult(stageVsn.ID, metaData.Name, res.Status, res.Detail)
 		return
@@ -52,6 +57,7 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.ExecutedResult) {
 	stageVsn := info.(*models.StageVersion)
 	metaData := stageVsn.MetaData
+
 	if stageVsn.State == models.StateDeleted {
 		return
 	}
@@ -64,13 +70,29 @@ func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.Ex
 	if !meet {
 		return
 	}
+
 	readyMap[metaData.Name] = true
 	deployment := deployment.NewDeployment(metaData)
 	res := deployment.Undeploy()
+	//	res := &models.StageResult{
+	//		Namespace: "vessel",
+	//		Name:      metaData.Name,
+	//		Status:    "OK",
+	//		Detail:    "",
+	//	}
 	//TODO:Update stageVersion
+	sv := &models.StageVersion{
+		ID:    stageVsn.ID,
+		State: models.StateDeleted,
+	}
+	if err := sv.Update(); err != nil {
+		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, models.ResultFailed, "stageVersion update failure")
+	}
 	stageVsn.State = models.StateDeleted
-	stageVsn.Status = models.DataInValidStatus
-	if err := stageVsn.Update(); err != nil {
+	sv = &models.StageVersion{
+		ID: stageVsn.ID,
+	}
+	if err := sv.SoftDelete(); err != nil {
 		finishChan <- FillSchedulingResult(stageVsn.ID, stageVsn.MetaData.Name, models.ResultFailed, "stageVersion update failure")
 	} else {
 		finishChan <- FillSchedulingResult(stageVsn.ID, res.Name, res.Status, res.Detail)

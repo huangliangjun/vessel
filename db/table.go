@@ -45,19 +45,22 @@ func (db *DB) Count(value interface{}) (int64, error) {
 }
 
 func (db *DB) Create(value interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Create(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
 func (db *DB) Update(value interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Model(value).Update(value).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
@@ -66,42 +69,52 @@ func (db *DB) UpdateField(model interface{}, fieldName string, value interface{}
 }
 
 func (db *DB) Save(value interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Save(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
 func (db *DB) Delete(value interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Unscoped().Delete(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
 func (db *DB) DeleteS(value interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Where(value).Delete(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
 func (db *DB) BatchDelete(value interface{}, condition string) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Unscoped().Where(condition).Delete(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
 func (db *DB) BatchDeleteS(value interface{}, condition string) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Where(condition).Delete(value).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }
 
@@ -147,9 +160,11 @@ func (db *DB) Raw(models interface{}, sql string, values ...interface{}) error {
 }
 
 func (db *DB) Exec(sql string, values ...interface{}) error {
-	tx := db.Begin()
+	tx := db.db.Begin()
 	if err := tx.Exec(sql, values...).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+	tx.Commit()
 	return nil
 }

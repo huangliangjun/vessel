@@ -77,7 +77,7 @@ func (pv *PointVersion) Create() error {
 	if err := db.Instance.Create(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //update point's version data
@@ -85,7 +85,7 @@ func (pv *PointVersion) Update() error {
 	if err := db.Instance.Update(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //query point's version data
@@ -102,5 +102,5 @@ func (pv *PointVersion) SoftDelete() error {
 	if err := db.Instance.DeleteS(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }

@@ -191,7 +191,7 @@ func (sv *StageVersion) Create() error {
 	if err := db.Instance.Create(sv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //update stage version data
@@ -199,7 +199,7 @@ func (sv *StageVersion) Update() error {
 	if err := db.Instance.Update(sv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //query stage version data
@@ -216,5 +216,5 @@ func (sv *StageVersion) SoftDelete() error {
 	if err := db.Instance.DeleteS(sv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }

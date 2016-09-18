@@ -66,14 +66,14 @@ func (PipelineVersion) TableName() string {
 func (p *Pipeline) Create() error {
 	if err := db.Instance.Create(p); err != nil {
 		//rallback transaction
-		db.Instance.Rollback()
+		//db.Instance.Rollback()
 		return err
 	}
 	for _, point := range p.Points {
 		//save  pipeline's point data
 		point.PID = p.ID
 		if err := db.Instance.Create(point); err != nil {
-			db.Instance.Rollback()
+			//db.Instance.Rollback()
 			return err
 		}
 	}
@@ -82,18 +82,18 @@ func (p *Pipeline) Create() error {
 		//save  pipeline's point data
 		err := stage.ObjToJson()
 		if err != nil {
-			db.Instance.Rollback()
+			//db.Instance.Rollback()
 			return err
 		}
 		stage.PID = p.ID
 		if err := db.Instance.Create(stage); err != nil {
-			db.Instance.Rollback()
+			//db.Instance.Rollback()
 			return err
 		}
 	}
 	//commit transaction
-
-	return db.Instance.Commit()
+	return nil
+	//return db.Instance.Commit()
 }
 
 //Query one pipeline data
@@ -139,10 +139,9 @@ func (p *Pipeline) QueryMulti() ([]*Pipeline, error) {
 //update pipeline data
 func (p *Pipeline) Update() error {
 	if err := db.Instance.Update(p); err != nil {
-		db.Instance.Rollback()
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //delete pipeline data
@@ -157,9 +156,7 @@ func (p *Pipeline) SoftDelete() error {
 		return errors.New("record not exist")
 	}
 	//delete pipeline
-	if err := db.Instance.DeleteS(p); err != nil {
-		//rollback transaction
-		db.Instance.Rollback()
+	if err := db.Instance.DeleteS(pipeline); err != nil {
 		return err
 	}
 	//delete pipeline's stage
@@ -167,8 +164,6 @@ func (p *Pipeline) SoftDelete() error {
 		PID: pipeline.ID,
 	}
 	if err := db.Instance.DeleteS(stage); err != nil {
-		//rollback transaction
-		db.Instance.Rollback()
 		return err
 	}
 
@@ -177,14 +172,10 @@ func (p *Pipeline) SoftDelete() error {
 		PID: pipeline.ID,
 	}
 	if err := db.Instance.DeleteS(point); err != nil {
-		//rollback transaction
-		db.Instance.Rollback()
 		return err
 	}
 
-	//commit transaction
-
-	return db.Instance.Commit()
+	return nil
 }
 
 func (p *Pipeline) CheckIsExist() (bool, error) {
@@ -201,7 +192,7 @@ func (pv *PipelineVersion) Create() error {
 	if err := db.Instance.Create(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //update pipeline version data
@@ -209,7 +200,7 @@ func (pv *PipelineVersion) Update() error {
 	if err := db.Instance.Update(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }
 
 //query one pipeline version data
@@ -236,5 +227,5 @@ func (pv *PipelineVersion) SoftDelete() error {
 	if err := db.Instance.DeleteS(pv); err != nil {
 		return err
 	}
-	return db.Instance.Commit()
+	return nil
 }

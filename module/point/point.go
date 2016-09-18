@@ -1,7 +1,7 @@
 package point
 
 import (
-	//	"fmt"
+	//"fmt"
 
 	"github.com/containerops/vessel/models"
 )
@@ -34,7 +34,6 @@ func StopPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, b
 	meet := true
 	ended := false
 	if pointVsn.Kind == models.StartPoint {
-
 		return meet, ended
 	}
 	for _, condition := range pointVsn.Conditions {
@@ -49,7 +48,6 @@ func StopPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, b
 func AddAndUpdate(pointVsn *models.PointVersion) error {
 	if pointVsn.Kind != models.TemporaryPoint {
 		pointVsn.State = models.StateReady
-		pointVsn.Status = models.DataValidStatus
 		if err := pointVsn.Create(); err != nil {
 			return err
 		}
@@ -64,9 +62,17 @@ func AddAndUpdate(pointVsn *models.PointVersion) error {
 
 func Delete(pvid uint64) error {
 	pointVsn := &models.PointVersion{
-		PvID:   pvid,
-		State:  models.StateDeleted,
-		Status: models.DataInValidStatus,
+		PvID:  pvid,
+		State: models.StateDeleted,
 	}
-	return pointVsn.Update()
+	if err := pointVsn.Update(); err != nil {
+		return err
+	}
+	pointVsn = &models.PointVersion{
+		PvID: pvid,
+	}
+	if err := pointVsn.SoftDelete(); err != nil {
+		return err
+	}
+	return nil
 }
