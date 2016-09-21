@@ -2,4 +2,4 @@
 appName: Vessel
 usage: ContainerOps CI Service
 version: v0.1.0-alpha.0
-runtimePath: ../conf/runtime.yaml
+runtimePath: ./conf/runtime.yaml

@@ -31,7 +31,7 @@ func InitDB(driver, user, passwd, URI, databaseName string) error {
 	if err != nil {
 		fmt.Errorf("open db error : ", err.Error())
 	}
-	vesselDb.LogMode(false)
+	vesselDb.LogMode(true)
 	Instance.db = vesselDb
 	Instance.InitConnectedPool()
 	return nil

@@ -1,10 +1,11 @@
 package models
 
 import (
+	"encoding/json"
+	//"errors"
+	"fmt"
 	"time"
 
-	"encoding/json"
-	//"fmt"
 	"github.com/containerops/vessel/db"
 	"github.com/containerops/vessel/utils/timer"
 	//	"k8s.io/kubernetes/pkg/api/v1"
@@ -20,13 +21,13 @@ const (
 // Stage stage data
 type Stage struct {
 	ID            uint64           `json:"id" gorm:"primary_key"`
-	PID           uint64           `json:"pid" gorm:"type:int;not null;index"`
-	Namespace     string           `json:"namespace" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
-	Name          string           `json:"name" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
-	Replicas      uint             `json:"replicas" gorm:"type:int;default:0"`
+	PID           uint64           `json:"pID" gorm:"not null;index"`
+	Namespace     string           `json:"namespace" binding:"Required" gorm:"type:varchar(255);not null"`
+	Name          string           `json:"name" binding:"Required" gorm:"type:varchar(255);not null"`
+	Replicas      uint             `json:"replicas" gorm:"default:0"`
 	PipelineName  string           `json:"-" sql:"-"`
-	Type          string           `json:"type"  binding:"In(container,vm,pc)" gorm:"varchar(20)"`
-	Dependencies  string           `json:"dependencies,omitempty" gorm:"varchar(255)"` // eg : "a,b,c"
+	Type          string           `json:"type"  binding:"In(container,vm,pc)" gorm:"type:varchar(32)"`
+	Dependencies  string           `json:"dependencies,omitempty" gorm:"type:varchar(255)"` // eg : "a,b,c"
 	Artifacts     []Artifact       `json:"artifacts"  sql:"-"`
 	Volumes       []Volume         `json:"volumes"  sql:"-"`
 	ArtifactsJSON string           `json:"-" gorm:"column:artifactsJson;type:text;not null"` // json type
@@ -34,7 +35,7 @@ type Stage struct {
 	Ports         []ServicePort    `json:"ports,omitempty" sql:"-"`
 	PortsJSON     string           `json:"-" gorm:"column:portsJSON;type:text;not null"` // json type
 	Hourglass     *timer.Hourglass `json:"-" sql:"-"`
-	Status        uint             `json:"status" gorm:"type:int;default:0"`
+	Status        uint             `json:"status" gorm:"type:tinyint;default:0"`
 	CreatedAt     *time.Time       `json:"created" `
 	UpdatedAt     *time.Time       `json:"updated"`
 	DeletedAt     *time.Time       `json:"deleted"`
@@ -43,9 +44,9 @@ type Stage struct {
 // StageVersion data
 type StageVersion struct {
 	ID           uint64        `json:"id" gorm:"primary_key"`
-	PvID         uint64        `json:"pvid" gorm:"type:int;not null"`
-	SID          uint64        `json:"sid" gorm:"type:int;not null;index"`
-	State        string        `json:"state" gorm:"column:state;type:varchar(20)"`
+	PvID         uint64        `json:"pvID" gorm:"not null;"`
+	SID          uint64        `json:"sID" gorm:"not null;"`
+	State        string        `json:"state" gorm:"type:varchar(32)"`
 	Detail       string        `json:"detail" gorm:"type:text;"`
 	MetaData     *Stage        `json:"-" sql:"-"`
 	PointVersion *PointVersion `json:"-" sql:"-"`
@@ -121,6 +122,37 @@ func (StageVersion) TableName() string {
 	return "pipeline_stage_version"
 }
 
+func (s *Stage) AddForeignKey() error {
+	if err := db.Instance.AddForeignKey(s, "p_id", "pipeline(id)", "CASCADE", "NO ACTION"); err != nil {
+		return fmt.Errorf("create foreign key p_id error: %v", err.Error())
+	}
+	return nil
+}
+
+func (sv *StageVersion) AddForeignKey() error {
+	if err := db.Instance.AddForeignKey(sv, "pv_id", "pipeline_version(id)", "CASCADE", "NO ACTION"); err != nil {
+		return fmt.Errorf("create foreign key pv_id error: %v", err.Error())
+	}
+	return nil
+}
+
+func (p *StageVersion) AddUniqueIndex() error {
+	if err := db.Instance.AddUniqueIndex(p, "idxs_pvid_sid", "pv_id", "s_id"); err != nil {
+		return fmt.Errorf("create unique index idxs_pvid_sid error: %v", err.Error())
+	}
+	return nil
+}
+
+//check stage record is exist
+func (p *Stage) IsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
 //query pipeline'statge data
 func (s *Stage) QueryM() ([]*Stage, error) {
 	stages := make([]*Stage, 0, 10)
@@ -142,7 +174,6 @@ func (s *Stage) QueryM() ([]*Stage, error) {
 func (s *Stage) ObjToJson() error {
 	bsArtifacts, err := json.Marshal(s.Artifacts)
 	if err != nil {
-
 		return err
 	}
 	s.ArtifactsJSON = string(bsArtifacts)
@@ -172,6 +203,7 @@ func (s *Stage) JsonToObj() error {
 		return err
 	}
 	s.Artifacts = artifacts
+
 	err = json.Unmarshal([]byte(s.VolumesJSON), &volumes)
 	if err != nil {
 		return err
@@ -196,6 +228,17 @@ func (sv *StageVersion) Create() error {
 
 //update stage version data
 func (sv *StageVersion) Update() error {
+	stageVersion := &StageVersion{
+		PvID: sv.PvID,
+		SID:  sv.SID,
+	}
+	is, err := stageVersion.IsExist()
+	if err != nil {
+		return err
+	} else if err == nil && is == false {
+		return fmt.Errorf("record not exist")
+	}
+	sv.ID = stageVersion.ID
 	if err := db.Instance.Update(sv); err != nil {
 		return err
 	}
@@ -217,4 +260,14 @@ func (sv *StageVersion) SoftDelete() error {
 		return err
 	}
 	return nil
+}
+
+//check stageVersion record is exist
+func (p *StageVersion) IsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
 }

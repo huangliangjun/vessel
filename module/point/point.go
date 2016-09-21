@@ -34,6 +34,10 @@ func StopPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, b
 	meet := true
 	ended := false
 	if pointVsn.Kind == models.StartPoint {
+		err := Delete(pointVsn)
+		if err != nil {
+			return meet, ended
+		}
 		return meet, ended
 	}
 	for _, condition := range pointVsn.Conditions {
@@ -42,6 +46,10 @@ func StopPoint(pointVsn *models.PointVersion, readyMap map[string]bool) (bool, b
 		}
 	}
 	ended = pointVsn.Kind == models.EndPoint
+	err := Delete(pointVsn)
+	if err != nil {
+		return meet, ended
+	}
 	return meet, ended
 }
 
@@ -60,18 +68,20 @@ func AddAndUpdate(pointVsn *models.PointVersion) error {
 	return nil
 }
 
-func Delete(pvid uint64) error {
-	pointVsn := &models.PointVersion{
-		PvID:  pvid,
-		State: models.StateDeleted,
+func Delete(pointVsn *models.PointVersion) error {
+	pv := &models.PointVersion{
+		PvID:    pointVsn.PvID,
+		PointID: pointVsn.PointID,
+		State:   models.StateDeleted,
 	}
-	if err := pointVsn.Update(); err != nil {
+	if err := pv.Update(); err != nil {
 		return err
 	}
-	pointVsn = &models.PointVersion{
-		PvID: pvid,
+	pv = &models.PointVersion{
+		PvID:    pointVsn.PvID,
+		PointID: pointVsn.PointID,
 	}
-	if err := pointVsn.SoftDelete(); err != nil {
+	if err := pv.SoftDelete(); err != nil {
 		return err
 	}
 	return nil

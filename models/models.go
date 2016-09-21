@@ -10,6 +10,7 @@ import (
 	"github.com/coreos/etcd/client"
 	_ "github.com/go-sql-driver/mysql"
 	//	"github.com/jinzhu/gorm"
+	"github.com/containerops/vessel/db"
 	"k8s.io/kubernetes/pkg/client/restclient"
 	"k8s.io/kubernetes/pkg/client/unversioned"
 )
@@ -96,6 +97,40 @@ func InitK8S() error {
 			return err
 		}
 		K8S = client
+	}
+	return nil
+}
+
+// InitDatabase for mysql init
+func InitDatabase() error {
+	if err := db.InitDB(setting.RunTime.Database.Driver, setting.RunTime.Database.Username,
+		setting.RunTime.Database.Password, setting.RunTime.Database.Host+":"+setting.RunTime.Database.Port,
+		setting.RunTime.Database.Schema); err != nil {
+		fmt.Println(err)
+	}
+	if err := db.Instance.RegisterModel(new(Pipeline), new(PipelineVersion)); err != nil {
+		fmt.Println(err)
+	}
+	if err := db.Instance.RegisterModel(new(Stage), new(StageVersion)); err != nil {
+		fmt.Println(err)
+	}
+	if err := db.Instance.RegisterModel(new(Point), new(PointVersion)); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(Stage).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(Point).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(StageVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(PointVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(PointVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
 	}
 	return nil
 }

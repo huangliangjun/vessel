@@ -10,7 +10,7 @@ import (
 
 // PipelineTemplate template for request data
 type PipelineTemplate struct {
-	Kind       string    `json:"kind" binding:"In(CCloud)"`
+	Kind       string    `json:"kind" binding:"In(ccloud)"`
 	APIVersion string    `json:"apiVersion" binding:"In(v1)"`
 	MetaData   *Pipeline `json:"metadata" binding:"Required"`
 }
@@ -18,9 +18,9 @@ type PipelineTemplate struct {
 // Pipeline pipeline data
 type Pipeline struct {
 	ID        uint64     `json:"id" gorm:"primary_key"`
-	Namespace string     `json:"namespace" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
-	Name      string     `json:"name" binding:"Required" gorm:"type:varchar(20);not null;unique_index:idxs_namespace_name"`
-	Timeout   uint64     `json:"timeout" gorm:"type:int;"`
+	Namespace string     `json:"namespace" binding:"Required" gorm:"type:varchar(255);not null;unique_index:idxs_namespace_name"`
+	Name      string     `json:"name" binding:"Required" gorm:"type:varchar(255);not null;unique_index:idxs_namespace_name"`
+	Timeout   uint64     `json:"timeout" gorm:"null"`
 	Stages    []*Stage   `json:"stages" binding:"Required" gorm:"-"`
 	Points    []*Point   `json:"points" binding:"Required" gorm:"-"`
 	Status    uint       `json:"status" gorm:"type:tinyint;default:0"`
@@ -32,8 +32,8 @@ type Pipeline struct {
 // PipelineVersion data
 type PipelineVersion struct {
 	ID        uint64     `json:"id" gorm:"primary_key"`
-	PID       uint64     `json:"Pid" gorm:"type:int;not null;index"`
-	State     string     `json:"state" gorm:"column:state;type:varchar(20)"`
+	PID       uint64     `json:"pID" gorm:"type:int;not null;index"`
+	State     string     `json:"state" gorm:"type:varchar(32)"`
 	Detail    string     `json:"detail" gorm:"type:text;"`
 	MetaData  *Pipeline  `json:"-" sql:"-"`
 	Status    uint       `json:"status" gorm:"type:tinyint;default:0"`
@@ -100,17 +100,18 @@ func (p *Pipeline) Create() error {
 func (p *Pipeline) QueryOne() error {
 	//query pipeline data
 	pipeline := &Pipeline{
+		ID:        p.ID,
 		Namespace: p.Namespace,
 		Name:      p.Name,
 	}
-	if _, err := db.Instance.Count(pipeline); err != nil {
+	if is, err := pipeline.IsExist(); err != nil {
 		return err
-	} else if pipeline.ID <= 0 {
-		return errors.New("record not found")
+	} else if is == false {
+		return errors.New("record not exist")
 	}
 	*p = *pipeline
 	//query pipeline's stages data
-	stage := &Stage{PID: pipeline.ID}
+	stage := &Stage{PID: p.ID}
 	stages, err := stage.QueryM()
 	if err != nil {
 		return err
@@ -118,7 +119,7 @@ func (p *Pipeline) QueryOne() error {
 	p.Stages = stages
 
 	//query pipeline's points data
-	point := &Point{PID: pipeline.ID}
+	point := &Point{PID: p.ID}
 	points, err := point.QueryM()
 	if err != nil {
 		return err
@@ -150,9 +151,9 @@ func (p *Pipeline) SoftDelete() error {
 		Namespace: p.Namespace,
 		Name:      p.Name,
 	}
-	if _, err := db.Instance.Count(pipeline); err != nil {
+	if is, err := pipeline.IsExist(); err != nil {
 		return err
-	} else if pipeline.ID <= 0 {
+	} else if is == false {
 		return errors.New("record not exist")
 	}
 	//delete pipeline
@@ -178,7 +179,8 @@ func (p *Pipeline) SoftDelete() error {
 	return nil
 }
 
-func (p *Pipeline) CheckIsExist() (bool, error) {
+//check pipeline record is exist
+func (p *Pipeline) IsExist() (bool, error) {
 	if _, err := db.Instance.Count(p); err != nil {
 		return false, err
 	} else if p.ID <= 0 {
@@ -228,4 +230,14 @@ func (pv *PipelineVersion) SoftDelete() error {
 		return err
 	}
 	return nil
+}
+
+//check pipelineVersion record is exist
+func (p *PipelineVersion) IsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
 }

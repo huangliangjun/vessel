@@ -1,6 +1,8 @@
 package models
 
 import (
+	//	"errors"
+	"fmt"
 	"time"
 
 	"github.com/containerops/vessel/db"
@@ -26,8 +28,8 @@ const (
 // Point data
 type Point struct {
 	ID         uint64     `json:"id" gorm:"primary_key"`
-	PID        uint64     `json:"pid" gorm:"type:int;not null;index"`
-	Type       string     `json:"type" binding:"In(Start,Check,End)" gorm:"type:varchar(20)"`
+	PID        uint64     `json:"pID" gorm:"not null;index"`
+	Type       string     `json:"type" binding:"In(Start,Check,End)" gorm:"type:varchar(32)"`
 	Triggers   string     `json:"triggers" gorm:"type:varchar(255)"`   // eg : "a,b,c"
 	Conditions string     `json:"conditions" gorm:"type:varchar(255)"` // eg : "a,b,c"
 	Status     uint       `json:"status" gorm:"type:tinyint;default:0"`
@@ -39,9 +41,9 @@ type Point struct {
 // PointVersion data
 type PointVersion struct {
 	ID         uint64     `json:"id" gorm:"primary_key"`
-	PvID       uint64     `json:"pvid" gorm:"type:int;not null"`
-	PointID    uint64     `json:"PointID" gorm:"type:int;not null;index"`
-	State      string     `json:"state" gorm:"column:state;type:varchar(20);not null;"`
+	PvID       uint64     `json:"pvID" gorm:"not null;"`
+	PointID    uint64     `json:"pointID" gorm:"not null;"`
+	State      string     `json:"state" gorm:"type:varchar(32);not null;"`
 	Detail     string     `json:"detail" gorm:"type:text;"`
 	Status     uint       `json:"status" gorm:"type:tinyint;default:0"`
 	Conditions []string   `json:"-" sql:"-"`
@@ -58,8 +60,39 @@ func (p *Point) TableName() string {
 }
 
 // custom set PointVersion's table name is point_version in db
-func (p *PointVersion) TableName() string {
+func (pv *PointVersion) TableName() string {
 	return "point_version"
+}
+
+func (p *Point) AddForeignKey() error {
+	if err := db.Instance.AddForeignKey(p, "p_id", "pipeline(id)", "CASCADE", "NO ACTION"); err != nil {
+		return fmt.Errorf("create foreign key p_id error: %v", err.Error())
+	}
+	return nil
+}
+
+func (pv *PointVersion) AddForeignKey() error {
+	if err := db.Instance.AddForeignKey(pv, "pv_id", "pipeline_version(id)", "CASCADE", "NO ACTION"); err != nil {
+		return fmt.Errorf("create foreign key pv_id error: %v", err.Error())
+	}
+	return nil
+}
+
+func (p *PointVersion) AddUniqueIndex() error {
+	if err := db.Instance.AddUniqueIndex(p, "idxs_pvid_pointid", "pv_id", "point_id"); err != nil {
+		return fmt.Errorf("create unique index idxs_pvid_pointid error: %v", err.Error())
+	}
+	return nil
+}
+
+//check point record is exist
+func (p *Point) IsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
 }
 
 //query pipeline's points data
@@ -82,6 +115,22 @@ func (pv *PointVersion) Create() error {
 
 //update point's version data
 func (pv *PointVersion) Update() error {
+	pointVersion := &PointVersion{
+		PvID:    pv.PvID,
+		PointID: pv.PointID,
+	}
+	is, err := pointVersion.IsExist()
+	if err != nil {
+		return err
+	} else if err == nil && is == false {
+		return fmt.Errorf("record not exist")
+	}
+	//	if _, err := db.Instance.Count(pointVersion); err != nil {
+	//		return err
+	//	} else if pointVersion.ID <= 0 {
+	//		return errors.New("record not exist")
+	//	}
+	pv.ID = pointVersion.ID
 	if err := db.Instance.Update(pv); err != nil {
 		return err
 	}
@@ -103,4 +152,14 @@ func (pv *PointVersion) SoftDelete() error {
 		return err
 	}
 	return nil
+}
+
+//check pointVersion record is exist
+func (p *PointVersion) IsExist() (bool, error) {
+	if _, err := db.Instance.Count(p); err != nil {
+		return false, err
+	} else if p.ID <= 0 {
+		return false, nil
+	}
+	return true, nil
 }

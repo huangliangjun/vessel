@@ -8,7 +8,7 @@ import (
 
 	"github.com/containerops/vessel/models"
 	"github.com/containerops/vessel/module/dependence"
-	"github.com/containerops/vessel/module/point"
+	//	"github.com/containerops/vessel/module/point"
 	"github.com/containerops/vessel/module/scheduler"
 )
 
@@ -18,7 +18,7 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 	pipeline := pipelineTemplate.MetaData
 
 	// Check pipeline exist
-	is, err := pipeline.CheckIsExist()
+	is, err := pipeline.IsExist()
 	if err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
 		return bytes
@@ -119,11 +119,11 @@ func StopPipeline(pID uint64, pvID uint64) []byte {
 	}
 	executorMap := dependence.ParsePipelineVersion(pipelineVersion)
 
-	//point version delete
-	if err := point.Delete(pvID); err != nil {
-		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
-		return bytes
-	}
+	//	//point version delete
+	//	if err := point.Delete(pvID); err != nil {
+	//		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
+	//		return bytes
+	//	}
 
 	//stop pipeline
 	schedulingRes := removePipeline(executorMap, pipelineVersion, "")
@@ -141,7 +141,7 @@ func DeletePipeline(pID uint64) []byte {
 		ID: pID,
 	}
 	// Check pipeline exist
-	is, err := pipeline.CheckIsExist()
+	is, err := pipeline.IsExist()
 	if err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
 		return bytes

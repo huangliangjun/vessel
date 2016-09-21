@@ -28,7 +28,7 @@ func (db *DB) AddUniqueIndex(model interface{}, indexName string, column ...stri
 
 func (db *DB) AddForeignKey(model interface{}, foreignKeyField, destinationTable, onDelete, onUpdate string) error {
 	if err := db.db.Model(model).AddForeignKey(foreignKeyField, destinationTable, onDelete, onUpdate).Error; err != nil {
-		return fmt.Errorf("add ForeignKey error : ", err.Error())
+		return fmt.Errorf("add ForeignKey error : %v", err.Error())
 	}
 	return nil
 }
