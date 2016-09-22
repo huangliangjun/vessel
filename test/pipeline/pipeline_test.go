@@ -143,13 +143,11 @@ func Test_MultiStartStopPipeline(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unmarshal body error : %v", err)
 	}
-	t.Log("the pipelineResult is ", pipelineResult)
 	pipelineResult1 := models.PipelineResult{}
 	err = json.Unmarshal(body1, &pipelineResult1)
 	if err != nil {
 		t.Errorf("Unmarshal body error : %v", err)
 	}
-	t.Log("the pipelineResult1 is ", pipelineResult1)
 	body, code, err = startPipeline(pipelineResult.PID)
 	if err != nil {
 		t.Errorf("startPipeline error : %v", err)

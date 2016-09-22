@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/containerops/vessel/models"
-	//"github.com/containerops/vessel/module/deployment"
+	"github.com/containerops/vessel/module/deployment"
 	"github.com/containerops/vessel/module/point"
 )
 
@@ -31,14 +31,14 @@ func Start(info interface{}, readyMap map[string]bool, finishChan chan *models.E
 	if err := stageVsn.Create(); err != nil {
 		return
 	}
-	//	deployment := deployment.NewDeployment(metaData)
-	//	res := deployment.Deploy()
-	res := &models.StageResult{
-		Namespace: "vessel",
-		Name:      metaData.Name,
-		Status:    "OK",
-		Detail:    "",
-	}
+	deployment := deployment.NewDeployment(metaData)
+	res := deployment.Deploy()
+	//	res := &models.StageResult{
+	//		Namespace: "vessel",
+	//		Name:      metaData.Name,
+	//		Status:    "OK",
+	//		Detail:    "",
+	//	}
 	if res.Status != models.ResultSuccess {
 		finishChan <- FillSchedulingResult(stageVsn.ID, metaData.Name, res.Status, res.Detail)
 		return
@@ -72,14 +72,14 @@ func Stop(info interface{}, readyMap map[string]bool, finishChan chan *models.Ex
 	}
 
 	readyMap[metaData.Name] = true
-	//deployment := deployment.NewDeployment(metaData)
-	//res := deployment.Undeploy()
-	res := &models.StageResult{
-		Namespace: "vessel",
-		Name:      metaData.Name,
-		Status:    "OK",
-		Detail:    "",
-	}
+	deployment := deployment.NewDeployment(metaData)
+	res := deployment.Undeploy()
+	//	res := &models.StageResult{
+	//		Namespace: "vessel",
+	//		Name:      metaData.Name,
+	//		Status:    "OK",
+	//		Detail:    "",
+	//	}
 	//TODO:Update stageVersion
 	sv := &models.StageVersion{
 		PvID:  stageVsn.PvID,
