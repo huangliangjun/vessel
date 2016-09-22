@@ -27,6 +27,24 @@ func Test_InitDB(t *testing.T) {
 	if err := db.Instance.RegisterModel(new(models.Point), new(models.PointVersion)); err != nil {
 		t.Fatal(err)
 	}
+	if err := new(models.Stage).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(models.Point).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(models.StageVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(models.PointVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(StageVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(PointVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func Test_Create(t *testing.T) {

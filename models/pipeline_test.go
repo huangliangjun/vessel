@@ -180,6 +180,24 @@ func Test_InitDB(t *testing.T) {
 	if err := db.Instance.RegisterModel(new(Point), new(PointVersion)); err != nil {
 		t.Fatal(err)
 	}
+	if err := new(Stage).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(Point).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(StageVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(PointVersion).AddForeignKey(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(StageVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
+	}
+	if err := new(PointVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func Test_PipelineCreate(t *testing.T) {

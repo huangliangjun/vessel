@@ -129,6 +129,9 @@ func InitDatabase() error {
 	if err := new(PointVersion).AddForeignKey(); err != nil {
 		fmt.Println(err)
 	}
+	if err := new(StageVersion).AddUniqueIndex(); err != nil {
+		fmt.Println(err)
+	}
 	if err := new(PointVersion).AddUniqueIndex(); err != nil {
 		fmt.Println(err)
 	}
