@@ -28,7 +28,6 @@ func CreatePipeline(pipelineTemplate *models.PipelineTemplate) []byte {
 		return bytes
 	}
 	log.Println("the pipeline is ", pipeline)
-
 	// Check stages and points dependence
 	if err := dependence.CheckDependence(pipeline); err != nil {
 		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
@@ -118,12 +117,6 @@ func StopPipeline(pID uint64, pvID uint64) []byte {
 		return bytes
 	}
 	executorMap := dependence.ParsePipelineVersion(pipelineVersion)
-
-	//	//point version delete
-	//	if err := point.Delete(pvID); err != nil {
-	//		bytes, _ := outputResult(pipeline, 0, nil, err.Error())
-	//		return bytes
-	//	}
 
 	//stop pipeline
 	schedulingRes := removePipeline(executorMap, pipelineVersion, "")
